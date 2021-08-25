@@ -3,13 +3,20 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
+    ACol: typeof import('ant-design-vue/es')['Col']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    ADivider: typeof import('ant-design-vue/es')['Divider']
+    ADrawer: typeof import('ant-design-vue/es')['Drawer']
     ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+    ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     CommonDrawer: typeof import('./src/components/CommonDrawer.vue')['default']
     CommonModal: typeof import('./src/components/CommonModal.vue')['default']
   }

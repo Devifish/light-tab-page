@@ -7,19 +7,19 @@
 <script lang="ts" setup>
 import { computed, watch, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-import { ThemeType } from "./store/setting";
+import { ThemeMode } from "./store/setting";
 import Home from "@views/home/Index.vue";
 
 const store = useStore();
-const theme = computed<ThemeType>(() => store.getters["setting/getTheme"]);
+const themeMode = computed<ThemeMode>(() => store.getters["setting/getThemeMode"]);
 
-function changeTheme(theme: ThemeType) {
+function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode;
-  switch (theme) {
-    case ThemeType.auto:
+  switch (themeMode) {
+    case ThemeMode.auto:
       isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
       break;
-    case ThemeType.dart:
+    case ThemeMode.dart:
       isDarkMode = true;
       break;
     default:
@@ -32,6 +32,10 @@ function changeTheme(theme: ThemeType) {
   htmlEle.setAttribute("data-theme", isDarkMode ? "dark" : "light");
 }
 
+/**
+ * 监听系统主题颜色变化事件
+ * 如果主题设置是Auto则同步修改
+ */
 function onSystemThemeChange() {
   const darkMedia: MediaQueryList = window.matchMedia(
     "(prefers-color-scheme: dark)"
@@ -39,19 +43,20 @@ function onSystemThemeChange() {
 
   if (typeof darkMedia.addEventListener === "function") {
     darkMedia.addEventListener("change", (e) => {
-      if (theme.value !== ThemeType.auto) return;
+      if (themeMode.value !== ThemeMode.auto) return;
 
       const isDarkMode = e.matches;
-      changeTheme(isDarkMode ? ThemeType.dart : ThemeType.light);
+      changeThemeMode(isDarkMode ? ThemeMode.dart : ThemeMode.light);
     });
   }
 }
 
-watch(theme, (val) => changeTheme(val));
+// 监听并设置主题
+watch(themeMode, (val) => changeThemeMode(val));
 
 onBeforeMount(() => {
   onSystemThemeChange();
-  changeTheme(theme.value);
+  changeThemeMode(themeMode.value);
 });
 </script>
 
@@ -61,5 +66,7 @@ onBeforeMount(() => {
   @import "ant-design-vue/lib/comment/style/index.less";
   @import "ant-design-vue/lib/input/style/index.less";
   @import "ant-design-vue/lib/select/style/index.less";
+  @import "ant-design-vue/lib/drawer/style/index.less";
+  @import "ant-design-vue/lib/divider/style/index.less";
 }
 </style>

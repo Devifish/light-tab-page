@@ -1,26 +1,33 @@
 import { Module } from "vuex";
 
-export enum ThemeType {
-  auto, light, dart
+export enum ThemeMode {
+  auto,
+  light,
+  dart,
 }
 
 interface SettingState {
-  theme: ThemeType
+  themeMode: ThemeMode;
 }
 
-
+const themeMode = Number.parseInt(localStorage["themeMode"] ?? `${ThemeMode.auto}`);
 
 const settingModule: Module<SettingState, any> = {
   namespaced: true,
   state: {
-    theme: ThemeType.auto
+    themeMode: themeMode,
   },
   getters: {
-    getTheme(state) {
-      return state.theme;
-    }
+    getThemeMode(state) {
+      return state.themeMode;
+    },
   },
-  mutations: {},
+  mutations: {
+    updateThemeMode(state, themeMode: ThemeMode) {
+      state.themeMode = themeMode;
+      localStorage.setItem("themeMode", themeMode.toString());
+    },
+  },
   actions: {},
 };
 
