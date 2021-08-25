@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { SearchEngineData } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
+import { isEmpty } from "@/utils/common";
 
 interface SearchState {
   searchEngines: SearchEngineData;
@@ -55,7 +56,7 @@ const searchModule: Module<SearchState, any> = {
       console.log("写入搜索历史", newHistory);
     },
     updateCurrentEngine(state, currentEngine: string) {
-      if (state.searchEngines[currentEngine] === undefined) return;
+      if (isEmpty(state.searchEngines[currentEngine])) return;
 
       state.currentEngine = currentEngine;
       localStorage.setItem("currentEngine", currentEngine);

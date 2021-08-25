@@ -1,6 +1,6 @@
 import { createApp } from "vue";
-import App from "./App.vue";
 import Store from "./store";
+import App from "./App.vue";
 import "./plugins/moment";
 
 const app = createApp(App);

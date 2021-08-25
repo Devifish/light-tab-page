@@ -1,27 +1,9 @@
 <template>
-  <main id="main-layout">
-    <search class="search" />
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </main>
+  <a-config-provider>
+    <home />
+  </a-config-provider>
 </template>
 
 <script lang="ts" setup>
-
-
+import Home from "@views/home/Index.vue";
 </script>
-
-<style lang="less">
-#main-layout {
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto 72px 46px auto 1fr;
-  justify-items: center;
-
-  .search {
-    align-self: end;
-  }
-}
-</style>

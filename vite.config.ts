@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@/": `${resolve(__dirname, "src")}/`,
+      "@views/": `${resolve(__dirname, "src", "views")}/`,
     },
   },
   plugins: [
