@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { SearchEngineData } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
+import GoogleLogo from "@/assets/google.png";
 import { isEmpty } from "@/utils/common";
 
 interface SearchState {
@@ -25,6 +26,11 @@ const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
     name: "Bing",
     icon: BingLogo,
     baseUrl: "https://cn.bing.com/search?q={searchText}",
+  },
+  google: {
+    name: "Google",
+    icon: GoogleLogo,
+    baseUrl: "https://www.google.com/search?q={searchText}&ie={inputEncoding}",
   },
 };
 
