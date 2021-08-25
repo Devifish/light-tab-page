@@ -1,7 +1,7 @@
 <template>
   <div class="search-layout">
     <div class="search-logo">
-      <img :src="activeData.logo" class="logo" alt="logo" />
+      <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" />
     </div>
     <div class="search-input">
       <a-dropdown :visible="showDropdown">
@@ -15,9 +15,13 @@
           @blur="showDropdown = false"
         >
           <template #addonBefore>
-            <a-select v-model:value="avticeSearch" style="width: 90px">
+            <a-select
+              :value="currentEngine"
+              style="width: 90px"
+              @change="onChangeDefaultEngine"
+            >
               <a-select-option
-                v-for="(value, key) in searchData"
+                v-for="(value, key) in searchEngines"
                 :value="key"
                 :key="key"
               >
@@ -41,45 +45,30 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import BaiduLogo from "@/assets/baidu.png";
-import BingLogo from "@/assets/bing.svg";
+import { useStore } from "vuex";
 
-const searchData: Record<string, any> = {
-  baidu: {
-    name: "百度",
-    logo: BaiduLogo,
-    url: "https://www.baidu.com/#ie={inputEncoding}&wd={searchText}",
-  },
-  bing: {
-    name: "Bing",
-    logo: BingLogo,
-    url: "https://cn.bing.com/search?q={searchText}",
-  },
-};
-const searchHistory = [];
+// Vuex
+const store = useStore();
+const searchEngines = store.getters["search/getSearchEngines"];
+const searchHistory = store.getters["search/getHistory"];
+const currentEngine = computed(() => store.getters["search/getCurrentEngine"]);
 
-const avticeSearch = ref("bing");
-const activeData = computed(() => searchData[avticeSearch.value]);
+// 搜索内容
 const searchText = ref();
 const showDropdown = ref(false);
 
 function onSearch() {
-  let url = activeData.value.url;
-  url = url.replace("{searchText}", encodeURI(searchText.value));
-
-  // inputEncoding
-  if (url.includes("{inputEncoding}"))
-    url = url.replace("{inputEncoding}", "utf-8");
-
-  location.href = url;
+  store.dispatch("search/submitSearch", searchText.value);
 }
 
 function onSearchFocus() {
   if (searchHistory.length === 0) return;
-
   showDropdown.value = true;
 }
 
+function onChangeDefaultEngine(value) {
+  store.commit("search/updateCurrentEngine", value);
+}
 </script>
 
 <style lang="less">

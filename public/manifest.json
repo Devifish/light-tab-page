@@ -1,5 +1,5 @@
 {
-    "name": "Light 新标签页",
+    "name": "轻标签页",
     "description": "轻量简洁的新标签页",
     "version": "1.0.0",
     "manifest_version": 3,
@@ -11,7 +11,7 @@
     },
     "browser_action": {
         "default_icon": "images/icons/logo128.png",
-        "default_title": "Light 新标签页"
+        "default_title": "轻标签页"
     },
     "icons": {
         "32": "images/icons/logo32.png",
