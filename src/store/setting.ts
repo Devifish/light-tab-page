@@ -1,11 +1,25 @@
 import { Module } from "vuex";
 
-interface SettingState {}
+export enum ThemeType {
+  auto, light, dart
+}
+
+interface SettingState {
+  theme: ThemeType
+}
+
+
 
 const settingModule: Module<SettingState, any> = {
   namespaced: true,
-  state: {},
-  getters: {},
+  state: {
+    theme: ThemeType.auto
+  },
+  getters: {
+    getTheme(state) {
+      return state.theme;
+    }
+  },
   mutations: {},
   actions: {},
 };
