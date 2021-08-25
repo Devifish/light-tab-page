@@ -2,7 +2,7 @@
     "name": "轻标签页",
     "description": "轻量简洁的新标签页",
     "version": "1.0.0",
-    "manifest_version": 3,
+    "manifest_version": 2,
     "permissions": [
         "bookmarks"
     ],
