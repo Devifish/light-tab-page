@@ -5,3 +5,8 @@ export interface SearchEngineItem {
 };
 
 export type SearchEngineData = Record<string, SearchEngineItem>;
+
+export enum OpenPageTarget {
+  Blank = "_blank",
+  Self = "_self"
+}

@@ -1,34 +1,51 @@
 import { Module } from "vuex";
-
-export enum ThemeMode {
-  auto,
-  light,
-  dart,
-}
+import { BackgroundType, ThemeMode, ViewSetting } from "@/types";
+import { copy } from "@/utils/common";
 
 interface SettingState {
-  themeMode: ThemeMode;
+  view: ViewSetting;
+  layout?: object;
 }
 
-const themeMode = Number.parseInt(localStorage["themeMode"] ?? `${ThemeMode.auto}`);
+const SETTING_STORAGE = "setting-data";
+
+function initSettingState() {
+  const defaultSettingState: SettingState = {
+    view: {
+      themeMode: ThemeMode.Auto,
+      backgroundType: BackgroundType.None,
+    },
+  };
+
+  // 读取配置
+  const settingData = JSON.parse(localStorage[SETTING_STORAGE] ?? "{}");
+  copy(settingData, defaultSettingState, true);
+
+  return defaultSettingState;
+}
+
+function saveSettingState(data: SettingState) {
+  const settingJson = JSON.stringify(data);
+  localStorage.setItem(SETTING_STORAGE, settingJson);
+}
 
 const settingModule: Module<SettingState, any> = {
   namespaced: true,
-  state: {
-    themeMode: themeMode,
-  },
+  state: initSettingState,
   getters: {
-    getThemeMode(state) {
-      return state.themeMode;
-    },
+    getViewSetting(state) {
+      return state.view;
+    }
   },
   mutations: {
-    updateThemeMode(state, themeMode: ThemeMode) {
-      state.themeMode = themeMode;
-      localStorage.setItem("themeMode", themeMode.toString());
+    updateViewSetting(state, view: ViewSetting) {
+      copy(view, state.view, true);
+      saveSettingState(state);
+    },
+    updateLayoutSetting(state) {
+      saveSettingState(state);
     },
   },
-  actions: {},
 };
 
 export default settingModule;

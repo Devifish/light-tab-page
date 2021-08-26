@@ -4,7 +4,7 @@
     <div></div>
     <div></div>
     <div class="setting-corner">
-      <a-button type="text" @click="$refs['settingDrawer'].open()">
+      <a-button type="text" @click="settingDrawer.open()">
         <setting-outlined style="font-size: 18px" />
       </a-button>
     </div>
@@ -17,10 +17,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useDrawer } from "@/utils/use";
+import { ref } from "vue";
 import Search from "@views/home/Search.vue";
 import Setting from "@views/setting/Index.vue";
 import { SettingOutlined } from "@ant-design/icons-vue";
+
+const settingDrawer = ref();
 </script>
 
 <style lang="less">

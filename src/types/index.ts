@@ -1,1 +1,2 @@
-export * from "./search-engine";
+export * from "./search";
+export * from "./setting";

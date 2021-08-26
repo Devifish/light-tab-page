@@ -37,15 +37,20 @@ export function deepClone<E extends any>(obj: E): E {
  * @param source 来源
  * @param target 目标
  */
-export function copy(source: any, target: any, onlyExist: boolean = false) {
+export function copy(
+  source: any,
+  target: any,
+  onlyExist: boolean = false,
+  skipEmpty: boolean = true
+) {
   const keys = Object.keys(source);
   for (const key of keys) {
-    const targetVal = target[key];
-    if (onlyExist && typeof targetVal === "undefined") {
-      continue;
-    }
+    const temp = source[key];
+
+    if (skipEmpty && isEmpty(temp)) continue;
+    if (onlyExist && !target.hasOwnProperty(key)) continue;
 
     // 复制对应参数
-    target[key] = source[key];
+    target[key] = temp;
   }
 }

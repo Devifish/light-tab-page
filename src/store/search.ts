@@ -1,5 +1,5 @@
 import { Module } from "vuex";
-import { SearchEngineData } from "@/types";
+import { SearchEngineData, OpenPageTarget } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
 import GoogleLogo from "@/assets/google.png";
@@ -9,11 +9,6 @@ interface SearchState {
   searchEngines: SearchEngineData;
   currentEngine: string;
   history: Array<string>;
-}
-
-export enum OpenPageTarget {
-  BLANK = "_blank",
-  SELF = "_self"
 }
 
 const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
@@ -80,7 +75,7 @@ const searchModule: Module<SearchState, any> = {
       if (url.includes("{inputEncoding}"))
         url = url.replace("{inputEncoding}", "utf-8");
 
-      window.open(url, OpenPageTarget.BLANK);
+      window.open(url, OpenPageTarget.Blank);
     },
   },
 };
