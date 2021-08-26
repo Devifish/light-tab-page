@@ -1,21 +1,19 @@
 <template>
   <div class="background-setting">
     <div>
-      <h4>背景设置</h4>
+      <span class="lable-text">背景设置</span>
       <a-radio-group
         :value="viewSetting.backgroundType"
         @change="onBackgroundTypeChange"
+        style="width: 100%"
       >
         <a-radio :value="BackgroundType.None">无</a-radio>
-        <a-radio :value="BackgroundType.Local">本地图片</a-radio>
-        <a-radio :value="BackgroundType.Bing" disabled>Bing每日壁纸（Todo）</a-radio>
+        <a-radio :value="BackgroundType.Local" disabled>本地图片</a-radio>
+        <a-radio :value="BackgroundType.Bing" disabled>Bing每日壁纸</a-radio>
       </a-radio-group>
     </div>
-    <div
-      class="upload-background"
-      v-show="viewSetting.backgroundType === BackgroundType.Local"
-    >
-      <h4>上传背景</h4>
+    <div class="upload-background" v-show="viewSetting.backgroundType === BackgroundType.Local">
+      <span class="lable-text">上传背景</span>
       <a-upload list-type="picture-card">
         <div>
           <plus-outlined />
@@ -32,9 +30,7 @@ import { PlusOutlined } from "@ant-design/icons-vue";
 import { BackgroundType, ViewSetting } from "@/types";
 
 const store = useStore();
-const viewSetting = computed<ViewSetting>(() => {
-  return store.getters["setting/getViewSetting"];
-});
+const viewSetting = computed<ViewSetting>(() => store.getters["setting/getViewSetting"]);
 
 function onBackgroundTypeChange(e) {
   store.commit("setting/updateViewSetting", {

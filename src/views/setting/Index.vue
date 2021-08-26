@@ -6,21 +6,29 @@
       <background-setting class="setting-item" />
     </div>
     <a-divider />
+    <div class="layout-setting">
+      <h3>搜索设置</h3>
+      <search-setting class="setting-item" />
+    </div>
+    <a-divider />
   </div>
 </template>
 
 <script lang="ts" setup>
 import ThemeMode from "@views/setting/ThemeMode.vue";
 import BackgroundSetting from "@views/setting/BackgroundSetting.vue";
-import { useDrawer } from "@/utils/use";
-
-const drawer = useDrawer();
+import SearchSetting from "@views/setting/SearchSetting.vue";
 </script>
 
 <style lang="less">
 .setting-layout {
   .setting-item {
     padding: 8px 0;
+  }
+
+  .lable-text {
+    height: 38px;
+    line-height: 38px;
   }
 }
 </style>

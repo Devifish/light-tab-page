@@ -54,3 +54,9 @@ export function copy(
     target[key] = temp;
   }
 }
+
+export function sleep(timeout: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}

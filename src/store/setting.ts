@@ -9,33 +9,25 @@ interface SettingState {
 
 const SETTING_STORAGE = "setting-data";
 
-function initSettingState() {
-  const defaultSettingState: SettingState = {
-    view: {
-      themeMode: ThemeMode.Auto,
-      backgroundType: BackgroundType.None,
-    },
-  };
-
-  // 读取配置
-  const settingData = JSON.parse(localStorage[SETTING_STORAGE] ?? "{}");
-  copy(settingData, defaultSettingState, true);
-
-  return defaultSettingState;
-}
-
-function saveSettingState(data: SettingState) {
-  const settingJson = JSON.stringify(data);
-  localStorage.setItem(SETTING_STORAGE, settingJson);
-}
-
 const settingModule: Module<SettingState, any> = {
   namespaced: true,
-  state: initSettingState,
+  state() {
+    const defaultState: SettingState = {
+      view: {
+        themeMode: ThemeMode.Auto,
+        backgroundType: BackgroundType.None,
+      },
+    };
+
+    const settingData = JSON.parse(localStorage[SETTING_STORAGE] ?? "{}");
+    copy(settingData, defaultState, true);
+
+    return defaultState;
+  },
   getters: {
     getViewSetting(state) {
       return state.view;
-    }
+    },
   },
   mutations: {
     updateViewSetting(state, view: ViewSetting) {
@@ -47,5 +39,10 @@ const settingModule: Module<SettingState, any> = {
     },
   },
 };
+
+function saveSettingState(data: SettingState) {
+  const settingJson = JSON.stringify(data);
+  localStorage.setItem(SETTING_STORAGE, settingJson);
+}
 
 export default settingModule;

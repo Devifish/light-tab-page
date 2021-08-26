@@ -1,24 +1,14 @@
 <template>
   <div class="theme-mode">
-    <h4>主题模式</h4>
-    <a-row>
-      <a-col
-        class="theme-item"
-        v-for="item in themeModes"
-        :span="4"
-        :key="item.name"
-      >
-        <a-tooltip :title="item.name">
-          <div @click="onThemeChange(item.mode)">
-            <img :src="item.icon" />
-            <check-circle-filled
-              class="select-icon"
-              v-if="item.mode === themeMode"
-            />
-          </div>
-        </a-tooltip>
-      </a-col>
-    </a-row>
+    <span class="lable-text">主题模式</span>
+    <a-space style="width: 100%">
+      <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
+        <div class="theme-item" @click="onThemeChange(item.mode)">
+          <img :src="item.icon" />
+          <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
+        </div>
+      </a-tooltip>
+    </a-space>
   </div>
 </template>
 
@@ -66,11 +56,13 @@ function onThemeChange(themeMode: ThemeMode) {
 
 .theme-mode {
   .theme-item {
+    position: relative;
+
     .select-icon {
       color: @primary-color;
       position: absolute;
       bottom: 8px;
-      right: 12px;
+      right: 8px;
     }
   }
 }
