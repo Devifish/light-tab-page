@@ -26,7 +26,11 @@
 
     <div>
       <span class="lable-text">搜索框圆角</span>
-      <a-slider v-model:value="searchInputRadius" :max="22" :tipFormatter="value => `${value}px`" />
+      <a-slider
+        v-model:value="searchInputRadius"
+        :max="22"
+        :tipFormatter="(value) => `${value}px`"
+      />
     </div>
 
     <a-row type="flex" justify="space-between" align="middle">
@@ -60,26 +64,31 @@ const store = useStore();
 const searchEngines = computed<SearchEngineData>(() => store.getters["search/getSearchEngines"]);
 const searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]);
 
+// 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
   set: (value) => store.commit("search/updateCurrentEngine", value),
 });
+
+// 是否在新标签页中打开
 const isOpenPageByBlank = computed({
   get: () => searchSetting.value.openPageTarget === OpenPageTarget.Blank,
   set: (isOpenPageByBlank: boolean) =>
-    store.commit("search/updateSearchSetting", <SearchSetting>{
+    store.commit("search/updateSearchSetting", {
       openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self,
     }),
 });
+
+// 显示搜索引擎下拉列表
 const showEngineSelect = computed({
   get: () => searchSetting.value.showEngineSelect,
-  set: (showEngineSelect) =>
-    store.commit("search/updateSearchSetting", <SearchSetting>{ showEngineSelect }),
+  set: (showEngineSelect) => store.commit("search/updateSearchSetting", { showEngineSelect }),
 });
+
+// 搜索输入框圆角
 const searchInputRadius = computed({
   get: () => searchSetting.value.searchInputRadius,
-  set: (searchInputRadius) =>
-    store.commit("search/updateSearchSetting", <SearchSetting>{ searchInputRadius }),
+  set: (searchInputRadius) => store.commit("search/updateSearchSetting", { searchInputRadius }),
 });
 </script>
 
