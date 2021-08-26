@@ -26,7 +26,7 @@
 
     <div>
       <span class="lable-text">搜索框圆角</span>
-      <a-slider v-model:value="searchInputRadius" :max="22" />
+      <a-slider v-model:value="searchInputRadius" :max="22" :tipFormatter="value => `${value}px`" />
     </div>
 
     <a-row type="flex" justify="space-between" align="middle">

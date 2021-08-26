@@ -108,7 +108,7 @@ watch(
 watch(
   () => searchSetting.value.showEngineSelect,
   async () => {
-    await sleep(100);
+    await sleep(50);
     changeSearchInputRadius();
   }
 );
@@ -145,10 +145,7 @@ onMounted(() => {
     }
   }
 
-  .ant-input-group-addon {
-    transition: unset;
-  }
-
+  .ant-input-group-addon,
   .ant-input-search-button {
     transition: unset;
   }
