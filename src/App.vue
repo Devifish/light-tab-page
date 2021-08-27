@@ -2,12 +2,21 @@
   <a-config-provider>
     <home />
   </a-config-provider>
+
+  <wallpaper
+    v-if="background.type !== BackgroundType.None"
+    :src="background.url"
+    :blur="`${background.blur}px`"
+    :maskColor="background.maskColor"
+    :maskOpacity="background.maskOpacity"
+    @error="onWallpaperError"
+  />
 </template>
 
 <script lang="ts" setup>
 import { computed, watch, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-import { ThemeMode } from "./types";
+import { BackgroundSetting, BackgroundType, ThemeMode } from "./types";
 import Home from "@views/home/Index.vue";
 
 const store = useStore();
@@ -15,6 +24,7 @@ const themeMode = computed<ThemeMode>(() => {
   const viewSetting = store.getters["setting/getViewSetting"];
   return viewSetting.themeMode;
 });
+const background = computed<BackgroundSetting>(() => store.getters["setting/getBackgroundSetting"]);
 
 function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode;
@@ -40,9 +50,7 @@ function changeThemeMode(themeMode: ThemeMode) {
  * 如果主题设置是Auto则同步修改
  */
 function onSystemThemeChange() {
-  const darkMedia: MediaQueryList = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  );
+  const darkMedia: MediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
 
   if (typeof darkMedia.addEventListener === "function") {
     darkMedia.addEventListener("change", (e) => {
@@ -52,6 +60,10 @@ function onSystemThemeChange() {
       changeThemeMode(isDarkMode ? ThemeMode.Dart : ThemeMode.Light);
     });
   }
+}
+
+function onWallpaperError() {
+  store.dispatch("setting/reloadBackgroundImage");
 }
 
 // 监听并设置主题

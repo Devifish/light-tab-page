@@ -25,6 +25,7 @@ declare module 'vue' {
     CommonDrawer: typeof import('./src/components/CommonDrawer.vue')['default']
     CommonModal: typeof import('./src/components/CommonModal.vue')['default']
     CustomStyle: typeof import('./src/components/CustomStyle.vue')['default']
+    Wallpaper: typeof import('./src/components/Wallpaper.vue')['default']
   }
 }
 

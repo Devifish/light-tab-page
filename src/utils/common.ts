@@ -55,8 +55,44 @@ export function copy(
   }
 }
 
+export function uuid() {
+  var temp: any[] = [];
+  var hexDigits = "0123456789abcdef";
+
+  for (var i = 0; i < 36; i++) {
+    temp[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+  }
+
+  temp[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+  temp[19] = hexDigits.substr((temp[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  temp[8] = temp[13] = temp[18] = temp[23] = "-";
+  return temp.join("");
+}
+
 export function sleep(timeout: number) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, timeout);
   });
+}
+
+export async function fileToBase64(file: File) {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+
+  await new Promise((resolve) => (reader.onload = resolve));
+  return reader.result;
+}
+
+export function base64ToBlob(base64: string) {
+  const temp = base64.split(","),
+    mime = temp[0].match(/:(.*?);/)![1],
+    data = atob(temp[1]),
+    u8arr = new Uint8Array(data.length);
+
+  let index = data.length;
+  while (index--) {
+    u8arr[index] = data.charCodeAt(index);
+  }
+
+  return new Blob([u8arr], { type: mime });
 }

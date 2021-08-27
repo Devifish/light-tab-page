@@ -12,6 +12,14 @@ export enum BackgroundType {
 
 export interface ViewSetting {
   themeMode?: ThemeMode;
-  backgroundType?: BackgroundType;
-  backgroundUrl?: string;
+  background?: BackgroundSetting;
+}
+
+export interface BackgroundSetting {
+  id?: string,
+  type?: BackgroundType;
+  url?: string;
+  blur?: number;
+  maskColor?: String;
+  maskOpacity?: number;
 }

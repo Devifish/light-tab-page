@@ -109,6 +109,11 @@ function onSearchFocus() {
       border-bottom-right-radius: v-bind(searchInputRadius);
       border-top-right-radius: v-bind(searchInputRadius);
     }
+
+    // 去除搜索按钮底色（防止在设置壁纸后白底）
+    .ant-input-group-addon:last-child {
+      background-color: unset;
+    }
   }
 }
 </style>
