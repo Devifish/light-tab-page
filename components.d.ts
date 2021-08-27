@@ -24,7 +24,6 @@ declare module 'vue' {
     AUpload: typeof import('ant-design-vue/es')['Upload']
     CommonDrawer: typeof import('./src/components/CommonDrawer.vue')['default']
     CommonModal: typeof import('./src/components/CommonModal.vue')['default']
-    CustomStyle: typeof import('./src/components/CustomStyle.vue')['default']
     Wallpaper: typeof import('./src/components/Wallpaper.vue')['default']
   }
 }
