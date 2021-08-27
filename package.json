@@ -1,6 +1,13 @@
 {
   "name": "light-tab-page",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "private": true,
+  "author": "Devifish",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Devifish/light-tab-page"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,7 +19,7 @@
     "axios": "^0.21.1",
     "localforage": "^1.10.0",
     "moment": "^2.29.1",
-    "vue": "^3.2.4",
+    "vue": "^3.2.6",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
@@ -20,7 +27,6 @@
     "@vitejs/plugin-vue": "^1.5.0",
     "@vue/compiler-sfc": "^3.2.5",
     "less": "^4.1.0",
-    "less-loader": "~8.0.0",
     "typescript": "^4.3.2",
     "vite": "^2.5.1",
     "vite-plugin-components": "^0.13.2",
