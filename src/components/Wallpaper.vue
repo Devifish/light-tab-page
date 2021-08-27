@@ -1,12 +1,13 @@
 <template>
   <div class="wallpaper-layout" v-if="src">
     <div class="wallpaper-mask"></div>
-    <img class="wallpaper-image" :src="src" alt="wallpaper" @error="onError" />
+    <div class="wallpaper-image" :style="{ backgroundImage: `url(${src})` }"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onBeforeMount } from "vue";
+import { verifyImageUrl } from "@/utils/image";
 
 export default defineComponent({
   props: {
@@ -25,13 +26,10 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
-    function onError(e) {
-      ctx.emit("error", e);
-    }
-
-    return {
-      onError,
-    };
+    onBeforeMount(async () => {
+      const isOk = await verifyImageUrl(props.src!)
+      if (!isOk) ctx.emit("error");
+    })
   },
 });
 </script>
@@ -61,17 +59,9 @@ export default defineComponent({
     width: 100%;
     height: 100%;
 
-    // img标签样式
-    object-fit: cover;
-    object-position: center;
-
-    /*
-      // background-image样式
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center 0;
-    */
-
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 0;
     filter: blur(@wallpaper-blur);
   }
 }
