@@ -8,13 +8,15 @@
         <a-radio :value="BackgroundType.Bing" disabled>Bing每日壁纸</a-radio>
       </a-radio-group>
     </div>
+
     <div class="upload-layout" v-show="backgroundType === BackgroundType.Local">
-      <span class="lable-text">选择壁纸</span>
+      <span class="lable-text">上传壁纸</span>
       <a-upload
         class="background-uploader"
         list-type="picture-card"
         :show-upload-list="false"
         :customRequest="uploadBackgroundImage"
+        style="width: 100%"
       >
         <img v-if="backgroundUrl" :src="backgroundUrl" alt="avatar" />
         <div v-else>
@@ -22,6 +24,23 @@
         </div>
       </a-upload>
     </div>
+
+    <template v-if="backgroundType !== BackgroundType.None">
+      <div>
+        <span class="lable-text">遮罩透明度</span>
+        <a-slider
+          v-model:value="maskOpacity"
+          :step="0.01"
+          :max="1"
+          :tipFormatter="(value) => `${Math.round(value * 100)}%`"
+        />
+      </div>
+
+      <div>
+        <span class="lable-text">模糊强度</span>
+        <a-slider v-model:value="blur" :max="48" :tipFormatter="(value) => `${value}px`" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -43,6 +62,16 @@ const backgroundType = computed({
 // 背景路径
 const backgroundUrl = computed(() => background.value.url);
 
+const blur = computed({
+  get: () => background.value.blur!,
+  set: (blur) => store.commit("setting/updateBackgroundSetting", { blur }),
+});
+
+const maskOpacity = computed({
+  get: () => background.value.maskOpacity!,
+  set: (maskOpacity) => store.commit("setting/updateBackgroundSetting", { maskOpacity }),
+});
+
 function uploadBackgroundImage(e) {
   store.dispatch("setting/uploadBackgroundImage", e.file);
 }
@@ -56,8 +85,8 @@ function uploadBackgroundImage(e) {
     .background-uploader {
       .ant-upload,
       img {
-        width: 96px;
-        height: 96px;
+        width: 100%;
+        height: 128px;
 
         object-fit: cover;
         object-position: center;

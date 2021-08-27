@@ -6,8 +6,8 @@
     :placement="placement"
     :get-container="$parent.$el?.nextSibling"
     :body-style="{
-      height: `calc(100% - (55px + ${footer ? 53 : 0}px))`,
-      overflow: 'auto'
+      height: `calc(100% - (${title ? 55 : 0}px + ${footer ? 53 : 0}px))`,
+      overflow: 'auto',
     }"
     wrap-class-name="common-drawer"
     destroy-on-close
@@ -39,28 +39,28 @@ export default defineComponent({
     title: String,
     width: {
       type: Number,
-      default: 700
+      default: 700,
     },
     footer: {
       type: Boolean,
-      default: true
+      default: true,
     },
     placement: String,
     okText: {
       type: String,
-      default: "确定"
+      default: "确定",
     },
     cancelText: {
       type: String,
-      default: "取消"
-    }
+      default: "取消",
+    },
   },
   setup() {
     const state = reactive({
       visible: false,
       data: undefined,
       confirmLoading: false,
-      onOk: async () => {}
+      onOk: async () => {},
     });
 
     function open(data) {
@@ -92,7 +92,7 @@ export default defineComponent({
     provide<DrawerData>(CommonDrawerData, {
       onOk,
       close,
-      data: toRef(state, "data")
+      data: toRef(state, "data"),
     });
 
     return {
@@ -100,9 +100,9 @@ export default defineComponent({
       open,
       close,
       onOk,
-      clickOkHandle
+      clickOkHandle,
     };
-  }
+  },
 });
 </script>
 

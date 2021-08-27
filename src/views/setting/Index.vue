@@ -1,14 +1,18 @@
 <template>
   <div class="setting-layout">
     <div class="theme-setting">
-      <h3>外观设置</h3>
+      <h3>主题设置</h3>
       <theme-mode class="setting-item" />
-      <background-setting class="setting-item" />
     </div>
     <a-divider />
     <div class="layout-setting">
       <h3>搜索设置</h3>
       <search-setting class="setting-item" />
+    </div>
+    <a-divider />
+    <div class="theme-setting">
+      <h3>壁纸设置</h3>
+      <background-setting class="setting-item" />
     </div>
     <a-divider />
   </div>
