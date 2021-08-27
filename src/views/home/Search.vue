@@ -38,19 +38,21 @@
 
 <script lang="ts" setup>
 import { SearchEngineData, SearchSetting } from "@/types";
-import { sleep } from "@/utils/common";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 // Vuex
 const store = useStore();
 const searchEngines = computed<SearchEngineData>(() => store.getters["search/getSearchEngines"]);
 const searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]);
+const searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`);
+const searchHistory = ref([]);
+
+// 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
   set: (value) => store.commit("search/updateCurrentEngine", value),
 });
-const searchHistory = ref([]);
 
 // 搜索内容
 const searchText = ref();
@@ -67,55 +69,6 @@ function onSearchFocus() {
 
   showDropdown.value = true;
 }
-
-/**
- * 修改搜索输入框圆角半径
- * 开关左右侧Addon时需要重新调用
- */
-function changeSearchInputRadius() {
-  const radius = searchSetting.value.searchInputRadius!;
-  const showEngineSelect = searchSetting.value.showEngineSelect;
-  const searchInputRootEl = searchInput.value.$el;
-  const searchInputEl = searchInputRootEl.querySelector(".ant-input");
-  const searchBtnEl = searchInputRootEl.querySelector(".ant-input-search-button");
-  const searchInputAddonEl = searchInputRootEl.querySelector(".ant-input-group-addon");
-
-  // 修改前恢复默认
-  searchInputEl.style = {};
-  searchBtnEl.style = {};
-  searchInputAddonEl.style = {};
-
-  console.log(showEngineSelect ? searchInputAddonEl : searchInputEl);
-
-  // 搜索下拉选项或搜索框右侧样式
-  Object.assign(showEngineSelect ? searchInputAddonEl.style : searchInputEl.style, {
-    borderTopLeftRadius: `${radius}px`,
-    borderBottomLeftRadius: `${radius}px`,
-  });
-
-  // 搜索按钮左侧样式
-  Object.assign(searchBtnEl.style, {
-    borderTopRightRadius: `${radius}px`,
-    borderBottomRightRadius: `${radius}px`,
-  });
-}
-
-// 监听设置变化修改圆角
-watch(
-  () => searchSetting.value.searchInputRadius,
-  () => changeSearchInputRadius()
-);
-watch(
-  () => searchSetting.value.showEngineSelect,
-  async () => {
-    await sleep(50);
-    changeSearchInputRadius();
-  }
-);
-
-onMounted(() => {
-  changeSearchInputRadius();
-});
 </script>
 
 <style lang="less">
@@ -143,11 +96,19 @@ onMounted(() => {
       height: @input-h;
       width: 72px;
     }
-  }
 
-  .ant-input-group-addon,
-  .ant-input-search-button {
-    transition: unset;
+    .ant-input,
+    .ant-input-group-addon:first-child {
+      transition: unset;
+      border-bottom-left-radius: v-bind(searchInputRadius);
+      border-top-left-radius: v-bind(searchInputRadius);
+    }
+
+    .ant-input-search-button {
+      transition: unset;
+      border-bottom-right-radius: v-bind(searchInputRadius);
+      border-top-right-radius: v-bind(searchInputRadius);
+    }
   }
 }
 </style>
