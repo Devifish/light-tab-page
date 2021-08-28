@@ -18,3 +18,12 @@ export async function verifyImageUrl(url: string) {
     tempImg.remove();
   }
 }
+
+export async function isImageFile(file: Blob) {
+  const imageType = ["png", "jpeg", "jpg", "gif"];
+
+  let fileType = file.type;
+  fileType = fileType.substring(fileType.lastIndexOf("/") + 1, fileType.length);
+
+  return imageType.includes(fileType);
+}

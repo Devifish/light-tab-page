@@ -3,6 +3,7 @@ import { BackgroundSetting, BackgroundType, ThemeMode, ViewSetting } from "@/typ
 import { base64ToBlob, copy, fileToBase64, uuid } from "@/utils/common";
 import { wallpaperStore } from "@/plugins/localforage";
 import axios from "axios";
+import { isImageFile } from "@/utils/image";
 
 interface SettingState {
   view: ViewSetting;
@@ -57,15 +58,16 @@ const settingModule: Module<SettingState, any> = {
 
   actions: {
     async uploadBackgroundImage({ commit }, imageFile: File) {
-      const url = URL.createObjectURL(imageFile),
-        base64 = await fileToBase64(imageFile),
-        id = uuid();
+      if (!isImageFile(imageFile)) throw new Error("这不是一个图片文件");
+
+      const id = uuid();
+      const url = URL.createObjectURL(imageFile);
 
       // 清除上次壁纸
       await wallpaperStore.clear();
 
       // 保存图片到IndexedDB
-      await wallpaperStore.setItem(id, base64);
+      await wallpaperStore.setItem<Blob>(id, imageFile);
       commit("updateBackgroundSetting", {
         id,
         url,
@@ -73,11 +75,17 @@ const settingModule: Module<SettingState, any> = {
     },
 
     async reloadBackgroundImage({ state, commit }) {
-      const id = state.view.background?.id!,
-        base64 = await wallpaperStore.getItem(id),
-        url = URL.createObjectURL(base64ToBlob(base64 as string));
+      const id = state.view.background?.id!;
+      const file = await wallpaperStore.getItem<Blob>(id);
 
-      commit("updateBackgroundSetting", { url });
+      // 校验图片数据是否可用，否则删除该数据
+      if (file && isImageFile(file)) {
+        const url = URL.createObjectURL(file);
+        commit("updateBackgroundSetting", { url });
+      } else {
+        commit("updateBackgroundSetting", { id: null, url: null });
+        await wallpaperStore.removeItem(id);
+      }
     },
   },
 };
