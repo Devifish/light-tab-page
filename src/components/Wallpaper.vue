@@ -61,7 +61,7 @@ export default defineComponent({
 
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center 0;
+    background-position: center;
     filter: blur(@wallpaper-blur);
   }
 }
