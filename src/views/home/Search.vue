@@ -97,22 +97,29 @@ function onSearchFocus() {
       width: 72px;
     }
 
+    .ant-select-selector {
+      transition: none;
+      .ant-select-selection-item {
+        transition: none;
+      }
+    }
+
     .ant-input,
     .ant-input-group-addon:first-child {
-      transition: unset;
+      transition: none;
       border-bottom-left-radius: v-bind(searchInputRadius);
       border-top-left-radius: v-bind(searchInputRadius);
     }
 
     .ant-input-search-button {
-      transition: unset;
+      transition: none;
       border-bottom-right-radius: v-bind(searchInputRadius);
       border-top-right-radius: v-bind(searchInputRadius);
     }
 
     // 去除搜索按钮底色（防止在设置壁纸后白底）
     .ant-input-group-addon:last-child {
-      background-color: unset;
+      background-color: transparent;
     }
   }
 }

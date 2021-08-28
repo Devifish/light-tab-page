@@ -41,6 +41,10 @@ const settingDrawer = ref();
     position: fixed;
     top: 32px;
     right: 32px;
+
+    .ant-btn {
+      transition: none;
+    }
   }
 }
 </style>

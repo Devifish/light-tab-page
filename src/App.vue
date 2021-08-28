@@ -90,5 +90,9 @@ onBeforeMount(() => {
   @import "ant-design-vue/lib/drawer/style/index.less";
   @import "ant-design-vue/lib/divider/style/index.less";
   @import "ant-design-vue/lib/radio/style/index.less";
+
+  .ant-select-selector {
+    background-color: transparent !important;
+  }
 }
 </style>
