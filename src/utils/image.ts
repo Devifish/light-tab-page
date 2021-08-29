@@ -19,7 +19,7 @@ export async function verifyImageUrl(url: string) {
   }
 }
 
-export async function isImageFile(file: Blob) {
+export function isImageFile(file: Blob) {
   const imageType = ["png", "jpeg", "jpg", "gif"];
 
   let fileType = file.type;

@@ -11,6 +11,10 @@ export default defineConfig({
       "@views/": `${resolve(__dirname, "src", "views")}/`,
     },
   },
+  build: {
+    brotliSize: false,
+    chunkSizeWarningLimit: 1024,
+  },
   css: {
     preprocessorOptions: {
       less: {

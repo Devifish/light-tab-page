@@ -1,8 +1,7 @@
 import { Module } from "vuex";
 import { BackgroundSetting, BackgroundType, ThemeMode, ViewSetting } from "@/types";
-import { base64ToBlob, copy, fileToBase64, uuid } from "@/utils/common";
+import { copy, uuid } from "@/utils/common";
 import { wallpaperStore } from "@/plugins/localforage";
-import axios from "axios";
 import { isImageFile } from "@/utils/image";
 
 interface SettingState {
@@ -48,7 +47,7 @@ const settingModule: Module<SettingState, any> = {
       saveSettingState(state);
     },
     updateBackgroundSetting(state, background: BackgroundSetting) {
-      copy(background, state.view.background, true);
+      copy(background, state.view.background!, true);
       saveSettingState(state);
     },
     updateLayoutSetting(state) {

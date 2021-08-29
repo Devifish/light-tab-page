@@ -16,6 +16,7 @@
         list-type="picture-card"
         :show-upload-list="false"
         :customRequest="uploadBackgroundImage"
+        accept="image/*"
         style="width: 100%"
       >
         <img v-if="backgroundUrl" :src="backgroundUrl" alt="avatar" />
@@ -48,13 +49,13 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import { BackgroundSetting, BackgroundType, ViewSetting } from "@/types";
+import { BackgroundSetting, BackgroundType } from "@/types";
 
 const store = useStore();
 const background = computed<BackgroundSetting>(() => store.getters["setting/getBackgroundSetting"]);
 
 // 背景类型
-const backgroundType = computed({
+const backgroundType = computed<BackgroundType>({
   get: () => background.value.type!,
   set: (type) => store.commit("setting/updateBackgroundSetting", { type }),
 });

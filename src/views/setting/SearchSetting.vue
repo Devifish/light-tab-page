@@ -3,13 +3,13 @@
     <a-row type="flex" justify="space-between" align="middle">
       <a-col>
         <span class="lable-text">搜索引擎</span>
-        <a-tooltip title="管理搜索引擎" v-if="false">
+        <a-tooltip title="管理搜索引擎">
           <a-button
             class="engine-setting"
             type="text"
             shape="circle"
             size="small"
-            @click="settingDrawer.open()"
+            @click="searchDrawer.open()"
           >
             <setting-outlined />
           </a-button>
@@ -51,6 +51,10 @@
       </a-col>
     </a-row>
   </div>
+
+  <common-drawer title="管理搜索引擎" :width="400" :footer="false" ref="searchDrawer">
+    <search-manage />
+  </common-drawer>
 </template>
 
 <script lang="ts" setup>
@@ -58,11 +62,15 @@ import { useStore } from "vuex";
 import { ref, computed } from "vue";
 import { SettingOutlined } from "@ant-design/icons-vue";
 import { OpenPageTarget, SearchEngineData, SearchSetting } from "@/types";
+import SearchManage from "@views/setting/SearchManage.vue";
 
 // Vuex
 const store = useStore();
-const searchEngines = computed<SearchEngineData>(() => store.getters["search/getSearchEngines"]);
+const searchEngines = computed<SearchEngineData>(() => store.getters["search/getUseSearchEngines"]);
 const searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]);
+
+// Ref
+const searchDrawer = ref();
 
 // 当前搜索引擎
 const currentEngine = computed({

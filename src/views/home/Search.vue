@@ -1,7 +1,7 @@
 <template>
   <div class="search-layout">
     <div class="search-logo">
-      <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" />
+      <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
     <div class="search-input">
       <a-dropdown :visible="showDropdown">
@@ -43,10 +43,11 @@ import { useStore } from "vuex";
 
 // Vuex
 const store = useStore();
-const searchEngines = computed<SearchEngineData>(() => store.getters["search/getSearchEngines"]);
-const searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]);
-const searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`);
-const searchHistory = ref([]);
+
+const searchEngines = computed<SearchEngineData>(() => store.getters["search/getUseSearchEngines"]),
+  searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]),
+  searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
+  searchHistory = ref([]);
 
 // 当前搜索引擎
 const currentEngine = computed({

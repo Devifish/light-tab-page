@@ -1,5 +1,3 @@
-import Antd from "ant-design-vue";
-
 /**
  * 校验各种类型数据是否为空
  *
@@ -38,8 +36,8 @@ export function deepClone<E extends any>(obj: E): E {
  * @param target 目标
  */
 export function copy(
-  source: any,
-  target: any,
+  source: Object,
+  target: Object,
   onlyExist: boolean = false,
   skipEmpty: boolean = true
 ) {

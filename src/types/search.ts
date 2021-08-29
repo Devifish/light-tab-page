@@ -1,10 +1,14 @@
 export interface SearchEngineItem {
+  id: string;
   name: string;
   baseUrl: string;
   icon: string;
+  description: string;
 }
 
 export type SearchEngineData = Record<string, SearchEngineItem>;
+
+export type SearchEngines = Array<SearchEngineItem>;
 
 export enum OpenPageTarget {
   Blank = "_blank",
@@ -16,4 +20,5 @@ export interface SearchSetting {
   openPageTarget?: OpenPageTarget;
   showEngineSelect?: boolean;
   searchInputRadius?: number;
+  useSearchEngines?: Array<string>;
 }

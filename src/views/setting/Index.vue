@@ -1,33 +1,46 @@
 <template>
   <div class="setting-layout">
-    <div class="theme-setting">
-      <h3>主题设置</h3>
-      <theme-mode class="setting-item" />
-    </div>
-    <a-divider />
-    <div class="layout-setting">
-      <h3>搜索设置</h3>
-      <search-setting class="setting-item" />
-    </div>
-    <a-divider />
-    <div class="theme-setting">
-      <h3>壁纸设置</h3>
-      <background-setting class="setting-item" />
-    </div>
-    <a-divider />
+    <template v-for="item of settingList" :key="item.title">
+      <div class="setting-item">
+        <h3>{{ item.title }}</h3>
+        <component :is="item.component" />
+      </div>
+      <a-divider />
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
 import ThemeMode from "@views/setting/ThemeMode.vue";
-import BackgroundSetting from "@views/setting/BackgroundSetting.vue";
 import SearchSetting from "@views/setting/SearchSetting.vue";
+import BackgroundSetting from "@views/setting/BackgroundSetting.vue";
+import { DefineComponent } from "vue";
+
+interface SettingItem {
+  title: string;
+  component: DefineComponent<{}, {}, any>;
+}
+
+const settingList: SettingItem[] = [
+  {
+    title: "主题设置",
+    component: ThemeMode,
+  },
+  {
+    title: "搜索设置",
+    component: SearchSetting,
+  },
+  {
+    title: "壁纸设置",
+    component: BackgroundSetting,
+  },
+];
 </script>
 
 <style lang="less">
 .setting-layout {
-  .setting-item {
-    padding: 8px 0;
+  .setting-item > h3 {
+    margin-bottom: 12px;
   }
 
   .lable-text {

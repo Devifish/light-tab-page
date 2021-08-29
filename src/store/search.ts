@@ -1,5 +1,5 @@
 import { Module } from "vuex";
-import { SearchEngineData, OpenPageTarget, SearchSetting } from "@/types";
+import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngines } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
 import GoogleLogo from "@/assets/google.png";
@@ -12,21 +12,27 @@ interface SearchState {
 }
 
 const SEARCH_SETTING_STORAGE = "search-setting";
-const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
+export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   baidu: {
+    id: "baidu",
     name: "百度",
+    description: "百度是中国使用群体最多的一款搜索引擎",
     icon: BaiduLogo,
     baseUrl: "https://www.baidu.com/#ie={inputEncoding}&wd={searchText}",
   },
-  bing: {
-    name: "Bing",
-    icon: BingLogo,
-    baseUrl: "https://cn.bing.com/search?q={searchText}",
-  },
   google: {
+    id: "google",
     name: "Google",
+    description: "Google搜索是全球公认为全球最大的搜索引擎",
     icon: GoogleLogo,
     baseUrl: "https://www.google.com/search?q={searchText}&ie={inputEncoding}",
+  },
+  bing: {
+    id: "bing",
+    name: "Bing",
+    description: "必应是一款由微软公司推出的网络搜索引擎",
+    icon: BingLogo,
+    baseUrl: "https://cn.bing.com/search?q={searchText}",
   },
 };
 
@@ -39,14 +45,13 @@ const searchModule: Module<SearchState, any> = {
         currentEngine: "bing",
         openPageTarget: OpenPageTarget.Blank,
         showEngineSelect: true,
-        searchInputRadius: 4
+        searchInputRadius: 4,
+        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES),
       },
       history: [],
     };
 
-    const searchSetting = JSON.parse(
-      localStorage[SEARCH_SETTING_STORAGE] ?? "{}"
-    );
+    const searchSetting = JSON.parse(localStorage[SEARCH_SETTING_STORAGE] ?? "{}");
     copy(searchSetting, defaultState.setting, true);
 
     const history = JSON.parse(localStorage["history"] ?? "[]");
@@ -60,6 +65,18 @@ const searchModule: Module<SearchState, any> = {
     },
     getSearchEngines(state) {
       return state.searchEngines;
+    },
+    getUseSearchEngines({ searchEngines, setting }) {
+      const useSearchEngines = setting.useSearchEngines!;
+      const temp: SearchEngineData = {};
+
+      for (let id of useSearchEngines) {
+        const searchEngine = searchEngines[id];
+        if (isEmpty(searchEngine)) continue;
+
+        temp[id] = searchEngine;
+      }
+      return temp;
     },
     getSearchSetting(state) {
       return state.setting;
@@ -92,8 +109,7 @@ const searchModule: Module<SearchState, any> = {
       url = url.replace("{searchText}", encodeURI(searchText));
 
       // inputEncoding
-      if (url.includes("{inputEncoding}"))
-        url = url.replace("{inputEncoding}", "utf-8");
+      if (url.includes("{inputEncoding}")) url = url.replace("{inputEncoding}", "utf-8");
 
       commit("putHistory", searchText);
       window.open(url, setting.openPageTarget);

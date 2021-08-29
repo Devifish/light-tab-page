@@ -4,7 +4,6 @@
     :title="title"
     :width="width"
     :placement="placement"
-    :get-container="$parent.$el?.nextSibling"
     :body-style="{
       height: `calc(100% - (${title ? 55 : 0}px + ${footer ? 53 : 0}px))`,
       overflow: 'auto',
