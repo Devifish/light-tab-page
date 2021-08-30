@@ -96,7 +96,7 @@ const searchModule: Module<SearchState, any> = {
       saveSettingState(state.setting);
     },
     updateSearchSetting(state, setting: SearchSetting) {
-      copy(setting, state.setting, true, true);
+      copy(setting, state.setting);
       saveSettingState(state.setting);
     },
   },

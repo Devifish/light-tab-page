@@ -44,11 +44,11 @@ const settingModule: Module<SettingState, any> = {
   },
   mutations: {
     updateViewSetting(state, view: ViewSetting) {
-      copy(view, state.view, true);
+      copy(view, state.view);
       saveSettingState(state);
     },
     updateBackgroundSetting(state, background: BackgroundSetting) {
-      copy(background, state.view.background!, true);
+      copy(background, state.view.background!);
       saveSettingState(state);
     },
     updateLayoutSetting(state) {
