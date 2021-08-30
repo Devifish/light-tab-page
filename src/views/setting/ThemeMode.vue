@@ -5,7 +5,7 @@
       <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
         <div class="theme-item" @click="onThemeChange(item.mode)">
           <img :src="item.icon" />
-          <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
+          <check-circle-filled class="select-icon" v-if="item.mode === viewSetting.themeMode" />
         </div>
       </a-tooltip>
     </a-space>
@@ -20,6 +20,7 @@ import { CheckCircleFilled } from "@ant-design/icons-vue";
 import AutoMode from "@/assets/auto-mode.svg";
 import LightMode from "@/assets/light-mode.svg";
 import DarkMode from "@/assets/dark-mode.svg";
+import { SETTING_STORE_KEY } from "@/store/setting";
 
 const themeModes = [
   {
@@ -39,15 +40,12 @@ const themeModes = [
   },
 ];
 
-const store = useStore();
-const themeMode = computed<ThemeMode>(() => {
-  const viewSetting = store.getters["setting/getViewSetting"];
-  return viewSetting.themeMode;
-});
+const settingStore = useStore(SETTING_STORE_KEY);
+const viewSetting = computed(() => settingStore.state.view);
 
 function onThemeChange(themeMode: ThemeMode) {
   const viewSetting: ViewSetting = { themeMode };
-  store.commit("setting/updateViewSetting", viewSetting);
+  settingStore.commit("updateViewSetting", viewSetting);
 }
 </script>
 

@@ -58,15 +58,16 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import { BackgroundSetting, BackgroundType } from "@/types";
+import { BackgroundType } from "@/types";
+import { SETTING_STORE_KEY } from "@/store/setting";
 
-const store = useStore();
-const background = computed<BackgroundSetting>(() => store.getters["setting/getBackgroundSetting"]);
+const settingStore = useStore(SETTING_STORE_KEY);
+const background = computed(() => settingStore.state.view.background!);
 
 // 背景类型
 const backgroundType = computed<BackgroundType>({
   get: () => background.value.type!,
-  set: (type) => store.commit("setting/updateBackgroundSetting", { type }),
+  set: (type) => settingStore.commit("updateBackgroundSetting", { type }),
 });
 
 // 背景路径
@@ -75,23 +76,23 @@ const backgroundUrl = computed(() => background.value.url);
 // 高斯模糊
 const blur = computed({
   get: () => background.value.blur!,
-  set: (blur) => store.commit("setting/updateBackgroundSetting", { blur }),
+  set: (blur) => settingStore.commit("updateBackgroundSetting", { blur }),
 });
 
 // 遮罩不透明度
 const maskOpacity = computed({
   get: () => background.value.maskOpacity!,
-  set: (maskOpacity) => store.commit("setting/updateBackgroundSetting", { maskOpacity }),
+  set: (maskOpacity) => settingStore.commit("updateBackgroundSetting", { maskOpacity }),
 });
 
 // 自动透明度
 const autoOpacity = computed({
   get: () => background.value.autoOpacity!,
-  set: (autoOpacity) => store.commit("setting/updateBackgroundSetting", { autoOpacity }),
+  set: (autoOpacity) => settingStore.commit("updateBackgroundSetting", { autoOpacity }),
 });
 
 function uploadBackgroundImage(e) {
-  store.dispatch("setting/uploadBackgroundImage", e.file);
+  settingStore.dispatch("uploadBackgroundImage", e.file);
 }
 </script>
 

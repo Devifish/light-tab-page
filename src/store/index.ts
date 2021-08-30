@@ -1,18 +1,10 @@
-import { createStore, createLogger, Plugin } from "vuex";
-import SearchModule from "./search";
-import SettingModule from "./setting";
+import { App } from "vue";
+import SearchStore, { SEARCH_SETTING_KEY } from "./search";
+import SettingStore, { SETTING_STORE_KEY } from "./setting";
 
-const plugins: Plugin<any>[] = [];
-
-// 非生产环境添加日志
-if (import.meta.env.DEV) {
-  plugins.push(createLogger());
-}
-
-export default createStore({
-  modules: {
-    search: SearchModule,
-    setting: SettingModule,
+export default {
+  install(app: App) {
+    app.use(SearchStore, SEARCH_SETTING_KEY);
+    app.use(SettingStore, SETTING_STORE_KEY);
   },
-  plugins,
-});
+};

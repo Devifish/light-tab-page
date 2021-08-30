@@ -1,8 +1,9 @@
-import { Module } from "vuex";
+import { createStore, Store } from "vuex";
 import { BackgroundSetting, BackgroundType, ThemeMode, ViewSetting } from "@/types";
 import { copy, uuid } from "@/utils/common";
 import { wallpaperStore } from "@/plugins/localforage";
 import { isImageFile } from "@/utils/image";
+import { InjectionKey } from "vue";
 
 interface SettingState {
   view: ViewSetting;
@@ -11,8 +12,8 @@ interface SettingState {
 
 const SETTING_STORAGE = "setting-data";
 
-const settingModule: Module<SettingState, any> = {
-  namespaced: true,
+export const SETTING_STORE_KEY: InjectionKey<Store<SettingState>> = Symbol();
+export default createStore<SettingState>({
   state() {
     const defaultState: SettingState = {
       view: {
@@ -24,7 +25,7 @@ const settingModule: Module<SettingState, any> = {
           blur: 0,
           maskColor: "#000",
           maskOpacity: 0,
-          autoOpacity: true
+          autoOpacity: true,
         },
       },
     };
@@ -34,14 +35,7 @@ const settingModule: Module<SettingState, any> = {
 
     return defaultState;
   },
-  getters: {
-    getViewSetting(state) {
-      return state.view;
-    },
-    getBackgroundSetting(state) {
-      return state.view.background;
-    },
-  },
+  getters: {},
   mutations: {
     updateViewSetting(state, view: ViewSetting) {
       copy(view, state.view);
@@ -88,11 +82,9 @@ const settingModule: Module<SettingState, any> = {
       }
     },
   },
-};
+});
 
 function saveSettingState(data: SettingState) {
   const settingJson = JSON.stringify(data);
   localStorage.setItem(SETTING_STORAGE, settingJson);
 }
-
-export default settingModule;

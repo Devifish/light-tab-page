@@ -18,8 +18,8 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import Search from "@views/home/Search.vue";
-import Setting from "@views/setting/Index.vue";
+import Search from "./Search.vue";
+import Setting from "@/views/setting/Index.vue";
 import { SettingOutlined } from "@ant-design/icons-vue";
 
 const settingDrawer = ref();

@@ -1,9 +1,10 @@
-import { Module } from "vuex";
+import { createStore, Store } from "vuex";
 import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngines } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
 import GoogleLogo from "@/assets/google.png";
 import { copy, isEmpty } from "@/utils/common";
+import { InjectionKey } from "vue";
 
 interface SearchState {
   searchEngines: SearchEngineData;
@@ -36,8 +37,8 @@ export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   },
 };
 
-const searchModule: Module<SearchState, any> = {
-  namespaced: true,
+export const SEARCH_SETTING_KEY: InjectionKey<Store<SearchState>> = Symbol();
+export default createStore<SearchState>({
   state() {
     const defaultState: SearchState = {
       searchEngines: DEFAULT_SEARCH_ENGINES,
@@ -60,12 +61,6 @@ const searchModule: Module<SearchState, any> = {
     return defaultState;
   },
   getters: {
-    getCurrentEngine(state) {
-      return state.setting.currentEngine;
-    },
-    getSearchEngines(state) {
-      return state.searchEngines;
-    },
     getUseSearchEngines({ searchEngines, setting }) {
       const useSearchEngines = setting.useSearchEngines!;
       const temp: SearchEngineData = {};
@@ -77,12 +72,6 @@ const searchModule: Module<SearchState, any> = {
         temp[id] = searchEngine;
       }
       return temp;
-    },
-    getSearchSetting(state) {
-      return state.setting;
-    },
-    getHistory(state) {
-      return state.history;
     },
   },
   mutations: {
@@ -115,11 +104,9 @@ const searchModule: Module<SearchState, any> = {
       window.open(url, setting.openPageTarget);
     },
   },
-};
+});
 
 function saveSettingState(data: SearchSetting) {
   const settingJson = JSON.stringify(data);
   localStorage.setItem(SEARCH_SETTING_STORAGE, settingJson);
 }
-
-export default searchModule;

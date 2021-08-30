@@ -37,22 +37,23 @@
 </template>
 
 <script lang="ts" setup>
+import { SEARCH_SETTING_KEY } from "@/store/search";
 import { SearchEngineData, SearchSetting } from "@/types";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 // Vuex
-const store = useStore();
+const searchStore = useStore(SEARCH_SETTING_KEY);
 
-const searchEngines = computed<SearchEngineData>(() => store.getters["search/getUseSearchEngines"]),
-  searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]),
+const searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"]),
+  searchSetting = computed(() => searchStore.state.setting),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchHistory = ref([]);
 
 // 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
-  set: (value) => store.commit("search/updateCurrentEngine", value),
+  set: (value) => searchStore.commit("updateCurrentEngine", value),
 });
 
 // 搜索内容
@@ -61,7 +62,7 @@ const showDropdown = ref(false);
 const searchInput = ref();
 
 function onSearch() {
-  store.dispatch("search/submitSearch", searchText.value);
+  searchStore.dispatch("submitSearch", searchText.value);
 }
 
 function onSearchFocus() {
@@ -126,8 +127,7 @@ function onSearchFocus() {
 }
 
 // 深色模式搜索按钮半透明
-[data-theme=dark]
-.ant-input-search-button {
+[data-theme="dark"] .ant-input-search-button {
   opacity: 0.5;
 }
 </style>

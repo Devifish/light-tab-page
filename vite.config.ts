@@ -7,8 +7,7 @@ import ViteComponents, { AntDesignVueResolver } from "vite-plugin-components";
 export default defineConfig({
   resolve: {
     alias: {
-      "@/": `${resolve(__dirname, "src")}/`,
-      "@views/": `${resolve(__dirname, "src", "views")}/`,
+      "@/": `${resolve(__dirname, "src")}/`
     },
   },
   build: {

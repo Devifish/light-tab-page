@@ -16,28 +16,26 @@
 <script lang="ts" setup>
 import { computed, watch, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
-import { BackgroundSetting, BackgroundType, ThemeMode } from "./types";
-import Home from "@views/home/Index.vue";
+import { BackgroundType, ThemeMode } from "./types";
+import Home from "@/views/home/Index.vue";
+import { SETTING_STORE_KEY } from "./store/setting";
 
-const store = useStore();
-const themeMode = computed<ThemeMode>(() => {
-  const viewSetting = store.getters["setting/getViewSetting"];
-  return viewSetting.themeMode;
-});
-const background = computed<BackgroundSetting>(() => store.getters["setting/getBackgroundSetting"]);
+const settingStore = useStore(SETTING_STORE_KEY);
+const themeMode = computed(() => settingStore.state.view.themeMode!);
+const background = computed(() => settingStore.state.view.background!);
 
 // 当前主题
 const currentTheme = ref<ThemeMode>();
 
 // 遮罩不透明度
-const maskOpacity = (computed(() => {
+const maskOpacity = computed(() => {
   const defaultOpacity = 0.75;
   const { maskOpacity, autoOpacity } = background.value;
 
   return autoOpacity && currentTheme.value === ThemeMode.Dart
     ? (defaultOpacity + (1 - defaultOpacity) * maskOpacity!).toFixed(2)
     : maskOpacity;
-}));
+});
 
 function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode;
@@ -75,7 +73,7 @@ function onSystemThemeChange() {
 }
 
 function onWallpaperError() {
-  store.dispatch("setting/reloadBackgroundImage");
+  settingStore.dispatch("reloadBackgroundImage");
 }
 
 // 监听并设置主题
@@ -94,7 +92,7 @@ onBeforeMount(() => {
   overflow: hidden;
 }
 
-[data-theme=dark] {
+[data-theme="dark"] {
   @import "ant-design-vue/lib/style/dark.less";
   @import "ant-design-vue/lib/comment/style/index.less";
   @import "ant-design-vue/lib/input/style/index.less";
@@ -105,6 +103,7 @@ onBeforeMount(() => {
   @import "ant-design-vue/lib/slider/style/index.less";
   @import "ant-design-vue/lib/switch/style/index.less";
   @import "ant-design-vue/lib/button/style/index.less";
+  @import "ant-design-vue/lib/tag/style/index.less";
 
   .ant-select-selector {
     background-color: transparent !important;

@@ -57,21 +57,25 @@
       </div>
     </template>
   </a-list>
+
+  <a-modal title="Basic Modal">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
 import { useStore } from "vuex";
 import { ref, computed } from "vue";
-import { SearchEngineData, SearchSetting } from "@/types";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import { DEFAULT_SEARCH_ENGINES } from "@/store/search";
+import { DEFAULT_SEARCH_ENGINES, SEARCH_SETTING_KEY } from "@/store/search";
 
 // Vuex
-const store = useStore();
-const searchSetting = computed<SearchSetting>(() => store.getters["search/getSearchSetting"]),
-  currentEngine = computed(() => searchSetting.value.currentEngine!),
-  useSearchEngines = computed(() => searchSetting.value.useSearchEngines!),
-  searchEngines = computed(() => Object.values(store.getters["search/getSearchEngines"]));
+const searchStore = useStore(SEARCH_SETTING_KEY);
+const currentEngine = computed(() => searchStore.state.setting.currentEngine!),
+  useSearchEngines = computed(() => searchStore.state.setting.useSearchEngines!),
+  searchEngines = computed(() => Object.values(searchStore.state.searchEngines));
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES);
 const currentDragEngineId = ref<string>();
@@ -88,7 +92,7 @@ function onEngineDragenter(e, moveId: string) {
     temp.splice(currentIndex, 1);
     temp.splice(moveIndex, 0, currentId);
 
-    store.commit("search/updateSearchSetting", {
+    searchStore.commit("updateSearchSetting", {
       useSearchEngines: temp,
     });
   }
@@ -98,7 +102,7 @@ function addUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value);
   temp.add(engineId);
 
-  store.commit("search/updateSearchSetting", {
+  searchStore.commit("updateSearchSetting", {
     useSearchEngines: Array.from(temp),
   });
 }
@@ -107,7 +111,7 @@ function removeUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value);
   temp.delete(engineId);
 
-  store.commit("search/updateSearchSetting", {
+  searchStore.commit("updateSearchSetting", {
     useSearchEngines: Array.from(temp),
   });
 }
