@@ -56,6 +56,7 @@ function onThemeChange(themeMode: ThemeMode) {
 
 .theme-mode {
   .theme-item {
+    cursor: pointer;
     position: relative;
 
     .select-icon {

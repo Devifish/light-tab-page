@@ -56,7 +56,7 @@ const currentEngine = computed({
 });
 
 // 搜索内容
-const searchText = ref();
+const searchText = ref("");
 const showDropdown = ref(false);
 const searchInput = ref();
 
@@ -123,5 +123,11 @@ function onSearchFocus() {
       background-color: transparent;
     }
   }
+}
+
+// 深色模式搜索按钮半透明
+[data-theme=dark]
+.ant-input-search-button {
+  opacity: 0.5;
 }
 </style>

@@ -8,13 +8,13 @@
     :src="background.url"
     :blur="`${background.blur}px`"
     :maskColor="background.maskColor"
-    :maskOpacity="background.maskOpacity"
+    :maskOpacity="maskOpacity"
     @error="onWallpaperError"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed, watch, onBeforeMount } from "vue";
+import { computed, watch, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
 import { BackgroundSetting, BackgroundType, ThemeMode } from "./types";
 import Home from "@views/home/Index.vue";
@@ -26,17 +26,29 @@ const themeMode = computed<ThemeMode>(() => {
 });
 const background = computed<BackgroundSetting>(() => store.getters["setting/getBackgroundSetting"]);
 
+// 当前主题
+const currentTheme = ref<ThemeMode>();
+
+// 遮罩不透明度
+const maskOpacity = (computed(() => {
+  const defaultOpacity = 0.75;
+  const { maskOpacity, autoOpacity } = background.value;
+
+  return autoOpacity && currentTheme.value === ThemeMode.Dart
+    ? (defaultOpacity + (1 - defaultOpacity) * maskOpacity!).toFixed(2)
+    : maskOpacity;
+}));
+
 function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode;
   switch (themeMode) {
     case ThemeMode.Auto:
       isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      break;
-    case ThemeMode.Dart:
-      isDarkMode = true;
+      currentTheme.value = isDarkMode ? ThemeMode.Dart : ThemeMode.Light;
       break;
     default:
-      isDarkMode = false;
+      isDarkMode = themeMode === ThemeMode.Dart;
+      currentTheme.value = themeMode;
       break;
   }
 
@@ -82,7 +94,7 @@ onBeforeMount(() => {
   overflow: hidden;
 }
 
-[data-theme="dark"] {
+[data-theme=dark] {
   @import "ant-design-vue/lib/style/dark.less";
   @import "ant-design-vue/lib/comment/style/index.less";
   @import "ant-design-vue/lib/input/style/index.less";
@@ -90,9 +102,16 @@ onBeforeMount(() => {
   @import "ant-design-vue/lib/drawer/style/index.less";
   @import "ant-design-vue/lib/divider/style/index.less";
   @import "ant-design-vue/lib/radio/style/index.less";
+  @import "ant-design-vue/lib/slider/style/index.less";
+  @import "ant-design-vue/lib/switch/style/index.less";
+  @import "ant-design-vue/lib/button/style/index.less";
 
   .ant-select-selector {
     background-color: transparent !important;
+  }
+
+  .ant-list-item-meta-description {
+    color: #888888;
   }
 }
 </style>

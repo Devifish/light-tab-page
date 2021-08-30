@@ -5,32 +5,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onBeforeMount } from "vue";
+<script lang="ts" setup>
+import { onBeforeMount } from "vue";
 import { verifyImageUrl } from "@/utils/image";
 
-export default defineComponent({
-  props: {
-    src: String,
-    blur: {
-      type: String,
-      default: "0px",
-    },
-    maskColor: {
-      type: String,
-      default: "#000",
-    },
-    maskOpacity: {
-      type: Number,
-      default: 0,
-    },
-  },
-  setup(props, ctx) {
-    onBeforeMount(async () => {
-      const isOk = await verifyImageUrl(props.src!)
-      if (!isOk) ctx.emit("error");
-    })
-  },
+interface WallpaperProps {
+  src?: string;
+  blur?: string;
+  maskColor?: string;
+  maskOpacity?: number;
+}
+
+interface WallpaperEmits {
+  (e: "error"): void;
+}
+
+const props = withDefaults(defineProps<WallpaperProps>(), {
+  blur: "0px",
+  maskColor: "#000",
+  maskOpacity: 0,
+});
+
+const emits = defineEmits<WallpaperEmits>();
+
+onBeforeMount(async () => {
+  if (!(await verifyImageUrl(props.src!))) {
+    emits("error");
+  }
 });
 </script>
 

@@ -22,4 +22,5 @@ export interface BackgroundSetting {
   blur?: number;
   maskColor?: String;
   maskOpacity?: number;
+  autoOpacity?: boolean;
 }

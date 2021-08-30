@@ -24,6 +24,7 @@ const settingModule: Module<SettingState, any> = {
           blur: 0,
           maskColor: "#000",
           maskOpacity: 0,
+          autoOpacity: true
         },
       },
     };

@@ -28,7 +28,12 @@
 
     <template v-if="backgroundType !== BackgroundType.None">
       <div>
-        <span class="lable-text">遮罩透明度</span>
+        <span class="lable-text">模糊强度</span>
+        <a-slider v-model:value="blur" :max="48" :tipFormatter="(value) => `${value}px`" />
+      </div>
+
+      <div>
+        <span class="lable-text">遮罩不透明度</span>
         <a-slider
           v-model:value="maskOpacity"
           :step="0.01"
@@ -37,10 +42,14 @@
         />
       </div>
 
-      <div>
-        <span class="lable-text">模糊强度</span>
-        <a-slider v-model:value="blur" :max="48" :tipFormatter="(value) => `${value}px`" />
-      </div>
+      <a-row type="flex" justify="space-between" align="middle">
+        <a-col>
+          <span class="lable-text">在深色模式下使壁纸更暗</span>
+        </a-col>
+        <a-col>
+          <a-switch v-model:checked="autoOpacity" />
+        </a-col>
+      </a-row>
     </template>
   </div>
 </template>
@@ -63,14 +72,22 @@ const backgroundType = computed<BackgroundType>({
 // 背景路径
 const backgroundUrl = computed(() => background.value.url);
 
+// 高斯模糊
 const blur = computed({
   get: () => background.value.blur!,
   set: (blur) => store.commit("setting/updateBackgroundSetting", { blur }),
 });
 
+// 遮罩不透明度
 const maskOpacity = computed({
   get: () => background.value.maskOpacity!,
   set: (maskOpacity) => store.commit("setting/updateBackgroundSetting", { maskOpacity }),
+});
+
+// 自动透明度
+const autoOpacity = computed({
+  get: () => background.value.autoOpacity!,
+  set: (autoOpacity) => store.commit("setting/updateBackgroundSetting", { autoOpacity }),
 });
 
 function uploadBackgroundImage(e) {
