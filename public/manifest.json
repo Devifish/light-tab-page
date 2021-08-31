@@ -3,6 +3,9 @@
     "description": "🚀 Lightweight Browser new tab extension | 一款轻量简洁的新标签页浏览器插件",
     "version": "1.0.2",
     "manifest_version": 2,
+    "permissions": [
+        "https://cn.bing.com/"
+    ],
     "chrome_url_overrides": {
         "newtab": "index.html"
     },

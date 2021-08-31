@@ -37,8 +37,25 @@ const maskOpacity = computed(() => {
     : maskOpacity;
 });
 
+/**
+ * APP 初始化
+ * 完成启动时必须加载处理的任务
+ */
+function init() {
+  const backgroundType = background.value.type!;
+
+  // 同步并监听系统主题模式
+  onSystemThemeChange();
+  changeThemeMode(themeMode.value);
+
+  // 如果是Bing每日壁纸则重新加载
+  if (backgroundType === BackgroundType.Bing) {
+    settingStore.dispatch("loadBingDailyWallpaper");
+  }
+}
+
 function changeThemeMode(themeMode: ThemeMode) {
-  let isDarkMode;
+  let isDarkMode: boolean;
   switch (themeMode) {
     case ThemeMode.Auto:
       isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -79,10 +96,7 @@ function onWallpaperError() {
 // 监听并设置主题
 watch(themeMode, (val) => changeThemeMode(val));
 
-onBeforeMount(() => {
-  onSystemThemeChange();
-  changeThemeMode(themeMode.value);
-});
+onBeforeMount(init);
 </script>
 
 <style lang="less">

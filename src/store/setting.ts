@@ -1,9 +1,10 @@
 import { createStore, Store } from "vuex";
 import { BackgroundSetting, BackgroundType, ThemeMode, ViewSetting } from "@/types";
-import { copy, uuid } from "@/utils/common";
+import { copy, isEmpty, uuid } from "@/utils/common";
 import { wallpaperStore } from "@/plugins/localforage";
 import { isImageFile } from "@/utils/image";
 import { InjectionKey } from "vue";
+import { getDailyWallpaperUrl } from "@/api/bing";
 
 interface SettingState {
   view: ViewSetting;
@@ -80,6 +81,13 @@ export default createStore<SettingState>({
         commit("updateBackgroundSetting", { id: null, url: null });
         await wallpaperStore.removeItem(id);
       }
+    },
+
+    async loadBingDailyWallpaper({ commit }) {
+      const url = await getDailyWallpaperUrl();
+
+      if (isEmpty(url)) return;
+      commit("updateBackgroundSetting", { url });
     },
   },
 });

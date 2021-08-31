@@ -5,7 +5,7 @@
       <a-radio-group v-model:value="backgroundType" style="width: 100%">
         <a-radio :value="BackgroundType.None">无</a-radio>
         <a-radio :value="BackgroundType.Local">本地图片</a-radio>
-        <a-radio :value="BackgroundType.Bing" disabled>Bing每日壁纸</a-radio>
+        <a-radio :value="BackgroundType.Bing">Bing每日壁纸</a-radio>
       </a-radio-group>
     </div>
 
@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useStore } from "vuex";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import { BackgroundType } from "@/types";
@@ -94,6 +94,12 @@ const autoOpacity = computed({
 function uploadBackgroundImage(e) {
   settingStore.dispatch("uploadBackgroundImage", e.file);
 }
+
+watch(backgroundType, (type) => {
+  if (type === BackgroundType.Bing) {
+    settingStore.dispatch("loadBingDailyWallpaper");
+  }
+});
 </script>
 
 <style lang="less">
