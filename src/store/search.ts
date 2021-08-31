@@ -1,9 +1,9 @@
 import { createStore, Store } from "vuex";
-import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngines } from "@/types";
+import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngineItem } from "@/types";
 import BaiduLogo from "@/assets/baidu.png";
 import BingLogo from "@/assets/bing.svg";
 import GoogleLogo from "@/assets/google.png";
-import { copy, isEmpty } from "@/utils/common";
+import { copy, deepClone, isEmpty } from "@/utils/common";
 import { InjectionKey } from "vue";
 
 interface SearchState {
@@ -13,6 +13,8 @@ interface SearchState {
 }
 
 const SEARCH_SETTING_STORAGE = "search-setting";
+const SEARCH_ENGINES_STORAGE = "search-engines";
+
 export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   baidu: {
     id: "baidu",
@@ -41,7 +43,7 @@ export const SEARCH_SETTING_KEY: InjectionKey<Store<SearchState>> = Symbol();
 export default createStore<SearchState>({
   state() {
     const defaultState: SearchState = {
-      searchEngines: DEFAULT_SEARCH_ENGINES,
+      searchEngines: { ...DEFAULT_SEARCH_ENGINES },
       setting: {
         currentEngine: "bing",
         openPageTarget: OpenPageTarget.Blank,
@@ -54,6 +56,9 @@ export default createStore<SearchState>({
 
     const searchSetting = JSON.parse(localStorage[SEARCH_SETTING_STORAGE] ?? "{}");
     copy(searchSetting, defaultState.setting, true);
+
+    const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}");
+    Object.assign(defaultState.searchEngines, searchEngines);
 
     const history = JSON.parse(localStorage["history"] ?? "[]");
     if (!isEmpty(history)) defaultState.history = history;
@@ -88,6 +93,21 @@ export default createStore<SearchState>({
       copy(setting, state.setting);
       saveSettingState(state.setting);
     },
+    addSearchEngine(state, data: SearchEngineItem) {
+      const searchEnginesNew = {
+        ...state.searchEngines,
+        [data.id]: data,
+      };
+
+      state.searchEngines = searchEnginesNew;
+      saveSearchEngineData(searchEnginesNew);
+    },
+    deleteSearchEngine(state, searchKey: string) {
+      const searchEnginesNew = deepClone(state.searchEngines, searchKey);
+
+      state.searchEngines = searchEnginesNew;
+      saveSearchEngineData(searchEnginesNew);
+    },
   },
   actions: {
     submitSearch({ state, commit }, searchText: string) {
@@ -109,4 +129,10 @@ export default createStore<SearchState>({
 function saveSettingState(data: SearchSetting) {
   const settingJson = JSON.stringify(data);
   localStorage.setItem(SEARCH_SETTING_STORAGE, settingJson);
+}
+
+function saveSearchEngineData(data: SearchEngineData) {
+  const saveData = deepClone(data, ...Object.keys(DEFAULT_SEARCH_ENGINES));
+  const dataJson = JSON.stringify(saveData);
+  localStorage.setItem(SEARCH_ENGINES_STORAGE, dataJson);
 }

@@ -24,9 +24,16 @@ export function isEmpty(obj: any): boolean {
  *
  * @param obj 对象
  */
-export function deepClone<E extends any>(obj: E): E {
+export function deepClone<E extends object>(obj: E, ...ignoreKeys: string[]): E {
   const json = JSON.stringify(obj);
-  return JSON.parse(json);
+  const newObj = JSON.parse(json);
+
+  for (let key of ignoreKeys) {
+    if (newObj.hasOwnProperty(key)) {
+      delete newObj[key];
+    }
+  }
+  return newObj;
 }
 
 /**

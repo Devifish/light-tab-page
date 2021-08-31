@@ -35,9 +35,10 @@
             移出
           </a-button>
           <a-button
+            v-if="!defaultEngineKeys.includes(item.id)"
             type="link"
             size="small"
-            :disabled="defaultEngineKeys.includes(item.id)"
+            :disabled="currentEngine === item.id"
             @click="deleteSearchEngine(item.id)"
           >
             删除
@@ -47,8 +48,35 @@
     </template>
 
     <template #loadMore>
-      <div :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }">
-        <a-button type="text">
+      <div v-if="addEngineState.show" class="add-engine-layout">
+        <a-form :model="addEngineState" layout="vertical">
+          <a-form-item label="搜索引擎名称" v-bind="validateInfos.name">
+            <a-input v-model:value="addEngineState.name" placeholder="名称" />
+          </a-form-item>
+          <a-form-item label="图标URL" name="icon" v-bind="validateInfos.icon">
+            <a-input v-model:value="addEngineState.icon" placeholder="图标URL" />
+          </a-form-item>
+          <a-form-item label="描述" name="description">
+            <a-input v-model:value="addEngineState.description" placeholder="描述" />
+          </a-form-item>
+          <a-form-item
+            label="地址URL (用 {searchText} 代替搜索词)"
+            name="url"
+            v-bind="validateInfos.url"
+          >
+            <a-textarea v-model:value="addEngineState.url" placeholder="地址URL" :rows="3" />
+          </a-form-item>
+        </a-form>
+        <div class="btn-list">
+          <a-button type="primary" @click="addSearchEngine"> 保存 </a-button>
+          <a-button @click="addEngineState.show = false"> 取消 </a-button>
+        </div>
+      </div>
+      <div
+        v-else
+        :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+      >
+        <a-button type="text" @click="addEngineState.show = true">
           <template #icon>
             <plus-outlined />
           </template>
@@ -57,19 +85,15 @@
       </div>
     </template>
   </a-list>
-
-  <a-modal title="Basic Modal">
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-  </a-modal>
 </template>
 
 <script lang="ts" setup>
 import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import { DEFAULT_SEARCH_ENGINES, SEARCH_SETTING_KEY } from "@/store/search";
+import { SearchEngineItem } from "@/types";
+import { Form } from "ant-design-vue";
 
 // Vuex
 const searchStore = useStore(SEARCH_SETTING_KEY);
@@ -79,6 +103,37 @@ const currentEngine = computed(() => searchStore.state.setting.currentEngine!),
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES);
 const currentDragEngineId = ref<string>();
+
+const useForm = Form.useForm;
+const addEngineState = reactive({
+  show: false,
+  name: "",
+  url: "",
+  icon: "",
+  description: "",
+});
+const { validate, resetFields, validateInfos } = useForm(addEngineState, {
+  name: [
+    {
+      required: true,
+      message: "请输入名称",
+    },
+  ],
+  icon: [
+    {
+      required: true,
+      message: "请输入图标URL",
+      type: "url",
+    },
+  ],
+  url: [
+    {
+      required: true,
+      message: "请输入地址URL",
+      type: "url",
+    },
+  ],
+});
 
 function onEngineDragenter(e, moveId: string) {
   e.preventDefault();
@@ -116,7 +171,30 @@ function removeUseSearchEngines(engineId: string) {
   });
 }
 
-function deleteSearchEngine(engineId: string) {}
+async function addSearchEngine() {
+  try {
+    await validate();
+    const { name, icon, description, url } = addEngineState;
+    const data: SearchEngineItem = {
+      name,
+      icon,
+      description,
+      id: name,
+      baseUrl: url,
+    };
+
+    searchStore.commit("addSearchEngine", data);
+    addUseSearchEngines(name);
+
+    // 重置并关闭表单
+    resetFields();
+    addEngineState.show = false;
+  } catch {}
+}
+
+function deleteSearchEngine(engineId: string) {
+  searchStore.commit("deleteSearchEngine", engineId);
+}
 </script>
 
 <style lang="less">
@@ -146,6 +224,19 @@ function deleteSearchEngine(engineId: string) {}
 
     span {
       font-size: 12px;
+    }
+  }
+
+  .add-engine-layout {
+    margin-top: 12px;
+
+    .btn-list {
+      text-align: center;
+      margin-top: 32px;
+
+      > button {
+        margin-right: 8px;
+      }
     }
   }
 }
