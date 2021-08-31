@@ -10,7 +10,7 @@
           placeholder="搜索"
           enter-button
           size="large"
-          ref="searchInput"
+          @keydown="onSwitchEngines"
           @search="onSearch"
           @focus="onSearchFocus"
           @blur="showDropdown = false"
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { SEARCH_SETTING_KEY } from "@/store/search";
-import { SearchEngineData, SearchSetting } from "@/types";
+import { SearchEngineData } from "@/types";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
@@ -59,8 +59,11 @@ const currentEngine = computed({
 // 搜索内容
 const searchText = ref("");
 const showDropdown = ref(false);
-const searchInput = ref();
 
+/**
+ * 搜索框搜索事件
+ * 将搜索内容重定向到搜索引擎
+ */
 function onSearch() {
   searchStore.dispatch("submitSearch", searchText.value);
 }
@@ -71,11 +74,35 @@ function onSearchFocus() {
 
   showDropdown.value = true;
 }
+
+/**
+ * 搜索框按 Tab / Shift+Tab
+ * 切换当前的搜索引擎
+ */
+function onSwitchEngines(e: KeyboardEvent) {
+  if (e.key !== "Tab") return;
+
+  e.preventDefault();
+
+  const engineKeys = Object.keys(searchEngines.value);
+  const length = engineKeys.length;
+
+  let currentIndex = engineKeys.indexOf(currentEngine.value);
+  currentIndex += e.shiftKey ? -1 : 1;
+
+  currentEngine.value =
+    currentIndex < 0
+      ? engineKeys[length - 1]
+      : currentIndex < length
+      ? engineKeys[currentIndex]
+      : engineKeys[0];
+}
 </script>
 
 <style lang="less">
 @logo-h: 64px;
 @input-h: 44px;
+@search-radius: v-bind(searchInputRadius);
 
 .search-layout {
   display: grid;
@@ -109,14 +136,14 @@ function onSearchFocus() {
     .ant-input,
     .ant-input-group-addon:first-child {
       transition: none;
-      border-bottom-left-radius: v-bind(searchInputRadius);
-      border-top-left-radius: v-bind(searchInputRadius);
+      border-bottom-left-radius: @search-radius;
+      border-top-left-radius: @search-radius;
     }
 
     .ant-input-search-button {
       transition: none;
-      border-bottom-right-radius: v-bind(searchInputRadius);
-      border-top-right-radius: v-bind(searchInputRadius);
+      border-bottom-right-radius: @search-radius;
+      border-top-right-radius: @search-radius;
     }
 
     // 去除搜索按钮底色（防止在设置壁纸后白底）

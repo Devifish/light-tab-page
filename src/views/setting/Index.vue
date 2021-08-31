@@ -38,7 +38,7 @@ const settingList: SettingItem[] = [
     component: SearchSetting,
   },
   {
-    title: "壁纸设置",
+    title: "背景设置",
     icon: PictureOutlined,
     component: BackgroundSetting,
   },
