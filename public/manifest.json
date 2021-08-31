@@ -1,8 +1,9 @@
 {
-    "name": "轻标签页",
-    "description": "🚀 Lightweight Browser new tab extension | 一款轻量简洁的新标签页浏览器插件",
-    "version": "1.0.2",
     "manifest_version": 2,
+    "name": "__MSG_name__",
+    "description": "__MSG_description__",
+    "version": "1.0.2",
+    "default_locale": "zh_CN",
     "permissions": [
         "https://cn.bing.com/"
     ],
@@ -11,7 +12,7 @@
     },
     "browser_action": {
         "default_icon": "icons/logo-512.png",
-        "default_title": "轻标签页"
+        "default_title": "__MSG_name__"
     },
     "icons": {
         "48": "icons/logo-48.png",
