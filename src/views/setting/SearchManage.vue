@@ -88,112 +88,112 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "vuex";
-import { ref, reactive, computed } from "vue";
-import { PlusOutlined } from "@ant-design/icons-vue";
-import { DEFAULT_SEARCH_ENGINES, SEARCH_SETTING_KEY } from "@/store/search";
-import { SearchEngineItem } from "@/types";
-import { Form } from "ant-design-vue";
+import { useStore } from "vuex"
+import { ref, reactive, computed } from "vue"
+import { PlusOutlined } from "@ant-design/icons-vue"
+import { DEFAULT_SEARCH_ENGINES, SEARCH_SETTING_KEY } from "@/store/search"
+import { SearchEngineItem } from "@/types"
+import { Form } from "ant-design-vue"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY);
+const searchStore = useStore(SEARCH_SETTING_KEY)
 const currentEngine = computed(() => searchStore.state.setting.currentEngine!),
   useSearchEngines = computed(() => searchStore.state.setting.useSearchEngines!),
-  searchEngines = computed(() => Object.values(searchStore.state.searchEngines));
+  searchEngines = computed(() => Object.values(searchStore.state.searchEngines))
 
-const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES);
-const currentDragEngineId = ref<string>();
+const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
+const currentDragEngineId = ref<string>()
 
-const useForm = Form.useForm;
+const useForm = Form.useForm
 const addEngineState = reactive({
   show: false,
   name: "",
   url: "",
   icon: "",
-  description: "",
-});
+  description: ""
+})
 const { validate, resetFields, validateInfos } = useForm(addEngineState, {
   name: [
     {
       required: true,
-      message: "请输入名称",
-    },
+      message: "请输入名称"
+    }
   ],
   icon: [
     {
       required: true,
       message: "请输入图标URL",
-      type: "url",
-    },
+      type: "url"
+    }
   ],
   url: [
     {
       required: true,
       message: "请输入地址URL",
-      type: "url",
-    },
-  ],
-});
+      type: "url"
+    }
+  ]
+})
 
 function onEngineDragenter(e, moveId: string) {
-  e.preventDefault();
+  e.preventDefault()
 
-  const currentId = currentDragEngineId.value;
+  const currentId = currentDragEngineId.value
   if (currentId && moveId !== currentId) {
-    const temp = Array.from(useSearchEngines.value);
-    const currentIndex = temp.indexOf(currentId);
-    const moveIndex = temp.indexOf(moveId);
+    const temp = Array.from(useSearchEngines.value)
+    const currentIndex = temp.indexOf(currentId)
+    const moveIndex = temp.indexOf(moveId)
 
-    temp.splice(currentIndex, 1);
-    temp.splice(moveIndex, 0, currentId);
+    temp.splice(currentIndex, 1)
+    temp.splice(moveIndex, 0, currentId)
 
     searchStore.commit("updateSearchSetting", {
-      useSearchEngines: temp,
-    });
+      useSearchEngines: temp
+    })
   }
 }
 
 function addUseSearchEngines(engineId: string) {
-  const temp = new Set(useSearchEngines.value);
-  temp.add(engineId);
+  const temp = new Set(useSearchEngines.value)
+  temp.add(engineId)
 
   searchStore.commit("updateSearchSetting", {
-    useSearchEngines: Array.from(temp),
-  });
+    useSearchEngines: Array.from(temp)
+  })
 }
 
 function removeUseSearchEngines(engineId: string) {
-  const temp = new Set(useSearchEngines.value);
-  temp.delete(engineId);
+  const temp = new Set(useSearchEngines.value)
+  temp.delete(engineId)
 
   searchStore.commit("updateSearchSetting", {
-    useSearchEngines: Array.from(temp),
-  });
+    useSearchEngines: Array.from(temp)
+  })
 }
 
 async function addSearchEngine() {
   try {
-    await validate();
-    const { name, icon, description, url } = addEngineState;
+    await validate()
+    const { name, icon, description, url } = addEngineState
     const data: SearchEngineItem = {
       name,
       icon,
       description,
       id: name,
-      baseUrl: url,
-    };
+      baseUrl: url
+    }
 
-    searchStore.commit("addSearchEngine", data);
-    addUseSearchEngines(name);
+    searchStore.commit("addSearchEngine", data)
+    addUseSearchEngines(name)
 
     // 重置并关闭表单
-    resetFields();
-    addEngineState.show = false;
+    resetFields()
+    addEngineState.show = false
   } catch {}
 }
 
 function deleteSearchEngine(engineId: string) {
-  searchStore.commit("deleteSearchEngine", engineId);
+  searchStore.commit("deleteSearchEngine", engineId)
 }
 </script>
 

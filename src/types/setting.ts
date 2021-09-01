@@ -1,26 +1,26 @@
 export enum ThemeMode {
   Auto,
   Light,
-  Dart,
+  Dart
 }
 
 export enum BackgroundType {
   None,
   Local,
-  Bing,
+  Bing
 }
 
 export interface ViewSetting {
-  themeMode?: ThemeMode;
-  background?: BackgroundSetting;
+  themeMode?: ThemeMode
+  background?: BackgroundSetting
 }
 
 export interface BackgroundSetting {
-  id?: string,
-  type?: BackgroundType;
-  url?: string;
-  blur?: number;
-  maskColor?: String;
-  maskOpacity?: number;
-  autoOpacity?: boolean;
+  id?: string
+  type?: BackgroundType
+  url?: string
+  blur?: number
+  maskColor?: String
+  maskOpacity?: number
+  autoOpacity?: boolean
 }

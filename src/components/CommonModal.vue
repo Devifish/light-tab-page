@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRef, provide } from "vue";
-import { CommonModalData, ModalData } from "@/utils/use";
+import { defineComponent, reactive, ref, toRef, provide } from "vue"
+import { CommonModalData, ModalData } from "@/utils/use"
 
 export default defineComponent({
   name: "CommonModal",
@@ -34,39 +34,39 @@ export default defineComponent({
       confirmLoading: false,
       data: undefined,
       onOk: async () => {}
-    });
+    })
 
     function open(data) {
-      state.visible = true;
-      state.data = data;
+      state.visible = true
+      state.data = data
     }
 
     function close() {
-      state.visible = false;
+      state.visible = false
     }
 
     function onOk(callback: () => Promise<void>) {
-      state.onOk = callback;
+      state.onOk = callback
     }
 
     async function clickOkHandle() {
       if (typeof state.onOk === "function") {
-        state.confirmLoading = true;
+        state.confirmLoading = true
         try {
-          const value = await state.onOk();
+          const value = await state.onOk()
         } finally {
-          state.confirmLoading = false;
+          state.confirmLoading = false
         }
       }
 
-      close();
+      close()
     }
 
     provide<ModalData>(CommonModalData, {
       onOk,
       close,
       data: toRef(state, "data")
-    });
+    })
 
     return {
       state,
@@ -74,7 +74,7 @@ export default defineComponent({
       close,
       onOk,
       clickOkHandle
-    };
+    }
   }
-});
+})
 </script>

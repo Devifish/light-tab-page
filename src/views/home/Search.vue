@@ -37,42 +37,42 @@
 </template>
 
 <script lang="ts" setup>
-import { SEARCH_SETTING_KEY } from "@/store/search";
-import { SearchEngineData } from "@/types";
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
+import { SEARCH_SETTING_KEY } from "@/store/search"
+import { SearchEngineData } from "@/types"
+import { ref, computed } from "vue"
+import { useStore } from "vuex"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY);
+const searchStore = useStore(SEARCH_SETTING_KEY)
 
 const searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"]),
   searchSetting = computed(() => searchStore.state.setting),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
-  searchHistory = ref([]);
+  searchHistory = ref([])
 
 // 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
-  set: (value) => searchStore.commit("updateCurrentEngine", value),
-});
+  set: value => searchStore.commit("updateCurrentEngine", value)
+})
 
 // 搜索内容
-const searchText = ref("");
-const showDropdown = ref(false);
+const searchText = ref("")
+const showDropdown = ref(false)
 
 /**
  * 搜索框搜索事件
  * 将搜索内容重定向到搜索引擎
  */
 function onSearch() {
-  searchStore.dispatch("submitSearch", searchText.value);
+  searchStore.dispatch("submitSearch", searchText.value)
 }
 
 function onSearchFocus() {
-  const history = searchHistory.value;
-  if (history.length === 0) return;
+  const history = searchHistory.value
+  if (history.length === 0) return
 
-  showDropdown.value = true;
+  showDropdown.value = true
 }
 
 /**
@@ -80,22 +80,22 @@ function onSearchFocus() {
  * 切换当前的搜索引擎
  */
 function onSwitchEngines(e: KeyboardEvent) {
-  if (e.key !== "Tab") return;
+  if (e.key !== "Tab") return
 
-  e.preventDefault();
+  e.preventDefault()
 
-  const engineKeys = Object.keys(searchEngines.value);
-  const length = engineKeys.length;
+  const engineKeys = Object.keys(searchEngines.value)
+  const length = engineKeys.length
 
-  let currentIndex = engineKeys.indexOf(currentEngine.value);
-  currentIndex += e.shiftKey ? -1 : 1;
+  let currentIndex = engineKeys.indexOf(currentEngine.value)
+  currentIndex += e.shiftKey ? -1 : 1
 
   currentEngine.value =
     currentIndex < 0
       ? engineKeys[length - 1]
       : currentIndex < length
       ? engineKeys[currentIndex]
-      : engineKeys[0];
+      : engineKeys[0]
 }
 </script>
 

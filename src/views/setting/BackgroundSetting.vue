@@ -29,7 +29,7 @@
     <template v-if="backgroundType !== BackgroundType.None">
       <div>
         <span class="lable-text">模糊强度</span>
-        <a-slider v-model:value="blur" :max="48" :tipFormatter="(value) => `${value}px`" />
+        <a-slider v-model:value="blur" :max="48" :tipFormatter="value => `${value}px`" />
       </div>
 
       <div>
@@ -38,7 +38,7 @@
           v-model:value="maskOpacity"
           :step="0.01"
           :max="1"
-          :tipFormatter="(value) => `${Math.round(value * 100)}%`"
+          :tipFormatter="value => `${Math.round(value * 100)}%`"
         />
       </div>
 
@@ -55,51 +55,51 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from "vue";
-import { useStore } from "vuex";
-import { PlusOutlined } from "@ant-design/icons-vue";
-import { BackgroundType } from "@/types";
-import { SETTING_STORE_KEY } from "@/store/setting";
+import { computed, watch } from "vue"
+import { useStore } from "vuex"
+import { PlusOutlined } from "@ant-design/icons-vue"
+import { BackgroundType } from "@/types"
+import { SETTING_STORE_KEY } from "@/store/setting"
 
-const settingStore = useStore(SETTING_STORE_KEY);
-const background = computed(() => settingStore.state.view.background!);
+const settingStore = useStore(SETTING_STORE_KEY)
+const background = computed(() => settingStore.state.view.background!)
 
 // 背景类型
 const backgroundType = computed<BackgroundType>({
   get: () => background.value.type!,
-  set: (type) => settingStore.commit("updateBackgroundSetting", { type }),
-});
+  set: type => settingStore.commit("updateBackgroundSetting", { type })
+})
 
 // 背景路径
-const backgroundUrl = computed(() => background.value.url);
+const backgroundUrl = computed(() => background.value.url)
 
 // 高斯模糊
 const blur = computed({
   get: () => background.value.blur!,
-  set: (blur) => settingStore.commit("updateBackgroundSetting", { blur }),
-});
+  set: blur => settingStore.commit("updateBackgroundSetting", { blur })
+})
 
 // 遮罩不透明度
 const maskOpacity = computed({
   get: () => background.value.maskOpacity!,
-  set: (maskOpacity) => settingStore.commit("updateBackgroundSetting", { maskOpacity }),
-});
+  set: maskOpacity => settingStore.commit("updateBackgroundSetting", { maskOpacity })
+})
 
 // 自动透明度
 const autoOpacity = computed({
   get: () => background.value.autoOpacity!,
-  set: (autoOpacity) => settingStore.commit("updateBackgroundSetting", { autoOpacity }),
-});
+  set: autoOpacity => settingStore.commit("updateBackgroundSetting", { autoOpacity })
+})
 
 function uploadBackgroundImage(e) {
-  settingStore.dispatch("uploadBackgroundImage", e.file);
+  settingStore.dispatch("uploadBackgroundImage", e.file)
 }
 
-watch(backgroundType, (type) => {
+watch(backgroundType, type => {
   if (type === BackgroundType.Bing) {
-    settingStore.dispatch("loadBingDailyWallpaper");
+    settingStore.dispatch("loadBingDailyWallpaper")
   }
-});
+})
 </script>
 
 <style lang="less">

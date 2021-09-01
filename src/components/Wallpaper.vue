@@ -6,33 +6,33 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount } from "vue";
-import { verifyImageUrl } from "@/utils/image";
+import { onBeforeMount } from "vue"
+import { verifyImageUrl } from "@/utils/image"
 
 interface WallpaperProps {
-  src?: string;
-  blur?: string;
-  maskColor?: string;
-  maskOpacity?: number;
+  src?: string
+  blur?: string
+  maskColor?: string
+  maskOpacity?: number
 }
 
 interface WallpaperEmits {
-  (e: "error"): void;
+  (e: "error"): void
 }
 
 const props = withDefaults(defineProps<WallpaperProps>(), {
   blur: "0px",
   maskColor: "#000",
-  maskOpacity: 0,
-});
+  maskOpacity: 0
+})
 
-const emits = defineEmits<WallpaperEmits>();
+const emits = defineEmits<WallpaperEmits>()
 
 onBeforeMount(async () => {
   if (!(await verifyImageUrl(props.src!))) {
-    emits("error");
+    emits("error")
   }
-});
+})
 </script>
 
 <style lang="less">

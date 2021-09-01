@@ -1,19 +1,19 @@
-import { createStore, Store } from "vuex";
-import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngineItem } from "@/types";
-import BaiduLogo from "@/assets/baidu.png";
-import BingLogo from "@/assets/bing.svg";
-import GoogleLogo from "@/assets/google.png";
-import { copy, deepClone, isEmpty } from "@/utils/common";
-import { InjectionKey } from "vue";
+import { createStore, Store } from "vuex"
+import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngineItem } from "@/types"
+import BaiduLogo from "@/assets/baidu.png"
+import BingLogo from "@/assets/bing.svg"
+import GoogleLogo from "@/assets/google.png"
+import { copy, deepClone, isEmpty } from "@/utils/common"
+import { InjectionKey } from "vue"
 
 interface SearchState {
-  searchEngines: SearchEngineData;
-  setting: SearchSetting;
-  history: Array<string>;
+  searchEngines: SearchEngineData
+  setting: SearchSetting
+  history: Array<string>
 }
 
-const SEARCH_SETTING_STORAGE = "search-setting";
-const SEARCH_ENGINES_STORAGE = "search-engines";
+const SEARCH_SETTING_STORAGE = "search-setting"
+const SEARCH_ENGINES_STORAGE = "search-engines"
 
 export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   baidu: {
@@ -21,25 +21,25 @@ export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
     name: "百度",
     description: "百度是中国使用群体最多的一款搜索引擎",
     icon: BaiduLogo,
-    baseUrl: "https://www.baidu.com/#ie={inputEncoding}&wd={searchText}",
+    baseUrl: "https://www.baidu.com/#ie={inputEncoding}&wd={searchText}"
   },
   google: {
     id: "google",
     name: "Google",
     description: "Google搜索是全球公认为全球最大的搜索引擎",
     icon: GoogleLogo,
-    baseUrl: "https://www.google.com/search?q={searchText}&ie={inputEncoding}",
+    baseUrl: "https://www.google.com/search?q={searchText}&ie={inputEncoding}"
   },
   bing: {
     id: "bing",
     name: "Bing",
     description: "必应是一款由微软公司推出的网络搜索引擎",
     icon: BingLogo,
-    baseUrl: "https://cn.bing.com/search?q={searchText}",
-  },
-};
+    baseUrl: "https://cn.bing.com/search?q={searchText}"
+  }
+}
 
-export const SEARCH_SETTING_KEY: InjectionKey<Store<SearchState>> = Symbol();
+export const SEARCH_SETTING_KEY: InjectionKey<Store<SearchState>> = Symbol()
 export default createStore<SearchState>({
   state() {
     const defaultState: SearchState = {
@@ -49,90 +49,90 @@ export default createStore<SearchState>({
         openPageTarget: OpenPageTarget.Blank,
         showEngineSelect: true,
         searchInputRadius: 4,
-        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES),
+        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES)
       },
-      history: [],
-    };
+      history: []
+    }
 
-    const searchSetting = JSON.parse(localStorage[SEARCH_SETTING_STORAGE] ?? "{}");
-    copy(searchSetting, defaultState.setting, true);
+    const searchSetting = JSON.parse(localStorage[SEARCH_SETTING_STORAGE] ?? "{}")
+    copy(searchSetting, defaultState.setting, true)
 
-    const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}");
-    Object.assign(defaultState.searchEngines, searchEngines);
+    const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
+    Object.assign(defaultState.searchEngines, searchEngines)
 
-    const history = JSON.parse(localStorage["history"] ?? "[]");
-    if (!isEmpty(history)) defaultState.history = history;
+    const history = JSON.parse(localStorage["history"] ?? "[]")
+    if (!isEmpty(history)) defaultState.history = history
 
-    return defaultState;
+    return defaultState
   },
   getters: {
     getUseSearchEngines({ searchEngines, setting }) {
-      const useSearchEngines = setting.useSearchEngines!;
-      const temp: SearchEngineData = {};
+      const useSearchEngines = setting.useSearchEngines!
+      const temp: SearchEngineData = {}
 
       for (let id of useSearchEngines) {
-        const searchEngine = searchEngines[id];
-        if (isEmpty(searchEngine)) continue;
+        const searchEngine = searchEngines[id]
+        if (isEmpty(searchEngine)) continue
 
-        temp[id] = searchEngine;
+        temp[id] = searchEngine
       }
-      return temp;
-    },
+      return temp
+    }
   },
   mutations: {
     putHistory(state, newHistory: string) {
-      console.log("写入搜索历史", newHistory);
+      console.log("写入搜索历史", newHistory)
     },
     updateCurrentEngine(state, currentEngine: string) {
-      if (isEmpty(state.searchEngines[currentEngine])) return;
+      if (isEmpty(state.searchEngines[currentEngine])) return
 
-      state.setting.currentEngine = currentEngine;
-      saveSettingState(state.setting);
+      state.setting.currentEngine = currentEngine
+      saveSettingState(state.setting)
     },
     updateSearchSetting(state, setting: SearchSetting) {
-      copy(setting, state.setting);
-      saveSettingState(state.setting);
+      copy(setting, state.setting)
+      saveSettingState(state.setting)
     },
     addSearchEngine(state, data: SearchEngineItem) {
       const searchEnginesNew = {
         ...state.searchEngines,
-        [data.id]: data,
-      };
+        [data.id]: data
+      }
 
-      state.searchEngines = searchEnginesNew;
-      saveSearchEngineData(searchEnginesNew);
+      state.searchEngines = searchEnginesNew
+      saveSearchEngineData(searchEnginesNew)
     },
     deleteSearchEngine(state, searchKey: string) {
-      const searchEnginesNew = deepClone(state.searchEngines, searchKey);
+      const searchEnginesNew = deepClone(state.searchEngines, searchKey)
 
-      state.searchEngines = searchEnginesNew;
-      saveSearchEngineData(searchEnginesNew);
-    },
+      state.searchEngines = searchEnginesNew
+      saveSearchEngineData(searchEnginesNew)
+    }
   },
   actions: {
     submitSearch({ state, commit }, searchText: string) {
-      const { searchEngines, setting } = state;
-      const currentEngine = setting.currentEngine!;
+      const { searchEngines, setting } = state
+      const currentEngine = setting.currentEngine!
 
-      let url = searchEngines[currentEngine].baseUrl;
-      url = url.replace("{searchText}", encodeURI(searchText));
+      let url = searchEngines[currentEngine].baseUrl
+      url = url.replace("{searchText}", encodeURI(searchText))
 
       // inputEncoding
-      if (url.includes("{inputEncoding}")) url = url.replace("{inputEncoding}", "utf-8");
+      if (url.includes("{inputEncoding}")) url = url.replace("{inputEncoding}", "utf-8")
 
-      commit("putHistory", searchText);
-      window.open(url, setting.openPageTarget);
-    },
-  },
-});
+      commit("putHistory", searchText)
+      window.open(url, setting.openPageTarget)
+    }
+  }
+})
 
 function saveSettingState(data: SearchSetting) {
-  const settingJson = JSON.stringify(data);
-  localStorage.setItem(SEARCH_SETTING_STORAGE, settingJson);
+  const settingJson = JSON.stringify(data)
+  localStorage.setItem(SEARCH_SETTING_STORAGE, settingJson)
 }
 
 function saveSearchEngineData(data: SearchEngineData) {
-  const saveData = deepClone(data, ...Object.keys(DEFAULT_SEARCH_ENGINES));
-  const dataJson = JSON.stringify(saveData);
-  localStorage.setItem(SEARCH_ENGINES_STORAGE, dataJson);
+  const saveData = deepClone(data, ...Object.keys(DEFAULT_SEARCH_ENGINES))
+  const dataJson = JSON.stringify(saveData)
+  localStorage.setItem(SEARCH_ENGINES_STORAGE, dataJson)
 }

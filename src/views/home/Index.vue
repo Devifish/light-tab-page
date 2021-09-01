@@ -17,12 +17,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import Search from "./Search.vue";
-import Setting from "@/views/setting/Index.vue";
-import { SettingOutlined } from "@ant-design/icons-vue";
+import { ref } from "vue"
+import Search from "./Search.vue"
+import Setting from "@/views/setting/Index.vue"
+import { SettingOutlined } from "@ant-design/icons-vue"
 
-const settingDrawer = ref();
+const settingDrawer = ref()
 </script>
 
 <style lang="less">

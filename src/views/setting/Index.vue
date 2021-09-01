@@ -14,35 +14,35 @@
 </template>
 
 <script lang="ts" setup>
-import ThemeMode from "./ThemeMode.vue";
-import SearchSetting from "./SearchSetting.vue";
-import BackgroundSetting from "./BackgroundSetting.vue";
-import { DefineComponent, FunctionalComponent } from "vue";
-import { BgColorsOutlined, SearchOutlined, PictureOutlined } from "@ant-design/icons-vue";
+import ThemeMode from "./ThemeMode.vue"
+import SearchSetting from "./SearchSetting.vue"
+import BackgroundSetting from "./BackgroundSetting.vue"
+import { DefineComponent, FunctionalComponent } from "vue"
+import { BgColorsOutlined, SearchOutlined, PictureOutlined } from "@ant-design/icons-vue"
 
 interface SettingItem {
-  title: string;
-  icon: FunctionalComponent;
-  component: DefineComponent<{}, {}, any>;
+  title: string
+  icon: FunctionalComponent
+  component: DefineComponent<{}, {}, any>
 }
 
 const settingList: SettingItem[] = [
   {
     title: "主题设置",
     icon: BgColorsOutlined,
-    component: ThemeMode,
+    component: ThemeMode
   },
   {
     title: "搜索设置",
     icon: SearchOutlined,
-    component: SearchSetting,
+    component: SearchSetting
   },
   {
     title: "背景设置",
     icon: PictureOutlined,
-    component: BackgroundSetting,
-  },
-];
+    component: BackgroundSetting
+  }
+]
 </script>
 
 <style lang="less">
