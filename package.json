@@ -23,6 +23,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.155",
     "@types/node": "^16.7.1",
     "@vitejs/plugin-vue": "^1.6.0",
     "@vue/compiler-sfc": "^3.2.8",
