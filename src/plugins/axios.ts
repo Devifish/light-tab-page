@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { isExtension, containsPermissions, requestPermissions } from "@/utils/chrome"
+import { isExtension, containsPermissions, requestPermissions } from "./chrome"
 
 const axios = Axios.create({
   timeout: 10000

@@ -60,7 +60,7 @@ import { useStore } from "vuex"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { BackgroundType } from "@/types"
 import { SETTING_STORE_KEY } from "@/store/setting"
-import { isExtension } from "@/utils/chrome"
+import { isExtension } from "@/plugins/chrome"
 
 const settingStore = useStore(SETTING_STORE_KEY)
 const background = computed(() => settingStore.state.view.background!)
