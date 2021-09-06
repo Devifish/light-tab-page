@@ -8,6 +8,7 @@
 - [Edge 应用商店](https://microsoftedge.microsoft.com/addons/detail/%E8%BD%BB%E6%A0%87%E7%AD%BE%E9%A1%B5/ilebnicnppejmbmkaokpdljcanljdnic)
 - [Firefox 应用商店](https://addons.mozilla.org/zh-CN/firefox/addon/light-tab-page/) 
 - [离线安装包](https://github.com/Devifish/light-tab-page/releases)
+- [体验地址](https://lighttab.devifish.cn/) (仅缺失部分插件独有功能)
 
 ## 特性
 
