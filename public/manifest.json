@@ -8,7 +8,8 @@
     "optional_permissions": [
         "https://cn.bing.com/",
         "https://suggestion.baidu.com/",
-        "https://api.bing.com/"
+        "https://api.bing.com/",
+        "https://suggestqueries.google.com/"
     ],
     "chrome_url_overrides": {
         "newtab": "index.html"

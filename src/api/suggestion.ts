@@ -34,3 +34,28 @@ export async function getBingSuggestion(keyword: string): Promise<string[]> {
     return []
   }
 }
+
+export async function getGoogleSuggestion(keyword: string): Promise<string[]> {
+  try {
+    const { data } = await axios.get("https://suggestqueries.google.com/complete/search", {
+      params: {
+        client: "gws-wiz",
+        q: keyword,
+        jsonp: ""
+      },
+      responseType: "text"
+    })
+
+    const find = /\["(.*?)"/g
+    const suggestion: string[] = []
+
+    let temp: any = null
+    while ((temp = find.exec(data)) != null) {
+      suggestion.push(temp[1])
+    }
+
+    return suggestion
+  } catch {
+    return []
+  }
+}

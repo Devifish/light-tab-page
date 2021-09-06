@@ -4,7 +4,13 @@ import { permissions, Permissions } from "webextension-polyfill"
 
 export const Permis: Record<string, Permissions.Permissions> = {
   bing: { origins: ["https://cn.bing.com/"] },
-  suggestion: { origins: ["https://suggestion.baidu.com/", "https://api.bing.com/"] }
+  suggestion: {
+    origins: [
+      "https://suggestion.baidu.com/",
+      "https://api.bing.com/",
+      "https://suggestqueries.google.com/"
+    ]
+  }
 }
 
 export const isExtension = chrome && chrome.extension ? true : false

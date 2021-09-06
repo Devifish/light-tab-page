@@ -26,26 +26,21 @@
 
     <a-row type="flex" justify="space-between" align="middle">
       <a-col>
-        <span class="lable-text">搜索建议</span>
+        <span class="lable-text">搜索建议接口</span>
       </a-col>
       <a-col>
-        <a-radio-group v-model:value="suggestion" button-style="solid">
-          <a-radio-button :value="SearchSuggestion.none">关闭</a-radio-button>
-          <a-radio-button
-            :value="SearchSuggestion.baidu"
-            :disabled="!isExtension"
-            v-permis="Permis.suggestion"
-          >
-            Baidu
-          </a-radio-button>
-          <a-radio-button
-            :value="SearchSuggestion.bing"
-            :disabled="!isExtension"
-            v-permis="Permis.suggestion"
-          >
-            Bing
-          </a-radio-button>
-        </a-radio-group>
+        <a-select v-model:value="suggestion" v-permis="Permis.suggestion" style="width: 100px">
+          <a-select-option :value="SearchSuggestion.none"> 不使用 </a-select-option>
+          <a-select-option :value="SearchSuggestion.baidu" :disabled="!isExtension">
+            百度 API
+          </a-select-option>
+          <a-select-option :value="SearchSuggestion.bing" :disabled="!isExtension">
+            Bing API
+          </a-select-option>
+          <a-select-option :value="SearchSuggestion.google" :disabled="!isExtension">
+            Google API
+          </a-select-option>
+        </a-select>
       </a-col>
     </a-row>
 
