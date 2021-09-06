@@ -1,19 +1,23 @@
 <template>
   <div class="background-setting">
-    <div>
-      <span class="lable-text">壁纸设置</span>
-      <a-radio-group v-model:value="backgroundType" style="width: 100%">
-        <a-radio :value="BackgroundType.None">无</a-radio>
-        <a-radio :value="BackgroundType.Local">本地图片</a-radio>
-        <a-radio
-          :value="BackgroundType.Bing"
-          :disabled="!isExtension"
-          v-permis="PermissionsType.Bing"
-        >
-          每日壁纸
-        </a-radio>
-      </a-radio-group>
-    </div>
+    <a-row type="flex" justify="space-between" align="middle">
+      <a-col>
+        <span class="lable-text">壁纸设置</span>
+      </a-col>
+      <a-col>
+        <a-radio-group v-model:value="backgroundType" button-style="solid">
+          <a-radio-button :value="BackgroundType.None">无</a-radio-button>
+          <a-radio-button :value="BackgroundType.Local">本地图片</a-radio-button>
+          <a-radio-button
+            :value="BackgroundType.Bing"
+            :disabled="!isExtension"
+            v-permis="Permis.bing"
+          >
+            Bing每日壁纸
+          </a-radio-button>
+        </a-radio-group>
+      </a-col>
+    </a-row>
 
     <div class="upload-layout" v-show="backgroundType === BackgroundType.Local">
       <span class="lable-text">上传壁纸</span>
@@ -66,7 +70,7 @@ import { useStore } from "vuex"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { BackgroundType } from "@/types"
 import { SETTING_STORE_KEY } from "@/store/setting"
-import { isExtension, PermissionsType } from "@/plugins/extension"
+import { isExtension, Permis } from "@/plugins/extension"
 
 const settingStore = useStore(SETTING_STORE_KEY)
 const background = computed(() => settingStore.state.view.background!)

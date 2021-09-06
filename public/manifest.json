@@ -4,10 +4,10 @@
     "description": "__MSG_description__",
     "version": "1.1.2",
     "default_locale": "zh_CN",
-    "content_security_policy": "script-src 'self'; object-src 'self'",
     "permissions": [],
     "optional_permissions": [
-        "https://cn.bing.com/"
+        "https://cn.bing.com/",
+        "https://suggestion.baidu.com/"
     ],
     "chrome_url_overrides": {
         "newtab": "index.html"

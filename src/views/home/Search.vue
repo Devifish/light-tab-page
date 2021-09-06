@@ -4,16 +4,26 @@
       <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
     <div class="search-input">
-      <a-dropdown :visible="showDropdown">
+      <a-auto-complete
+        v-model:value="searchText"
+        size="large"
+        :defaultActiveFirstOption="false"
+        backfill
+        style="width: 100%"
+        @search="handleSearchSuggestion"
+      >
+        <template #options>
+          <a-select-option v-for="item of searchSuggestion" :key="item">
+            {{ item }}
+          </a-select-option>
+        </template>
+
         <a-input-search
-          v-model:value="searchText"
           placeholder="搜索"
           enter-button
           size="large"
           @keydown="onSwitchEngines"
           @search="onSearch"
-          @focus="onSearchFocus"
-          @blur="showDropdown = false"
         >
           <template #addonBefore v-if="searchSetting.showEngineSelect">
             <a-select v-model:value="currentEngine" style="width: 90px">
@@ -23,15 +33,7 @@
             </a-select>
           </template>
         </a-input-search>
-
-        <template #overlay>
-          <a-menu>
-            <a-menu-item v-for="(value, index) in searchHistory" :key="index">
-              {{ value }}
-            </a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
+      </a-auto-complete>
     </div>
   </div>
 </template>
@@ -39,6 +41,7 @@
 <script lang="ts" setup>
 import { SEARCH_SETTING_KEY } from "@/store/search"
 import { SearchEngineData } from "@/types"
+import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
 import { useStore } from "vuex"
 
@@ -48,7 +51,7 @@ const searchStore = useStore(SEARCH_SETTING_KEY)
 const searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"]),
   searchSetting = computed(() => searchStore.state.setting),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
-  searchHistory = ref([])
+  searchSuggestion = ref<string[]>()
 
 // 当前搜索引擎
 const currentEngine = computed({
@@ -58,21 +61,26 @@ const currentEngine = computed({
 
 // 搜索内容
 const searchText = ref("")
-const showDropdown = ref(false)
 
 /**
  * 搜索框搜索事件
  * 将搜索内容重定向到搜索引擎
  */
-function onSearch() {
-  searchStore.dispatch("submitSearch", searchText.value)
+function onSearch(search: string) {
+  searchStore.dispatch("submitSearch", search)
 }
 
-function onSearchFocus() {
-  const history = searchHistory.value
-  if (history.length === 0) return
-
-  showDropdown.value = true
+/**
+ * 搜索建议自动完成处理
+ * 获取搜索建议数据
+ */
+async function handleSearchSuggestion(value: string) {
+  if (isEmpty(value)) {
+    searchSuggestion.value = []
+  } else {
+    const suggestion = await searchStore.dispatch("getSuggestion", value)
+    searchSuggestion.value = suggestion
+  }
 }
 
 /**
@@ -127,21 +135,25 @@ function onSwitchEngines(e: KeyboardEvent) {
     }
 
     .ant-select-selector {
-      transition: none;
+      transition: none !important;
       .ant-select-selection-item {
-        transition: none;
+        transition: none !important;
       }
     }
 
     .ant-input,
     .ant-input-group-addon:first-child {
-      transition: none;
+      transition: none !important;
       border-bottom-left-radius: @search-radius;
       border-top-left-radius: @search-radius;
     }
 
+    .ant-input-group-addon:first-child .ant-select-selection-search {
+      display: none;
+    }
+
     .ant-input-search-button {
-      transition: none;
+      transition: none !important;
       border-bottom-right-radius: @search-radius;
       border-top-right-radius: @search-radius;
     }

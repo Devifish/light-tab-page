@@ -12,8 +12,7 @@ export default defineConfig({
   },
   build: {
     brotliSize: false,
-    chunkSizeWarningLimit: 1024,
-    watch: {}
+    chunkSizeWarningLimit: 1024
   },
   css: {
     preprocessorOptions: {

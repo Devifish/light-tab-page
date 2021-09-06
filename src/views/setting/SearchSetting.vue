@@ -24,6 +24,27 @@
       </a-col>
     </a-row>
 
+    <a-row type="flex" justify="space-between" align="middle">
+      <a-col>
+        <span class="lable-text">搜索建议</span>
+      </a-col>
+      <a-col>
+        <a-radio-group v-model:value="suggestion" button-style="solid">
+          <a-radio-button :value="SearchSuggestion.none">关闭</a-radio-button>
+          <a-radio-button
+            :value="SearchSuggestion.baidu"
+            :disabled="!isExtension"
+            v-permis="Permis.suggestion"
+          >
+            Baidu
+          </a-radio-button>
+          <a-radio-button :value="SearchSuggestion.google" disabled v-permis="Permis.suggestion">
+            Google
+          </a-radio-button>
+        </a-radio-group>
+      </a-col>
+    </a-row>
+
     <div>
       <span class="lable-text">搜索框圆角</span>
       <a-slider v-model:value="searchInputRadius" :max="22" :tipFormatter="value => `${value}px`" />
@@ -57,9 +78,10 @@
 import { useStore } from "vuex"
 import { ref, computed } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { OpenPageTarget, SearchEngineData } from "@/types"
+import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion } from "@/types"
 import SearchManage from "./SearchManage.vue"
 import { SEARCH_SETTING_KEY } from "@/store/search"
+import { Permis, isExtension } from "@/plugins/extension"
 
 // Vuex
 const searchStore = useStore(SEARCH_SETTING_KEY)
@@ -79,7 +101,7 @@ const currentEngine = computed({
 const isOpenPageByBlank = computed({
   get: () => searchSetting.value.openPageTarget === OpenPageTarget.Blank,
   set: (isOpenPageByBlank: boolean) =>
-    searchStore.commit("updateSearchSetting", {
+    updateSearchSetting({
       openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
     })
 })
@@ -87,14 +109,24 @@ const isOpenPageByBlank = computed({
 // 显示搜索引擎下拉列表
 const showEngineSelect = computed({
   get: () => searchSetting.value.showEngineSelect,
-  set: showEngineSelect => searchStore.commit("updateSearchSetting", { showEngineSelect })
+  set: showEngineSelect => updateSearchSetting({ showEngineSelect })
 })
 
 // 搜索输入框圆角
 const searchInputRadius = computed({
   get: () => searchSetting.value.searchInputRadius,
-  set: searchInputRadius => searchStore.commit("updateSearchSetting", { searchInputRadius })
+  set: searchInputRadius => updateSearchSetting({ searchInputRadius })
 })
+
+// 搜索关键字建议
+const suggestion = computed({
+  get: () => searchSetting.value.suggestion,
+  set: suggestion => updateSearchSetting({ suggestion })
+})
+
+function updateSearchSetting(data: SearchSetting) {
+  searchStore.commit("updateSearchSetting", data)
+}
 </script>
 
 <style lang="less">

@@ -1,10 +1,17 @@
 import { createStore, Store } from "vuex"
-import { SearchEngineData, OpenPageTarget, SearchSetting, SearchEngineItem } from "@/types"
+import {
+  SearchEngineData,
+  OpenPageTarget,
+  SearchSetting,
+  SearchEngineItem,
+  SearchSuggestion
+} from "@/types"
 import BaiduLogo from "@/assets/baidu.png"
 import BingLogo from "@/assets/bing.svg"
 import GoogleLogo from "@/assets/google.png"
 import { copy, deepClone, isEmpty } from "@/utils/common"
 import { InjectionKey } from "vue"
+import { getBaiduSuggestion } from "@/api/suggestion"
 
 interface SearchState {
   searchEngines: SearchEngineData
@@ -49,7 +56,8 @@ export default createStore<SearchState>({
         openPageTarget: OpenPageTarget.Blank,
         showEngineSelect: true,
         searchInputRadius: 4,
-        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES)
+        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES),
+        suggestion: SearchSuggestion.none
       },
       history: []
     }
@@ -122,6 +130,18 @@ export default createStore<SearchState>({
 
       commit("putHistory", searchText)
       window.open(url, setting.openPageTarget)
+    },
+
+    getSuggestion({ state }, searchText: string) {
+      const { setting } = state
+
+      switch (setting.suggestion) {
+        case SearchSuggestion.baidu:
+          return getBaiduSuggestion(searchText)
+        case SearchSuggestion.google:
+        default:
+          return []
+      }
     }
   }
 })

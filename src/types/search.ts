@@ -15,10 +15,17 @@ export enum OpenPageTarget {
   Self = "_self"
 }
 
+export enum SearchSuggestion {
+  none,
+  baidu,
+  google
+}
+
 export interface SearchSetting {
   currentEngine?: string
   openPageTarget?: OpenPageTarget
   showEngineSelect?: boolean
   searchInputRadius?: number
   useSearchEngines?: Array<string>
+  suggestion?: SearchSuggestion
 }
