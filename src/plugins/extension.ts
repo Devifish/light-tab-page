@@ -6,8 +6,11 @@ export enum PermissionsType {
   Bing
 }
 
+const isExtension = chrome && chrome.extension ? true : false
+
 const vPermis: ObjectDirective<any, PermissionsType> = {
   created(el, bind) {
+    if (!isExtension) return
     if (isEmpty(bind.value)) return
 
     let permis: Permissions.Permissions | undefined

@@ -24,6 +24,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.155",
     "@types/node": "^16.7.1",
     "@types/webextension-polyfill": "^0.8.0",
     "@vitejs/plugin-vue": "^1.6.0",
