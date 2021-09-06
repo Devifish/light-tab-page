@@ -11,7 +11,7 @@ import BingLogo from "@/assets/bing.svg"
 import GoogleLogo from "@/assets/google.png"
 import { copy, deepClone, isEmpty } from "@/utils/common"
 import { InjectionKey } from "vue"
-import { getBaiduSuggestion } from "@/api/suggestion"
+import { getBaiduSuggestion, getBingSuggestion } from "@/api/suggestion"
 
 interface SearchState {
   searchEngines: SearchEngineData
@@ -138,6 +138,8 @@ export default createStore<SearchState>({
       switch (setting.suggestion) {
         case SearchSuggestion.baidu:
           return getBaiduSuggestion(searchText)
+        case SearchSuggestion.bing:
+          return getBingSuggestion(searchText)
         case SearchSuggestion.google:
         default:
           return []

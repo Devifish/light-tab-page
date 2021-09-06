@@ -18,6 +18,7 @@ export enum OpenPageTarget {
 export enum SearchSuggestion {
   none,
   baidu,
+  bing,
   google
 }
 

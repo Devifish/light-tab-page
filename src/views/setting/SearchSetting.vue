@@ -38,8 +38,12 @@
           >
             Baidu
           </a-radio-button>
-          <a-radio-button :value="SearchSuggestion.google" disabled v-permis="Permis.suggestion">
-            Google
+          <a-radio-button
+            :value="SearchSuggestion.bing"
+            :disabled="!isExtension"
+            v-permis="Permis.suggestion"
+          >
+            Bing
           </a-radio-button>
         </a-radio-group>
       </a-col>
