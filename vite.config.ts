@@ -4,6 +4,7 @@ import vue from "@vitejs/plugin-vue"
 import ViteComponents, { AntDesignVueResolver } from "vite-plugin-components"
 
 export default defineConfig({
+  envPrefix: "APP_",
   resolve: {
     alias: {
       "@/": `${resolve(__dirname, "src")}/`
@@ -11,7 +12,8 @@ export default defineConfig({
   },
   build: {
     brotliSize: false,
-    chunkSizeWarningLimit: 1024
+    chunkSizeWarningLimit: 1024,
+    watch: {}
   },
   css: {
     preprocessorOptions: {

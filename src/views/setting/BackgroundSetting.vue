@@ -5,7 +5,7 @@
       <a-radio-group v-model:value="backgroundType" style="width: 100%">
         <a-radio :value="BackgroundType.None">无</a-radio>
         <a-radio :value="BackgroundType.Local">本地图片</a-radio>
-        <a-radio :value="BackgroundType.Bing" :disabled="!isExtension">Bing每日壁纸</a-radio>
+        <a-radio :value="BackgroundType.Bing" v-permis="PermissionsType.Bing">每日壁纸</a-radio>
       </a-radio-group>
     </div>
 
@@ -60,7 +60,7 @@ import { useStore } from "vuex"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { BackgroundType } from "@/types"
 import { SETTING_STORE_KEY } from "@/store/setting"
-import { isExtension } from "@/plugins/chrome"
+import { PermissionsType } from "@/plugins/extension"
 
 const settingStore = useStore(SETTING_STORE_KEY)
 const background = computed(() => settingStore.state.view.background!)

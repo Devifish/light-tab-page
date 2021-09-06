@@ -16,7 +16,7 @@
       "@/*": ["src/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable"],
-    "types": ["vite/client", "chrome"]
+    "types": ["vite/client"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules"]
