@@ -60,6 +60,11 @@ export function copy(
   }
 }
 
+/**
+ * 生成UUID
+ *
+ * @returns string uuid
+ */
 export function uuid() {
   var temp: any[] = []
   var hexDigits = "0123456789abcdef"
@@ -74,12 +79,12 @@ export function uuid() {
   return temp.join("")
 }
 
-export function sleep(timeout: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout)
-  })
-}
-
+/**
+ * 文件转Base64
+ *
+ * @param file 文件
+ * @returns Base64
+ */
 export async function fileToBase64(file: File) {
   const reader = new FileReader()
   reader.readAsDataURL(file)
@@ -88,6 +93,12 @@ export async function fileToBase64(file: File) {
   return reader.result
 }
 
+/**
+ * Base64转Blob
+ *
+ * @param base64 base64
+ * @returns Blob
+ */
 export function base64ToBlob(base64: string) {
   const temp = base64.split(","),
     mime = temp[0].match(/:(.*?);/)![1],

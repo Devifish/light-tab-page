@@ -2,6 +2,8 @@ import { isEmpty } from "@/utils/common"
 import { App, ObjectDirective } from "vue"
 import { permissions, Permissions } from "webextension-polyfill"
 
+export const isExtension = chrome && chrome.extension ? true : false
+
 export const Permis: Record<string, Permissions.Permissions> = {
   bing: { origins: ["https://cn.bing.com/"] },
   suggestion: {
@@ -12,8 +14,6 @@ export const Permis: Record<string, Permissions.Permissions> = {
     ]
   }
 }
-
-export const isExtension = chrome && chrome.extension ? true : false
 
 const vPermis: ObjectDirective<any, Permissions.Permissions> = {
   created(el, bind) {

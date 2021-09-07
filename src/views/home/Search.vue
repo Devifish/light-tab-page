@@ -10,7 +10,7 @@
         :defaultActiveFirstOption="false"
         backfill
         style="width: 100%"
-        @search="handleSearchSuggestion"
+        @search="debounceSearchSuggestion"
       >
         <template #options>
           <a-select-option v-for="item of searchSuggestion" :key="item">
@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { SEARCH_SETTING_KEY } from "@/store/search"
 import { SearchEngineData } from "@/types"
+import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
 import { useStore } from "vuex"
@@ -61,6 +62,7 @@ const currentEngine = computed({
 
 // 搜索内容
 const searchText = ref("")
+const debounceSearchSuggestion = debounce(handleSearchSuggestion)
 
 /**
  * 搜索框搜索事件
