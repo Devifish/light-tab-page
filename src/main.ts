@@ -8,4 +8,4 @@ const app = createApp(App)
 app.use(Store)
 app.use(Extension)
 
-app.mount("#app")
+app.mount(document.body)

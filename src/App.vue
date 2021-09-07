@@ -74,12 +74,6 @@ onBeforeMount(init)
 </script>
 
 <style lang="less">
-#app {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
 [data-theme="dark"] {
   @import "ant-design-vue/lib/style/dark.less";
   @import "ant-design-vue/lib/comment/style/index.less";
