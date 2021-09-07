@@ -30,7 +30,7 @@ export function debounce<E extends any[]>(
     if (timeId) clearTimeout(timeId)
 
     timeId = setTimeout(() => {
-      func.apply(_this, args)
+      Reflect.apply(func, _this, args)
     }, wait)
   }
 }

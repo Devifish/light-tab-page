@@ -29,8 +29,8 @@ export function deepClone<E extends object>(obj: E, ...ignoreKeys: string[]): E 
   const newObj = JSON.parse(json)
 
   for (let key of ignoreKeys) {
-    if (newObj.hasOwnProperty(key)) {
-      delete newObj[key]
+    if (Reflect.has(newObj, key)) {
+      Reflect.deleteProperty(newObj, key)
     }
   }
   return newObj
@@ -53,7 +53,7 @@ export function copy(
     const temp = source[key]
 
     if (skipEmpty && isEmpty(temp)) continue
-    if (onlyExist && !target.hasOwnProperty(key)) continue
+    if (onlyExist && !Reflect.has(target, key)) continue
 
     // 复制对应参数
     target[key] = temp

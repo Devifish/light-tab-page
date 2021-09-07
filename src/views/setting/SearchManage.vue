@@ -104,7 +104,6 @@ const currentEngine = computed(() => searchStore.state.setting.currentEngine!),
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
 const currentDragEngineId = ref<string>()
 
-const useForm = Form.useForm
 const addEngineState = reactive({
   show: false,
   name: "",
@@ -112,28 +111,14 @@ const addEngineState = reactive({
   icon: "",
   description: ""
 })
-const { validate, resetFields, validateInfos } = useForm(addEngineState, {
-  name: [
-    {
-      required: true,
-      message: "请输入名称"
-    }
-  ],
-  icon: [
-    {
-      required: true,
-      message: "请输入图标URL",
-      type: "url"
-    }
-  ],
-  url: [
-    {
-      required: true,
-      message: "请输入地址URL",
-      type: "url"
-    }
-  ]
+
+const rules = reactive({
+  name: [{ required: true, message: "请输入名称" }],
+  icon: [{ required: true, message: "请输入图标URL", type: "url" }],
+  url: [{ required: true, message: "请输入地址URL", type: "url" }]
 })
+
+const { validate, resetFields, validateInfos } = Form.useForm(addEngineState, rules)
 
 function onEngineDragenter(e, moveId: string) {
   e.preventDefault()
