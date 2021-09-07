@@ -2,57 +2,25 @@
   <a-config-provider>
     <home />
   </a-config-provider>
-
-  <wallpaper
-    v-if="background.type !== BackgroundType.None"
-    :src="background.url"
-    :blur="`${background.blur}px`"
-    :maskColor="background.maskColor"
-    :maskOpacity="maskOpacity"
-    @error="onWallpaperError"
-  />
 </template>
 
+<script lang="ts">
+import { InjectionKey, Ref } from "vue"
+
+export const CURRENT_THEME_KEY: InjectionKey<Ref<ThemeMode>> = Symbol.for("")
+</script>
+
 <script lang="ts" setup>
-import { computed, watch, onBeforeMount, ref } from "vue"
+import { computed, watch, onBeforeMount, ref, provide } from "vue"
 import { useStore } from "vuex"
-import { BackgroundType, ThemeMode } from "./types"
+import { ThemeMode } from "./types"
 import Home from "@/views/home/Index.vue"
 import { SETTING_STORE_KEY } from "./store/setting"
 
 const settingStore = useStore(SETTING_STORE_KEY)
 const themeMode = computed(() => settingStore.state.view.themeMode!)
-const background = computed(() => settingStore.state.view.background!)
 
-// 当前主题
 const currentTheme = ref<ThemeMode>()
-
-// 遮罩不透明度
-const maskOpacity = computed(() => {
-  const defaultOpacity = 0.75
-  const { maskOpacity, autoOpacity } = background.value
-
-  return autoOpacity && currentTheme.value === ThemeMode.Dart
-    ? (defaultOpacity + (1 - defaultOpacity) * maskOpacity!).toFixed(2)
-    : maskOpacity
-})
-
-/**
- * APP 初始化
- * 完成启动时必须加载处理的任务
- */
-function init() {
-  const backgroundType = background.value.type!
-
-  // 同步并监听系统主题模式
-  onSystemThemeChange()
-  changeThemeMode(themeMode.value)
-
-  // 如果是Bing每日壁纸则重新加载
-  if (backgroundType === BackgroundType.Bing) {
-    settingStore.dispatch("loadBingDailyWallpaper")
-  }
-}
 
 function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode: boolean
@@ -89,13 +57,19 @@ function onSystemThemeChange() {
   }
 }
 
-function onWallpaperError() {
-  settingStore.dispatch("reloadBackgroundImage")
+/**
+ * APP 初始化
+ * 同步并监听系统主题模式
+ */
+function init() {
+  onSystemThemeChange()
+  changeThemeMode(themeMode.value)
 }
 
 // 监听并设置主题
 watch(themeMode, val => changeThemeMode(val))
 
+provide(CURRENT_THEME_KEY, currentTheme)
 onBeforeMount(init)
 </script>
 

@@ -11,6 +11,12 @@
     <div></div>
   </main>
 
+  <!-- 壁纸 -->
+  <div class="wallpaper-layout">
+    <wallpaper />
+  </div>
+
+  <!-- 设置 -->
   <common-drawer :width="400" :footer="false" ref="settingDrawer">
     <setting />
   </common-drawer>
@@ -20,6 +26,7 @@
 import { ref } from "vue"
 import Search from "./Search.vue"
 import Setting from "@/views/setting/Index.vue"
+import Wallpaper from "./Wallpaper.vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
 
 const settingDrawer = ref()
@@ -46,5 +53,14 @@ const settingDrawer = ref()
       transition: none;
     }
   }
+}
+
+.wallpaper-layout {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  z-index: -10;
 }
 </style>
