@@ -1,8 +1,9 @@
 <template>
   <div class="search-setting">
-    <a-row type="flex" justify="space-between" align="middle">
-      <a-col>
-        <span class="lable-text">搜索引擎</span>
+    <setting-item horizontal>
+      <template #lable>
+        <span>搜索引擎</span>
+
         <a-tooltip title="管理搜索引擎">
           <a-button
             class="engine-setting"
@@ -14,58 +15,41 @@
             <setting-outlined />
           </a-button>
         </a-tooltip>
-      </a-col>
-      <a-col>
-        <a-select v-model:value="currentEngine" style="width: 90px">
-          <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
-            {{ value.name }}
-          </a-select-option>
-        </a-select>
-      </a-col>
-    </a-row>
+      </template>
 
-    <a-row type="flex" justify="space-between" align="middle">
-      <a-col>
-        <span class="lable-text">搜索建议接口</span>
-      </a-col>
-      <a-col>
-        <a-select v-model:value="suggestion" v-permis="Permis.suggestion" style="width: 100px">
-          <a-select-option :value="SearchSuggestion.none"> 不使用 </a-select-option>
-          <a-select-option :value="SearchSuggestion.baidu" :disabled="!isExtension">
-            百度 API
-          </a-select-option>
-          <a-select-option :value="SearchSuggestion.bing" :disabled="!isExtension">
-            Bing API
-          </a-select-option>
-          <a-select-option :value="SearchSuggestion.google" :disabled="!isExtension">
-            Google API
-          </a-select-option>
-        </a-select>
-      </a-col>
-    </a-row>
+      <a-select v-model:value="currentEngine" style="width: 90px">
+        <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
+          {{ value.name }}
+        </a-select-option>
+      </a-select>
+    </setting-item>
 
-    <div>
-      <span class="lable-text">搜索框圆角</span>
+    <setting-item lable="搜索建议接口" horizontal>
+      <a-select v-model:value="suggestion" v-permis="Permis.suggestion" style="width: 100px">
+        <a-select-option :value="SearchSuggestion.none"> 不使用 </a-select-option>
+        <a-select-option :value="SearchSuggestion.baidu" :disabled="!isExtension">
+          百度 API
+        </a-select-option>
+        <a-select-option :value="SearchSuggestion.bing" :disabled="!isExtension">
+          Bing API
+        </a-select-option>
+        <a-select-option :value="SearchSuggestion.google" :disabled="!isExtension">
+          Google API
+        </a-select-option>
+      </a-select>
+    </setting-item>
+
+    <setting-item lable="搜索框圆角">
       <a-slider v-model:value="searchInputRadius" :max="22" :tipFormatter="value => `${value}px`" />
-    </div>
+    </setting-item>
 
-    <a-row type="flex" justify="space-between" align="middle">
-      <a-col>
-        <span class="lable-text">在新标签页中打开搜索结果</span>
-      </a-col>
-      <a-col>
-        <a-switch v-model:checked="isOpenPageByBlank" />
-      </a-col>
-    </a-row>
+    <setting-item lable="在新标签页中打开搜索结果" horizontal>
+      <a-switch v-model:checked="isOpenPageByBlank" />
+    </setting-item>
 
-    <a-row type="flex" justify="space-between" align="middle">
-      <a-col>
-        <span class="lable-text">在搜索框前添加搜索引擎下拉列表</span>
-      </a-col>
-      <a-col>
-        <a-switch v-model:checked="showEngineSelect" />
-      </a-col>
-    </a-row>
+    <setting-item lable="在搜索框前添加搜索引擎下拉列表" horizontal>
+      <a-switch v-model:checked="showEngineSelect" />
+    </setting-item>
   </div>
 
   <common-drawer title="管理搜索引擎" :width="400" :footer="false" ref="searchDrawer">

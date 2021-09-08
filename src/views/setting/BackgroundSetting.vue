@@ -1,26 +1,24 @@
 <template>
   <div class="background-setting">
-    <a-row type="flex" justify="space-between" align="middle">
-      <a-col>
-        <span class="lable-text">壁纸设置</span>
-      </a-col>
-      <a-col>
-        <a-radio-group v-model:value="backgroundType" button-style="solid">
-          <a-radio-button :value="BackgroundType.None">无</a-radio-button>
-          <a-radio-button :value="BackgroundType.Local">本地图片</a-radio-button>
-          <a-radio-button
-            :value="BackgroundType.Bing"
-            :disabled="!isExtension"
-            v-permis="Permis.bing"
-          >
-            Bing每日壁纸
-          </a-radio-button>
-        </a-radio-group>
-      </a-col>
-    </a-row>
+    <setting-item lable="壁纸设置" horizontal>
+      <a-radio-group v-model:value="backgroundType" button-style="solid">
+        <a-radio-button :value="BackgroundType.None">无</a-radio-button>
+        <a-radio-button :value="BackgroundType.Local">本地图片</a-radio-button>
+        <a-radio-button
+          :value="BackgroundType.Bing"
+          :disabled="!isExtension"
+          v-permis="Permis.bing"
+        >
+          Bing每日壁纸
+        </a-radio-button>
+      </a-radio-group>
+    </setting-item>
 
-    <div class="upload-layout" v-show="backgroundType === BackgroundType.Local">
-      <span class="lable-text">上传壁纸</span>
+    <setting-item
+      class="upload-layout"
+      lable="上传壁纸"
+      v-show="backgroundType === BackgroundType.Local"
+    >
       <a-upload
         class="background-uploader"
         list-type="picture-card"
@@ -34,32 +32,25 @@
           <plus-outlined />
         </div>
       </a-upload>
-    </div>
+    </setting-item>
 
     <template v-if="backgroundType !== BackgroundType.None">
-      <div>
-        <span class="lable-text">模糊强度</span>
+      <setting-item lable="模糊强度">
         <a-slider v-model:value="blur" :max="48" :tipFormatter="value => `${value}px`" />
-      </div>
+      </setting-item>
 
-      <div>
-        <span class="lable-text">遮罩不透明度</span>
+      <setting-item lable="遮罩不透明度">
         <a-slider
           v-model:value="maskOpacity"
           :step="0.01"
           :max="1"
           :tipFormatter="value => `${Math.round(value * 100)}%`"
         />
-      </div>
+      </setting-item>
 
-      <a-row type="flex" justify="space-between" align="middle">
-        <a-col>
-          <span class="lable-text">在深色模式下使壁纸更暗</span>
-        </a-col>
-        <a-col>
-          <a-switch v-model:checked="autoOpacity" />
-        </a-col>
-      </a-row>
+      <setting-item lable="在深色模式下使壁纸更暗" horizontal>
+        <a-switch v-model:checked="autoOpacity" />
+      </setting-item>
     </template>
   </div>
 </template>

@@ -85,13 +85,13 @@ function cleanHistory() {
 
     height: 38px;
     line-height: 38px;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 0 8px;
     margin-bottom: 4px;
+    border-bottom: 1px solid #f0f0f0;
 
     h3 {
       font-size: 14px;
       font-weight: bold;
-      margin-left: 12px;
       margin-bottom: 0;
     }
   }

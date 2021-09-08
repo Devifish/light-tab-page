@@ -1,14 +1,15 @@
 <template>
   <div class="theme-mode">
-    <span class="lable-text">主题模式</span>
-    <a-space style="width: 100%">
-      <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
-        <div class="theme-item" @click="onThemeChange(item.mode)">
-          <img :src="item.icon" />
-          <check-circle-filled class="select-icon" v-if="item.mode === viewSetting.themeMode" />
-        </div>
-      </a-tooltip>
-    </a-space>
+    <setting-item lable="主题模式">
+      <a-space>
+        <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
+          <div class="theme-item" @click="onThemeChange(item.mode)">
+            <img :src="item.icon" />
+            <check-circle-filled class="select-icon" v-if="item.mode === viewSetting.themeMode" />
+          </div>
+        </a-tooltip>
+      </a-space>
+    </setting-item>
   </div>
 </template>
 

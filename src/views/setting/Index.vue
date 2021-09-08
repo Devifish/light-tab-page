@@ -1,11 +1,13 @@
 <template>
   <div class="setting-layout">
     <template v-for="item of settingList" :key="item.title">
-      <div class="setting-item">
+      <div class="setting-menu">
         <h3>
           <component :is="item.icon" />
           {{ item.title }}
         </h3>
+
+        <!-- content -->
         <component :is="item.component" />
       </div>
       <a-divider />
@@ -47,13 +49,8 @@ const settingList: SettingItem[] = [
 
 <style lang="less">
 .setting-layout {
-  .setting-item > h3 {
+  .setting-menu > h3 {
     margin-bottom: 12px;
-  }
-
-  .lable-text {
-    height: 38px;
-    line-height: 38px;
   }
 }
 </style>
