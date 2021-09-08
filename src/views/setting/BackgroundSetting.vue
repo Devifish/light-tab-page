@@ -15,9 +15,9 @@
     </setting-item>
 
     <setting-item
+      v-if="backgroundType === BackgroundType.Local"
       class="upload-layout"
       lable="上传壁纸"
-      v-show="backgroundType === BackgroundType.Local"
     >
       <a-upload
         class="background-uploader"
