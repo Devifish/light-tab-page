@@ -1,6 +1,6 @@
 <template>
   <a-config-provider>
-    <home />
+    <router-view />
   </a-config-provider>
 </template>
 
@@ -14,7 +14,6 @@ export const CURRENT_THEME_KEY: InjectionKey<Ref<ThemeMode>> = Symbol.for("")
 import { computed, watch, onBeforeMount, ref, provide } from "vue"
 import { useStore } from "vuex"
 import { ThemeMode } from "./types"
-import Home from "@/views/home/Index.vue"
 import { SETTING_STORE_KEY } from "./store/setting"
 
 const settingStore = useStore(SETTING_STORE_KEY)

@@ -1,3 +1,5 @@
+import { setTransitionHooks } from "@vue/runtime-core"
+
 export interface SearchEngineItem {
   id: string
   name: string
@@ -29,4 +31,16 @@ export interface SearchSetting {
   searchInputRadius?: number
   useSearchEngines?: Array<string>
   suggestion?: SearchSuggestion
+}
+
+export interface HistoryItem {
+  engineId: string
+  searchText: string
+  timestamp: number
+}
+
+export interface SearchData {
+  engine: string
+  text: string
+  target: OpenPageTarget
 }

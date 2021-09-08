@@ -5,6 +5,7 @@ import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/image"
 import { InjectionKey } from "vue"
 import { getDailyWallpaperUrl } from "@/api/bing"
+import { debounce } from "@/utils/async"
 
 interface SettingState {
   view: ViewSetting
@@ -92,7 +93,7 @@ export default createStore<SettingState>({
   }
 })
 
-function saveSettingState(data: SettingState) {
+const saveSettingState = debounce((data: SettingState) => {
   const settingJson = JSON.stringify(data)
   localStorage.setItem(SETTING_STORAGE, settingJson)
-}
+}, 1000)

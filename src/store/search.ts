@@ -4,7 +4,9 @@ import {
   OpenPageTarget,
   SearchSetting,
   SearchEngineItem,
-  SearchSuggestion
+  SearchSuggestion,
+  HistoryItem,
+  SearchData
 } from "@/types"
 import BaiduLogo from "@/assets/baidu.png"
 import BingLogo from "@/assets/bing.svg"
@@ -16,11 +18,13 @@ import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/ap
 interface SearchState {
   searchEngines: SearchEngineData
   setting: SearchSetting
-  history: Array<string>
+  history: Array<HistoryItem>
 }
 
 const SEARCH_SETTING_STORAGE = "search-setting"
 const SEARCH_ENGINES_STORAGE = "search-engines"
+const SEARCH_HISTORY_STORAGE = "search-history"
+const SEARCH_HISTORY_LENGTH = 100
 
 export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   baidu: {
@@ -68,7 +72,7 @@ export default createStore<SearchState>({
     const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
     Object.assign(defaultState.searchEngines, searchEngines)
 
-    const history = JSON.parse(localStorage["history"] ?? "[]")
+    const history = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
     if (!isEmpty(history)) defaultState.history = history
 
     return defaultState
@@ -88,8 +92,18 @@ export default createStore<SearchState>({
     }
   },
   mutations: {
-    putHistory(state, newHistory: string) {
-      console.log("写入搜索历史", newHistory)
+    putHistory({ history }, newHistory: HistoryItem) {
+      history.unshift(newHistory)
+      saveSearchHistory(history)
+    },
+    deleteHistory({ history }, index: number) {
+      history.splice(index, 1)
+
+      saveSearchHistory(history)
+    },
+    cleanHistory(state) {
+      state.history = []
+      localStorage.removeItem(SEARCH_HISTORY_STORAGE)
     },
     updateCurrentEngine(state, currentEngine: string) {
       if (isEmpty(state.searchEngines[currentEngine])) return
@@ -118,18 +132,32 @@ export default createStore<SearchState>({
     }
   },
   actions: {
-    submitSearch({ state, commit }, searchText: string) {
-      const { searchEngines, setting } = state
+    submitSearch({ state, commit, dispatch }, searchText: string) {
+      const { setting } = state
       const currentEngine = setting.currentEngine!
+      const history: HistoryItem = {
+        searchText,
+        engineId: currentEngine,
+        timestamp: Date.now()
+      }
 
-      let url = searchEngines[currentEngine].baseUrl
-      url = url.replace("{searchText}", encodeURI(searchText))
+      commit("putHistory", history)
+      dispatch("openSearchPage", <SearchData>{
+        engine: currentEngine,
+        text: searchText,
+        target: setting.openPageTarget
+      })
+    },
 
-      // inputEncoding
+    openSearchPage({ state }, search: SearchData) {
+      const { searchEngines } = state
+
+      // 构建搜索URL
+      let url = searchEngines[search.engine].baseUrl
+      if (url.includes("{searchText}")) url = url.replace("{searchText}", encodeURI(search.text))
       if (url.includes("{inputEncoding}")) url = url.replace("{inputEncoding}", "utf-8")
 
-      commit("putHistory", searchText)
-      window.open(url, setting.openPageTarget)
+      window.open(url, search.target)
     },
 
     getSuggestion({ state }, searchText: string) {
@@ -158,4 +186,14 @@ function saveSearchEngineData(data: SearchEngineData) {
   const saveData = deepClone(data, ...Object.keys(DEFAULT_SEARCH_ENGINES))
   const dataJson = JSON.stringify(saveData)
   localStorage.setItem(SEARCH_ENGINES_STORAGE, dataJson)
+}
+
+function saveSearchHistory(data: Array<HistoryItem>) {
+  const length = data.length
+  if (length > SEARCH_HISTORY_LENGTH) {
+    data.splice(SEARCH_HISTORY_LENGTH - 1, length - SEARCH_HISTORY_LENGTH)
+  }
+
+  const dataJson = JSON.stringify(data)
+  localStorage.setItem(SEARCH_HISTORY_STORAGE, dataJson)
 }

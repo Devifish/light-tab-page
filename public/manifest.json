@@ -16,7 +16,8 @@
     },
     "browser_action": {
         "default_icon": "icons/logo128.png",
-        "default_title": "__MSG_name__"
+        "default_title": "__MSG_name__",
+        "default_popup": "index.html#/popup"
     },
     "icons": {
         "32": "icons/logo32.png",

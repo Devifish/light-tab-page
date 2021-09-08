@@ -21,6 +21,7 @@
     "localforage": "^1.10.0",
     "moment": "^2.29.1",
     "vue": "^3.2.8",
+    "vue-router": "^4.0.11",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
