@@ -1,6 +1,6 @@
 import { isEmpty } from "@/utils/common"
-import { App, ObjectDirective } from "vue"
-import { permissions, Permissions } from "webextension-polyfill"
+import type { App, ObjectDirective } from "vue"
+import { permissions, Permissions, topSites } from "webextension-polyfill"
 
 export const isExtension = chrome && chrome.extension ? true : false
 
@@ -38,6 +38,14 @@ const vPermis: ObjectDirective<any, Permissions.Permissions> = {
 
       el.addEventListener("click", onRequestPermissions)
     })
+  }
+}
+
+export async function getBrowserTopSites() {
+  if (isExtension) {
+    return await topSites.get()
+  } else {
+    return []
   }
 }
 

@@ -6,7 +6,9 @@
     "default_locale": "zh_CN",
     "content_security_policy": "script-src 'self'; object-src 'self';",
     "minimum_chrome_version": "81.0.0",
-    "permissions": [],
+    "permissions": [
+        "topSites"
+    ],
     "optional_permissions": [
         "https://cn.bing.com/",
         "https://suggestion.baidu.com/",

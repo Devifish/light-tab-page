@@ -1,5 +1,5 @@
 import { createStore, Store } from "vuex"
-import { BackgroundSetting, BackgroundType, ThemeMode, ViewSetting } from "@/types"
+import { BackgroundSetting, BackgroundType, ThemeMode, TopSiteSetting } from "@/types"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/image"
@@ -8,8 +8,9 @@ import { getDailyWallpaperUrl } from "@/api/bing"
 import { debounce } from "@/utils/async"
 
 interface SettingState {
-  view: ViewSetting
-  layout?: object
+  themeMode: ThemeMode
+  background: BackgroundSetting
+  topSite: TopSiteSetting
 }
 
 const SETTING_STORAGE = "setting-data"
@@ -18,17 +19,25 @@ export const SETTING_STORE_KEY: InjectionKey<Store<SettingState>> = Symbol()
 export default createStore<SettingState>({
   state() {
     const defaultState: SettingState = {
-      view: {
-        themeMode: ThemeMode.Auto,
-        background: {
-          id: "",
-          type: BackgroundType.None,
-          url: "",
-          blur: 0,
-          maskColor: "#000",
-          maskOpacity: 0,
-          autoOpacity: true
-        }
+      themeMode: ThemeMode.Auto,
+      background: {
+        id: "",
+        type: BackgroundType.None,
+        url: "",
+        blur: 0,
+        maskColor: "#000",
+        maskOpacity: 0,
+        autoOpacity: true
+      },
+      topSite: {
+        col: 6,
+        row: 2,
+        gap: 10,
+        iconSize: 32,
+        boardSize: 64,
+        boardRadius: 4,
+        boardColor: "#fff",
+        boardOpacity: 0.8
       }
     }
 
@@ -39,12 +48,12 @@ export default createStore<SettingState>({
   },
   getters: {},
   mutations: {
-    updateViewSetting(state, view: ViewSetting) {
-      copy(view, state.view)
+    updateThemeMode(state, mode: ThemeMode) {
+      state.themeMode = mode
       saveSettingState(state)
     },
     updateBackgroundSetting(state, background: BackgroundSetting) {
-      copy(background, state.view.background!)
+      copy(background, state.background!)
       saveSettingState(state)
     },
     updateLayoutSetting(state) {
@@ -71,7 +80,7 @@ export default createStore<SettingState>({
     },
 
     async reloadBackgroundImage({ state, commit }) {
-      const id = state.view.background?.id!
+      const id = state.background?.id!
       const file = await wallpaperStore.getItem<Blob>(id)
 
       // 校验图片数据是否可用，否则删除该数据
@@ -93,6 +102,7 @@ export default createStore<SettingState>({
   }
 })
 
+// 保存设置数据节流防抖
 const saveSettingState = debounce((data: SettingState) => {
   const settingJson = JSON.stringify(data)
   localStorage.setItem(SETTING_STORAGE, settingJson)

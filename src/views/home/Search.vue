@@ -1,5 +1,5 @@
 <template>
-  <div class="search-layout">
+  <div class="search-warp">
     <div class="search-logo">
       <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
@@ -114,10 +114,12 @@ function onSwitchEngines(e: KeyboardEvent) {
 @input-h: 44px;
 @search-radius: v-bind(searchInputRadius);
 
-.search-layout {
-  display: grid;
-  grid-template-rows: @logo-h 100px;
-  justify-items: center;
+.search-warp {
+  height: 164px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 
   .search-logo img {
     height: @logo-h;

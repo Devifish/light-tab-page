@@ -17,7 +17,7 @@ import { ThemeMode } from "./types"
 import { SETTING_STORE_KEY } from "./store/setting"
 
 const settingStore = useStore(SETTING_STORE_KEY)
-const themeMode = computed(() => settingStore.state.view.themeMode!)
+const themeMode = computed(() => settingStore.state.themeMode)
 
 const currentTheme = ref<ThemeMode>()
 

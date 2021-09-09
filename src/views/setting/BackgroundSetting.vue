@@ -64,7 +64,7 @@ import { SETTING_STORE_KEY } from "@/store/setting"
 import { isExtension, Permis } from "@/plugins/extension"
 
 const settingStore = useStore(SETTING_STORE_KEY)
-const background = computed(() => settingStore.state.view.background!)
+const background = computed(() => settingStore.state.background)
 
 // 背景类型
 const backgroundType = computed<BackgroundType>({

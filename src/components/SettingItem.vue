@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 interface SettingItemProps {
   lable?: string
-  horizontal: boolean
+  horizontal?: boolean
 }
 
 const props = withDefaults(defineProps<SettingItemProps>(), {

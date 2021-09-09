@@ -17,7 +17,7 @@ import { BackgroundType, ThemeMode } from "@/types"
 import { CURRENT_THEME_KEY } from "@/App.vue"
 
 const settingStore = useStore(SETTING_STORE_KEY)
-const background = computed(() => settingStore.state.view.background!)
+const background = computed(() => settingStore.state.background)
 
 // 获取当前主题
 const currentTheme = inject(CURRENT_THEME_KEY)

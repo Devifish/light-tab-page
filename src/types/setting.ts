@@ -10,11 +10,6 @@ export enum BackgroundType {
   Bing
 }
 
-export interface ViewSetting {
-  themeMode?: ThemeMode
-  background?: BackgroundSetting
-}
-
 export interface BackgroundSetting {
   id?: string
   type?: BackgroundType
@@ -23,4 +18,19 @@ export interface BackgroundSetting {
   maskColor?: String
   maskOpacity?: number
   autoOpacity?: boolean
+}
+
+export interface TopSiteIcon {
+  size: number
+}
+
+export interface TopSiteSetting {
+  row: number
+  col: number
+  gap: number
+  iconSize: number
+  boardSize: number
+  boardColor: string
+  boardOpacity: number
+  boardRadius: number
 }
