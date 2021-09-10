@@ -2,7 +2,7 @@ import type { InjectionKey } from "vue"
 import { createStore, Store } from "vuex"
 import { getBrowserTopSites } from "@/plugins/extension"
 import { TopSiteItem, TopSites } from "@/types"
-import { copy, isEmpty } from "@/utils/common"
+import { copy } from "@/utils/common"
 import { debounce } from "@/utils/async"
 import settingStore from "./setting"
 import { verifyImageUrl } from "@/utils/image"
@@ -43,29 +43,29 @@ export default createStore<TopSiteState>({
   },
   actions: {
     async initTopSites({ state }) {
+      const startTime = Date.now()
       const topSiteSetting = settingStore.state.topSite
       const list = await getBrowserTopSites()
-      console.log(list)
 
-      const topSites: TopSites = []
-      for (let i = 0; i < list.length; i++) {
-        if (i >= topSiteSetting.col * topSiteSetting.row) break
+      // 并行校验图标是否有效
+      state.topSites = await Promise.all(
+        list
+          .filter((_item, index) => index < topSiteSetting.col * topSiteSetting.row)
+          .map<Promise<TopSiteItem>>(async item => {
+            const icon = item.favicon || getFavicon(item.url)
+            const verify = await verifyImageUrl(icon)
 
-        const temp = list[i]
-        let icon: any = temp.favicon || getFavicon(temp.url)
-
-        if (!await verifyImageUrl(icon)) icon = undefined
-
-        topSites.push({
-          title: temp.title ?? "无标题",
-          url: temp.url,
-          icon,
-          textIcon: isEmpty(icon)
-        })
-      }
-
-      state.topSites = topSites
+            return {
+              title: item.title ?? "无标题",
+              url: item.url,
+              icon: verify ? icon : undefined,
+              textIcon: !verify
+            }
+          })
+      )
       state.init = true
+
+      console.log("load browser top-sites:", `${Date.now() - startTime}ms`)
       saveTopSiteState(state)
     }
   }
