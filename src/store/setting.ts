@@ -32,7 +32,7 @@ export default createStore<SettingState>({
       topSite: {
         col: 6,
         row: 2,
-        gap: 10,
+        gap: 16,
         iconSize: 32,
         boardSize: 64,
         boardRadius: 4,
@@ -53,10 +53,11 @@ export default createStore<SettingState>({
       saveSettingState(state)
     },
     updateBackgroundSetting(state, background: BackgroundSetting) {
-      copy(background, state.background!)
+      copy(background, state.background)
       saveSettingState(state)
     },
-    updateLayoutSetting(state) {
+    updateTopSiteSetting(state, topSite: TopSiteSetting) {
+      copy(topSite, state.topSite)
       saveSettingState(state)
     }
   },

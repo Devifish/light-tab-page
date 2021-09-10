@@ -3,7 +3,7 @@ import Router from "./router"
 import Store from "./store"
 import App from "./App.vue"
 import Extension from "./plugins/extension"
-import "./plugins/moment"
+import "./style/index.less"
 
 const app = createApp(App)
 app.use(Router)

@@ -2,7 +2,7 @@
   <div class="top-site-warp">
     <transition-group class="top-site-grid" name="flip-list" tag="ul">
       <li
-        class="top-site-icon-warp"
+        class="top-site-icon-item"
         :class="{
           hide: dragState.current === index
         }"
@@ -40,13 +40,13 @@ import { computed, onBeforeMount, reactive, ref } from "vue"
 import { useStore } from "vuex"
 import { SETTING_STORE_KEY } from "@/store/setting"
 import { TOP_SITE_STORE_KEY } from "@/store/top-site"
-import { DragType, OpenPageTarget } from "@/types"
+import { DragType, OpenPageTarget, SortData, TopSites } from "@/types"
 
 const settingStore = useStore(SETTING_STORE_KEY)
 const topSiteStore = useStore(TOP_SITE_STORE_KEY)
 
 const topSiteSetting = computed(() => settingStore.state.topSite)
-const topSites = computed(() => topSiteStore.state.topSites)
+const topSites = computed<TopSites>(() => topSiteStore.getters.getCurrentTopSites)
 
 const dragState = reactive({
   current: -1,
@@ -58,8 +58,8 @@ function openPage(url: string) {
 }
 
 function getFontIcon(text: string) {
-  const temp = text.charAt(0)
-  return temp <= "z" && temp >= "a" ? String.fromCharCode(temp.charCodeAt(0) - 32) : temp
+  const firstChar = text.trim().charAt(0)
+  return firstChar.toUpperCase()
 }
 
 function onDragIcon(type: DragType, index: number, e?: Event) {
@@ -70,12 +70,12 @@ function onDragIcon(type: DragType, index: number, e?: Event) {
       return
     case DragType.enter:
       if (dragState.current === index) return
+      const sortData: SortData = {
+        from: dragState.current,
+        to: index
+      }
 
-      const temp = topSites.value
-      const source = temp[dragState.current]
-
-      temp.splice(dragState.current, 1)
-      temp.splice(index, 0, source)
+      topSiteStore.commit("sortTopSites", sortData)
       dragState.current = index
       return
     case DragType.over:
@@ -84,7 +84,6 @@ function onDragIcon(type: DragType, index: number, e?: Event) {
     case DragType.end:
       dragState.shake = false
       dragState.current = -1
-      topSiteStore.commit("updateTopSites", topSites.value)
       return
   }
 }
@@ -99,9 +98,10 @@ onBeforeMount(init)
 </script>
 
 <style lang="less">
+@item-size-max: 128px;
 @col: v-bind("topSiteSetting.col");
 @row: v-bind("topSiteSetting.row");
-@gap: v-bind("topSiteSetting.gap");
+@gap: v-bind("`${topSiteSetting.gap}px`");
 @icon-size: v-bind("`${topSiteSetting.iconSize}px`");
 @board-size: v-bind("`${topSiteSetting.boardSize}px`");
 @board-color: v-bind("topSiteSetting.boardColor");
@@ -109,22 +109,18 @@ onBeforeMount(init)
 @board-radius: v-bind("`${topSiteSetting.boardRadius}px`");
 
 .top-site-warp {
-  height: calc(150px * @row);
-  width: 60%;
-
   .top-site-grid {
-    height: 100%;
+    height: calc(@row * (@item-size-max + @gap));
+    width: calc(@col * (@item-size-max + @gap));
     padding: 0;
     list-style: none;
 
     display: grid;
     grid-template-columns: repeat(@col, calc(100% / @col));
     grid-template-rows: repeat(@row, calc(100% / @row));
-    grid-column-gap: @gap;
-    grid-row-gap: @gap;
   }
 
-  .top-site-icon-warp {
+  .top-site-icon-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -164,8 +160,8 @@ onBeforeMount(init)
       .icon-board {
         height: 100%;
         background-color: @board-color;
-        border-radius: @board-radius;
         opacity: @board-opacity;
+        border-radius: @board-radius;
       }
     }
 
@@ -174,35 +170,20 @@ onBeforeMount(init)
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 128px;
+      max-width: @item-size-max;
       text-align: center;
       user-select: none;
-    }
-  }
-
-  .flip-list-move {
-    transition: transform 0.3s ease;
-  }
-
-  @keyframes shake {
-    0%,
-    50%,
-    100% {
-      transform: rotate(0deg);
-    }
-
-    25% {
-      transform: rotate(-4deg);
-    }
-    75% {
-      transform: rotate(4deg);
     }
   }
 }
 
 [data-theme="dark"] {
   .top-site-warp {
-    .top-site-icon-warp {
+    .top-site-icon-item {
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
       .icon-board {
         background-color: #1f1f1f !important;
         transition: background-color 0.3s ease;

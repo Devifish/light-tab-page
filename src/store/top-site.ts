@@ -1,7 +1,7 @@
 import type { InjectionKey } from "vue"
 import { createStore, Store } from "vuex"
 import { getBrowserTopSites } from "@/plugins/extension"
-import { TopSiteItem, TopSites } from "@/types"
+import { SortData, TopSiteItem, TopSites } from "@/types"
 import { copy } from "@/utils/common"
 import { debounce } from "@/utils/async"
 import settingStore from "./setting"
@@ -31,9 +31,23 @@ export default createStore<TopSiteState>({
 
     return defaultState
   },
+  getters: {
+    getCurrentTopSites({ topSites }) {
+      const topSiteSetting = settingStore.state.topSite
+      return topSites.filter((_item, index) => index < topSiteSetting.col * topSiteSetting.row)
+    }
+  },
   mutations: {
     updateTopSite(state, data: TopSiteItemVo) {
       state.topSites[data.index] = data
+      saveTopSiteState(state)
+    },
+    sortTopSites(state, sort: SortData) {
+      const topSites = state.topSites
+      const from = topSites[sort.from]
+
+      topSites.splice(sort.from, 1)
+      topSites.splice(sort.to, 0, from)
       saveTopSiteState(state)
     },
     updateTopSites(state, topSites: TopSites) {
@@ -44,24 +58,21 @@ export default createStore<TopSiteState>({
   actions: {
     async initTopSites({ state }) {
       const startTime = Date.now()
-      const topSiteSetting = settingStore.state.topSite
       const list = await getBrowserTopSites()
 
       // 并行校验图标是否有效
       state.topSites = await Promise.all(
-        list
-          .filter((_item, index) => index < topSiteSetting.col * topSiteSetting.row)
-          .map<Promise<TopSiteItem>>(async item => {
-            const icon = item.favicon || getFavicon(item.url)
-            const verify = await verifyImageUrl(icon)
+        list.map<Promise<TopSiteItem>>(async item => {
+          const icon = item.favicon || getFavicon(item.url)
+          const verify = await verifyImageUrl(icon)
 
-            return {
-              title: item.title ?? "无标题",
-              url: item.url,
-              icon: verify ? icon : undefined,
-              textIcon: !verify
-            }
-          })
+          return {
+            title: item.title ?? "无标题",
+            url: item.url,
+            icon: verify ? icon : undefined,
+            textIcon: !verify
+          }
+        })
       )
       state.init = true
 

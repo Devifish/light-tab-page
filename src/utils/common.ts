@@ -19,6 +19,17 @@ export function isEmpty(obj: any): boolean {
   }
 }
 
+export function equalsIgnoreCase(source?: string, target?: string) {
+  if (source && target) {
+    const sourceLow = source.toLowerCase(),
+      targetLow = target.toLowerCase()
+
+    return sourceLow === targetLow
+  } else {
+    return false
+  }
+}
+
 /**
  * 深克隆
  *

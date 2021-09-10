@@ -71,27 +71,3 @@ watch(themeMode, val => changeThemeMode(val))
 provide(CURRENT_THEME_KEY, currentTheme)
 onBeforeMount(init)
 </script>
-
-<style lang="less">
-[data-theme="dark"] {
-  @import "ant-design-vue/lib/style/dark.less";
-  @import "ant-design-vue/lib/comment/style/index.less";
-  @import "ant-design-vue/lib/input/style/index.less";
-  @import "ant-design-vue/lib/select/style/index.less";
-  @import "ant-design-vue/lib/drawer/style/index.less";
-  @import "ant-design-vue/lib/divider/style/index.less";
-  @import "ant-design-vue/lib/radio/style/index.less";
-  @import "ant-design-vue/lib/slider/style/index.less";
-  @import "ant-design-vue/lib/switch/style/index.less";
-  @import "ant-design-vue/lib/button/style/index.less";
-  @import "ant-design-vue/lib/tag/style/index.less";
-
-  .ant-select-selector {
-    background-color: transparent !important;
-  }
-
-  .ant-list-item-meta-description {
-    color: #888888;
-  }
-}
-</style>

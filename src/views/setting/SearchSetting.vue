@@ -17,7 +17,7 @@
         </a-tooltip>
       </template>
 
-      <a-select v-model:value="currentEngine" style="width: 90px">
+      <a-select v-model:value="searchSetting.currentEngine" style="width: 90px">
         <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
           {{ value.name }}
         </a-select-option>
@@ -25,7 +25,11 @@
     </setting-item>
 
     <setting-item lable="搜索建议接口" horizontal>
-      <a-select v-model:value="suggestion" v-permis="Permis.suggestion" style="width: 100px">
+      <a-select
+        v-model:value="searchSetting.suggestion"
+        v-permis="Permis.suggestion"
+        style="width: 100px"
+      >
         <a-select-option :value="SearchSuggestion.none"> 不使用 </a-select-option>
         <a-select-option :value="SearchSuggestion.baidu" :disabled="!isExtension">
           百度 API
@@ -40,7 +44,11 @@
     </setting-item>
 
     <setting-item lable="搜索框圆角">
-      <a-slider v-model:value="searchInputRadius" :max="22" :tipFormatter="value => `${value}px`" />
+      <a-slider
+        v-model:value="searchSetting.searchInputRadius"
+        :max="22"
+        :tipFormatter="value => `${value}px`"
+      />
     </setting-item>
 
     <setting-item lable="在新标签页中打开搜索结果" horizontal>
@@ -48,7 +56,7 @@
     </setting-item>
 
     <setting-item lable="在搜索框前添加搜索引擎下拉列表" horizontal>
-      <a-switch v-model:checked="showEngineSelect" />
+      <a-switch v-model:checked="searchSetting.showEngineSelect" />
     </setting-item>
   </div>
 
@@ -59,7 +67,7 @@
 
 <script lang="ts" setup>
 import { useStore } from "vuex"
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
 import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion } from "@/types"
 import SearchManage from "./SearchManage.vue"
@@ -74,12 +82,6 @@ const searchSetting = computed(() => searchStore.state.setting)
 // Ref
 const searchDrawer = ref()
 
-// 当前搜索引擎
-const currentEngine = computed({
-  get: () => searchSetting.value.currentEngine!,
-  set: value => searchStore.commit("updateCurrentEngine", value)
-})
-
 // 是否在新标签页中打开
 const isOpenPageByBlank = computed({
   get: () => searchSetting.value.openPageTarget === OpenPageTarget.Blank,
@@ -89,27 +91,12 @@ const isOpenPageByBlank = computed({
     })
 })
 
-// 显示搜索引擎下拉列表
-const showEngineSelect = computed({
-  get: () => searchSetting.value.showEngineSelect,
-  set: showEngineSelect => updateSearchSetting({ showEngineSelect })
-})
-
-// 搜索输入框圆角
-const searchInputRadius = computed({
-  get: () => searchSetting.value.searchInputRadius,
-  set: searchInputRadius => updateSearchSetting({ searchInputRadius })
-})
-
-// 搜索关键字建议
-const suggestion = computed({
-  get: () => searchSetting.value.suggestion,
-  set: suggestion => updateSearchSetting({ suggestion })
-})
-
 function updateSearchSetting(data: SearchSetting) {
   searchStore.commit("updateSearchSetting", data)
 }
+
+// 监听到设置变化则更新数据
+watch(searchSetting, updateSearchSetting, { deep: true })
 </script>
 
 <style lang="less">

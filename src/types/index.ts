@@ -18,3 +18,8 @@ export enum DragType {
   over,
   end
 }
+
+export type SortData = {
+  from: number
+  to: number
+}

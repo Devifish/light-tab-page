@@ -19,8 +19,14 @@
 import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
+import TopSiteSetting from "./TopSiteSetting.vue"
 import { DefineComponent, FunctionalComponent } from "vue"
-import { BgColorsOutlined, SearchOutlined, PictureOutlined } from "@ant-design/icons-vue"
+import {
+  BgColorsOutlined,
+  SearchOutlined,
+  PictureOutlined,
+  InsertRowAboveOutlined
+} from "@ant-design/icons-vue"
 
 interface SettingItem {
   title: string
@@ -43,6 +49,11 @@ const settingList: SettingItem[] = [
     title: "背景设置",
     icon: PictureOutlined,
     component: BackgroundSetting
+  },
+  {
+    title: "导航栏设置",
+    icon: InsertRowAboveOutlined,
+    component: TopSiteSetting
   }
 ]
 </script>
