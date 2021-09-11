@@ -1,13 +1,11 @@
-import type { InjectionKey } from "vue"
-import { createStore, Store } from "vuex"
+import { createStoreModule } from "./index"
 import { getBrowserTopSites } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
 import { copy } from "@/utils/common"
 import { debounce } from "@/utils/async"
-import settingStore from "./setting"
 import { verifyImageUrl } from "@/utils/image"
 
-interface TopSiteState {
+export interface TopSiteState {
   topSites: TopSites
   init: boolean
 }
@@ -16,10 +14,23 @@ export interface TopSiteItemVo extends TopSiteItem {
   index: number
 }
 
-const TOP_SITE_STORAGE = "top-site-data"
-export const TOP_SITE_STORE_KEY: InjectionKey<Store<TopSiteState>> = Symbol()
+export enum TopSiteGetters {
+  getCurrentTopSites = "GET_CURRENT_TOP_SITES"
+}
 
-export default createStore<TopSiteState>({
+export enum TopSiteMutations {
+  updateTopSite = "UPDATE_TOP_SITE",
+  sortTopSites = "SORT_TOP_SITES",
+  updateTopSites = "UPDATE_TOP_SITES"
+}
+
+export enum TopSiteActions {
+  initTopSites = "INIT_TOP_SITES"
+}
+
+const TOP_SITE_STORAGE = "top-site-data"
+
+export default createStoreModule<TopSiteState>({
   state() {
     const defaultState: TopSiteState = {
       topSites: [],
@@ -32,17 +43,34 @@ export default createStore<TopSiteState>({
     return defaultState
   },
   getters: {
-    getCurrentTopSites({ topSites }) {
-      const topSiteSetting = settingStore.state.topSite
+    /**
+     * 获取当前的导航栏数据
+     * @param param0
+     * @param rootState
+     * @returns
+     */
+    [TopSiteGetters.getCurrentTopSites]: ({ topSites }, _, rootState) => {
+      const topSiteSetting = rootState.setting.topSite
       return topSites.filter((_item, index) => index < topSiteSetting.col * topSiteSetting.row)
     }
   },
   mutations: {
-    updateTopSite(state, data: TopSiteItemVo) {
+    /**
+     * 更新单个导航
+     * @param state
+     * @param data
+     */
+    [TopSiteMutations.updateTopSite]: (state, data: TopSiteItemVo) => {
       state.topSites[data.index] = data
       saveTopSiteState(state)
     },
-    sortTopSites(state, sort: SortData) {
+
+    /**
+     * 对导航栏排序
+     * @param state
+     * @param sort
+     */
+    [TopSiteMutations.sortTopSites]: (state, sort: SortData) => {
       const topSites = state.topSites
       const from = topSites[sort.from]
 
@@ -50,18 +78,29 @@ export default createStore<TopSiteState>({
       topSites.splice(sort.to, 0, from)
       saveTopSiteState(state)
     },
-    updateTopSites(state, topSites: TopSites) {
+
+    /**
+     * 更新导航栏
+     * @param state
+     * @param topSites
+     */
+    [TopSiteMutations.updateTopSites]: (state, topSites: TopSites) => {
       state.topSites = topSites
       saveTopSiteState(state)
     }
   },
   actions: {
-    async initTopSites({ state }) {
+    /**
+     * 初始化导航
+     * 从浏览器获取最近浏览
+     * @param param0
+     */
+    [TopSiteActions.initTopSites]: async ({ state, commit }) => {
       const startTime = Date.now()
       const list = await getBrowserTopSites()
 
       // 并行校验图标是否有效
-      state.topSites = await Promise.all(
+      const topSites = await Promise.all(
         list.map<Promise<TopSiteItem>>(async item => {
           const icon = item.favicon || getFavicon(item.url)
           const verify = await verifyImageUrl(icon)
@@ -77,7 +116,7 @@ export default createStore<TopSiteState>({
       state.init = true
 
       console.log("load browser top-sites:", `${Date.now() - startTime}ms`)
-      saveTopSiteState(state)
+      commit(TopSiteMutations.updateTopSites, topSites)
     }
   }
 })

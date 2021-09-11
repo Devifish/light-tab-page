@@ -2,7 +2,7 @@
   <div class="top-site-warp">
     <transition-group class="top-site-grid" name="flip-list" tag="ul">
       <li
-        class="top-site-icon-item"
+        class="top-site-item"
         :class="{
           hide: dragState.current === index
         }"
@@ -36,17 +36,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, reactive, ref } from "vue"
-import { useStore } from "vuex"
-import { SETTING_STORE_KEY } from "@/store/setting"
-import { TOP_SITE_STORE_KEY } from "@/store/top-site"
+import { computed, onBeforeMount, reactive } from "vue"
 import { DragType, OpenPageTarget, SortData, TopSites } from "@/types"
+import { useStore } from "@/store"
+import { TopSiteActions, TopSiteGetters, TopSiteMutations } from "@/store/top-site"
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const topSiteStore = useStore(TOP_SITE_STORE_KEY)
+const store = useStore()
 
-const topSiteSetting = computed(() => settingStore.state.topSite)
-const topSites = computed<TopSites>(() => topSiteStore.getters.getCurrentTopSites)
+const topSiteSetting = computed(() => store.state.setting.topSite)
+const topSites = computed<TopSites>(() => store.getters[TopSiteGetters.getCurrentTopSites])
 
 const dragState = reactive({
   current: -1,
@@ -75,7 +73,7 @@ function onDragIcon(type: DragType, index: number, e?: Event) {
         to: index
       }
 
-      topSiteStore.commit("sortTopSites", sortData)
+      store.commit(TopSiteMutations.sortTopSites, sortData)
       dragState.current = index
       return
     case DragType.over:
@@ -89,8 +87,8 @@ function onDragIcon(type: DragType, index: number, e?: Event) {
 }
 
 async function init() {
-  if (!topSiteStore.state.init) {
-    await topSiteStore.dispatch("initTopSites")
+  if (!store.state.topSite.init) {
+    await store.dispatch(TopSiteActions.initTopSites)
   }
 }
 
@@ -120,7 +118,7 @@ onBeforeMount(init)
     grid-template-rows: repeat(@row, calc(100% / @row));
   }
 
-  .top-site-icon-item {
+  .top-site-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -151,7 +149,7 @@ onBeforeMount(init)
 
         &.text-icon {
           text-align: center;
-          font-size: 32px;
+          font-size: @icon-size;
           line-height: @icon-size;
           user-select: none;
         }
@@ -179,7 +177,7 @@ onBeforeMount(init)
 
 [data-theme="dark"] {
   .top-site-warp {
-    .top-site-icon-item {
+    .top-site-item {
       &:hover {
         background-color: rgba(0, 0, 0, 0.2);
       }

@@ -15,13 +15,13 @@
 
 <script lang="ts" setup>
 import { computed } from "vue"
-import { useStore } from "vuex"
 import { ThemeMode } from "@/types"
 import { CheckCircleFilled } from "@ant-design/icons-vue"
 import AutoMode from "@/assets/auto-mode.svg"
 import LightMode from "@/assets/light-mode.svg"
 import DarkMode from "@/assets/dark-mode.svg"
-import { SETTING_STORE_KEY } from "@/store/setting"
+import { useStore } from "@/store"
+import { SettingMutations } from "@/store/setting"
 
 const themeModes = [
   {
@@ -41,11 +41,11 @@ const themeModes = [
   }
 ]
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const themeMode = computed(() => settingStore.state.themeMode)
+const store = useStore()
+const themeMode = computed(() => store.state.setting.themeMode)
 
 function onThemeChange(themeMode: ThemeMode) {
-  settingStore.commit("updateThemeMode", themeMode)
+  store.commit(SettingMutations.updateThemeMode, themeMode)
 }
 </script>
 

@@ -88,18 +88,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "vuex"
 import { ref, reactive, computed } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
-import { DEFAULT_SEARCH_ENGINES, SEARCH_SETTING_KEY } from "@/store/search"
+import { DEFAULT_SEARCH_ENGINES, SearchMutations } from "@/store/search"
 import { SearchEngineItem } from "@/types"
 import { Form } from "ant-design-vue"
+import { useStore } from "@/store"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY)
-const currentEngine = computed(() => searchStore.state.setting.currentEngine!),
-  useSearchEngines = computed(() => searchStore.state.setting.useSearchEngines!),
-  searchEngines = computed(() => Object.values(searchStore.state.searchEngines))
+const store = useStore()
+const currentEngine = computed(() => store.state.search.setting.currentEngine!),
+  useSearchEngines = computed(() => store.state.search.setting.useSearchEngines!),
+  searchEngines = computed(() => Object.values(store.state.search.searchEngines))
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
 const currentDragEngineId = ref<string>()
@@ -132,7 +132,7 @@ function onEngineDragenter(e, moveId: string) {
     temp.splice(currentIndex, 1)
     temp.splice(moveIndex, 0, currentId)
 
-    searchStore.commit("updateSearchSetting", {
+    store.commit(SearchMutations.updateSearchSetting, {
       useSearchEngines: temp
     })
   }
@@ -142,7 +142,7 @@ function addUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value)
   temp.add(engineId)
 
-  searchStore.commit("updateSearchSetting", {
+  store.commit(SearchMutations.updateSearchSetting, {
     useSearchEngines: Array.from(temp)
   })
 }
@@ -151,7 +151,7 @@ function removeUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value)
   temp.delete(engineId)
 
-  searchStore.commit("updateSearchSetting", {
+  store.commit(SearchMutations.updateSearchSetting, {
     useSearchEngines: Array.from(temp)
   })
 }
@@ -168,7 +168,7 @@ async function addSearchEngine() {
       baseUrl: url
     }
 
-    searchStore.commit("addSearchEngine", data)
+    store.commit(SearchMutations.addSearchEngine, data)
     addUseSearchEngines(name)
 
     // 重置并关闭表单
@@ -178,7 +178,7 @@ async function addSearchEngine() {
 }
 
 function deleteSearchEngine(engineId: string) {
-  searchStore.commit("deleteSearchEngine", engineId)
+  store.commit(SearchMutations.deleteSearchEngine, engineId)
 }
 </script>
 

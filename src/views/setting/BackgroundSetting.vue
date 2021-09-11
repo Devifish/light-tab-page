@@ -36,7 +36,7 @@
 
     <template v-if="background.type !== BackgroundType.None">
       <setting-item lable="模糊强度">
-        <a-slider v-model:value="background.blur" :max="48" :tipFormatter="value => `${value}px`" />
+        <a-slider v-model:value="background.blur" :max="48" :tipFormatter="toPixel" />
       </setting-item>
 
       <setting-item lable="遮罩不透明度">
@@ -44,7 +44,7 @@
           v-model:value="background.maskOpacity"
           :step="0.01"
           :max="1"
-          :tipFormatter="value => `${Math.round(value * 100)}%`"
+          :tipFormatter="toPercent"
         />
       </setting-item>
 
@@ -57,21 +57,22 @@
 
 <script lang="ts" setup>
 import { computed, watch } from "vue"
-import { useStore } from "vuex"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { BackgroundSetting, BackgroundType } from "@/types"
-import { SETTING_STORE_KEY } from "@/store/setting"
 import { isExtension, Permis } from "@/plugins/extension"
+import { toPixel, toPercent } from "@/utils/format"
+import { useStore } from "@/store"
+import { SettingActions, SettingMutations } from "@/store/setting"
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const background = computed(() => settingStore.state.background)
+const store = useStore()
+const background = computed(() => store.state.setting.background)
 
 function uploadBackgroundImage(e) {
-  settingStore.dispatch("uploadBackgroundImage", e.file)
+  store.dispatch(SettingActions.uploadBackgroundImage, e.file)
 }
 
 function updateBackgroundSetting(value: BackgroundSetting) {
-  settingStore.commit("updateBackgroundSetting", value)
+  store.commit(SettingMutations.updateBackgroundSetting, value)
 }
 
 // 监听到设置变化则更新数据
@@ -82,7 +83,7 @@ watch(
   () => background.value.type,
   type => {
     if (type === BackgroundType.Bing) {
-      settingStore.dispatch("loadBingDailyWallpaper")
+      store.dispatch("loadBingDailyWallpaper")
     }
   }
 )

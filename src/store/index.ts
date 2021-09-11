@@ -1,12 +1,35 @@
-import { App } from "vue"
-import SearchStore, { SEARCH_SETTING_KEY } from "./search"
-import SettingStore, { SETTING_STORE_KEY } from "./setting"
-import TopSiteStore, { TOP_SITE_STORE_KEY } from "./top-site"
+import type { App, InjectionKey } from "vue"
+import { createStore, useStore as baseUseStore, Module, Store, GetterTree, Getter } from "vuex"
+import search, { SearchState } from "./search"
+import setting, { SettingState } from "./setting"
+import topSite, { TopSiteState } from "./top-site"
+
+export type RootState = {
+  search: SearchState
+  setting: SettingState
+  topSite: TopSiteState
+}
+
+export const STORE_KEY: InjectionKey<Store<RootState>> = Symbol("store_key")
+
+export function createStoreModule<S>(module: Module<S, RootState>) {
+  return module
+}
+
+export function useStore() {
+  return baseUseStore(STORE_KEY)
+}
+
+const store = createStore<RootState>({
+  modules: {
+    search,
+    setting,
+    topSite
+  }
+})
 
 export default {
   install(app: App) {
-    app.use(SearchStore, SEARCH_SETTING_KEY)
-    app.use(SettingStore, SETTING_STORE_KEY)
-    app.use(TopSiteStore, TOP_SITE_STORE_KEY)
+    app.use(store, STORE_KEY)
   }
 }

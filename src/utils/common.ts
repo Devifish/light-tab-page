@@ -123,30 +123,3 @@ export function base64ToBlob(base64: string) {
 
   return new Blob([u8arr], { type: mime })
 }
-
-export function timediff(source: number, target: number = Date.now()) {
-  const second = 1000,
-    min = 60 * second,
-    hour = 60 * min,
-    day = 24 * hour,
-    month = 30 * day,
-    year = 365 * day
-
-  const diff = target - source
-
-  if (diff < second) {
-    return "刚刚"
-  } else if (diff < min) {
-    return `${Math.floor(diff / second)}秒前`
-  } else if (diff < hour) {
-    return `${Math.floor(diff / min)}分钟前`
-  } else if (diff < day) {
-    return `${Math.floor(diff / hour)}小时前`
-  } else if (diff < month) {
-    return `${Math.floor(diff / day)}天前`
-  } else if (diff < year) {
-    return `${Math.floor(diff / month)}月前`
-  } else {
-    return `${Math.floor(diff / year)}年前`
-  }
-}

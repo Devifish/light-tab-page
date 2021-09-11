@@ -20,6 +20,7 @@
 
         <a-input-search
           placeholder="搜索"
+          autoFocus
           enter-button
           size="large"
           @keydown="onSwitchEngines"
@@ -39,25 +40,25 @@
 </template>
 
 <script lang="ts" setup>
-import { SEARCH_SETTING_KEY } from "@/store/search"
+import { useStore } from "@/store"
+import { SearchActions, SearchGetters, SearchMutations } from "@/store/search"
 import { SearchEngineData } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
-import { useStore } from "vuex"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY)
+const store = useStore()
 
-const searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"]),
-  searchSetting = computed(() => searchStore.state.setting),
+const searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines]),
+  searchSetting = computed(() => store.state.search.setting),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<string[]>()
 
 // 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
-  set: value => searchStore.commit("updateCurrentEngine", value)
+  set: value => store.commit(SearchMutations.updateCurrentEngine, value)
 })
 
 // 搜索内容
@@ -69,7 +70,7 @@ const debounceSearchSuggestion = debounce(handleSearchSuggestion)
  * 将搜索内容重定向到搜索引擎
  */
 function onSearch(search: string) {
-  searchStore.dispatch("submitSearch", search)
+  store.dispatch(SearchActions.submitSearch, search)
 }
 
 /**
@@ -80,7 +81,7 @@ async function handleSearchSuggestion(value: string) {
   if (isEmpty(value)) {
     searchSuggestion.value = []
   } else {
-    const suggestion = await searchStore.dispatch("getSuggestion", value)
+    const suggestion = await store.dispatch(SearchActions.getSuggestion, value)
     searchSuggestion.value = suggestion
   }
 }

@@ -1,4 +1,4 @@
-import { createStore, Store } from "vuex"
+import { createStoreModule } from "./index"
 import {
   SearchEngineData,
   OpenPageTarget,
@@ -12,13 +12,32 @@ import BaiduLogo from "@/assets/baidu.png"
 import BingLogo from "@/assets/bing.svg"
 import GoogleLogo from "@/assets/google.png"
 import { copy, deepClone, isEmpty } from "@/utils/common"
-import { InjectionKey } from "vue"
 import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/api/suggestion"
 
-interface SearchState {
+export interface SearchState {
   searchEngines: SearchEngineData
   setting: SearchSetting
   history: Array<HistoryItem>
+}
+
+export enum SearchGetters {
+  getUseSearchEngines = "GET_USE_SEARCH_ENGINES"
+}
+
+export enum SearchMutations {
+  putHistory = "PUT_HISTORY",
+  deleteHistory = "DELETE_HISTORY",
+  cleanHistory = "CLEAN_HISTORY",
+  updateCurrentEngine = "UPDATE_CURRENT_ENGINE",
+  updateSearchSetting = "UPDATE_SEARCH_SETTING",
+  addSearchEngine = "ADD_SEARCH_ENGINE",
+  deleteSearchEngine = "DELETE_SEARCH_ENGINE"
+}
+
+export enum SearchActions {
+  submitSearch = "SUBMIT_SEARCH",
+  openSearchPage = "OPEN_SEARCH_PAGE",
+  getSuggestion = "GET_SUGGESTION"
 }
 
 const SEARCH_SETTING_STORAGE = "search-setting"
@@ -50,8 +69,7 @@ export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
   }
 }
 
-export const SEARCH_SETTING_KEY: InjectionKey<Store<SearchState>> = Symbol()
-export default createStore<SearchState>({
+export default createStoreModule<SearchState>({
   state() {
     const defaultState: SearchState = {
       searchEngines: { ...DEFAULT_SEARCH_ENGINES },
@@ -78,7 +96,12 @@ export default createStore<SearchState>({
     return defaultState
   },
   getters: {
-    getUseSearchEngines({ searchEngines, setting }) {
+    /**
+     * 获取需要使用的搜索引擎列表
+     * @param param0
+     * @returns
+     */
+    [SearchGetters.getUseSearchEngines]: ({ searchEngines, setting }) => {
       const useSearchEngines = setting.useSearchEngines!
       const temp: SearchEngineData = {}
 
@@ -92,30 +115,65 @@ export default createStore<SearchState>({
     }
   },
   mutations: {
-    putHistory({ history }, newHistory: HistoryItem) {
+    /**
+     * 添加搜索历史
+     * @param param0
+     * @param newHistory
+     */
+    [SearchMutations.putHistory]: ({ history }, newHistory: HistoryItem) => {
       history.unshift(newHistory)
       saveSearchHistory(history)
     },
-    deleteHistory({ history }, index: number) {
+
+    /**
+     * 删除搜索历史
+     * @param param0
+     * @param index
+     */
+    [SearchMutations.deleteHistory]: ({ history }, index: number) => {
       history.splice(index, 1)
 
       saveSearchHistory(history)
     },
-    cleanHistory(state) {
+
+    /**
+     * 清除所有搜索历史
+     * @param state
+     */
+    [SearchMutations.cleanHistory]: state => {
       state.history = []
       localStorage.removeItem(SEARCH_HISTORY_STORAGE)
     },
-    updateCurrentEngine(state, currentEngine: string) {
+
+    /**
+     * 更新当前搜索引擎
+     * @param state
+     * @param currentEngine
+     * @returns
+     */
+    [SearchMutations.updateCurrentEngine]: (state, currentEngine: string) => {
       if (isEmpty(state.searchEngines[currentEngine])) return
 
       state.setting.currentEngine = currentEngine
       saveSettingState(state.setting)
     },
-    updateSearchSetting(state, setting: SearchSetting) {
+
+    /**
+     * 更新搜索设置
+     * @param state
+     * @param setting
+     */
+    [SearchMutations.updateSearchSetting]: (state, setting: SearchSetting) => {
       copy(setting, state.setting)
       saveSettingState(state.setting)
     },
-    addSearchEngine(state, data: SearchEngineItem) {
+
+    /**
+     * 添加自定义搜索引擎
+     * @param state
+     * @param data
+     */
+    [SearchMutations.addSearchEngine]: (state, data: SearchEngineItem) => {
       const searchEnginesNew = {
         ...state.searchEngines,
         [data.id]: data
@@ -124,7 +182,13 @@ export default createStore<SearchState>({
       state.searchEngines = searchEnginesNew
       saveSearchEngineData(searchEnginesNew)
     },
-    deleteSearchEngine(state, searchKey: string) {
+
+    /**
+     * 删除自定义搜索引擎
+     * @param state
+     * @param searchKey
+     */
+    [SearchMutations.deleteSearchEngine]: (state, searchKey: string) => {
       const searchEnginesNew = deepClone(state.searchEngines, searchKey)
 
       state.searchEngines = searchEnginesNew
@@ -132,7 +196,12 @@ export default createStore<SearchState>({
     }
   },
   actions: {
-    submitSearch({ state, commit, dispatch }, searchText: string) {
+    /**
+     * 提交搜索
+     * @param param0
+     * @param searchText
+     */
+    [SearchActions.submitSearch]: ({ state, commit, dispatch }, searchText: string) => {
       const { setting } = state
       const currentEngine = setting.currentEngine!
       const history: HistoryItem = {
@@ -140,16 +209,22 @@ export default createStore<SearchState>({
         engineId: currentEngine,
         timestamp: Date.now()
       }
+      commit(SearchMutations.putHistory, history)
 
-      commit("putHistory", history)
-      dispatch("openSearchPage", <SearchData>{
+      const data: SearchData = {
         engine: currentEngine,
         text: searchText,
-        target: setting.openPageTarget
-      })
+        target: setting.openPageTarget!
+      }
+      dispatch(SearchActions.openSearchPage, data)
     },
 
-    openSearchPage({ state }, search: SearchData) {
+    /**
+     * 打开搜索页面
+     * @param param0
+     * @param search
+     */
+    [SearchActions.openSearchPage]: ({ state }, search: SearchData) => {
       const { searchEngines } = state
 
       // 构建搜索URL
@@ -160,7 +235,13 @@ export default createStore<SearchState>({
       window.open(url, search.target)
     },
 
-    getSuggestion({ state }, searchText: string) {
+    /**
+     * 获取搜索建议
+     * @param param0
+     * @param searchText
+     * @returns
+     */
+    [SearchActions.getSuggestion]: ({ state }, searchText: string) => {
       const { setting } = state
 
       switch (setting.suggestion) {

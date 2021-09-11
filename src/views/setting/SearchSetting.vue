@@ -44,11 +44,7 @@
     </setting-item>
 
     <setting-item lable="搜索框圆角">
-      <a-slider
-        v-model:value="searchSetting.searchInputRadius"
-        :max="22"
-        :tipFormatter="value => `${value}px`"
-      />
+      <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tipFormatter="toPixel" />
     </setting-item>
 
     <setting-item lable="在新标签页中打开搜索结果" horizontal>
@@ -66,18 +62,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "vuex"
 import { ref, computed, watch } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
 import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion } from "@/types"
 import SearchManage from "./SearchManage.vue"
-import { SEARCH_SETTING_KEY } from "@/store/search"
 import { Permis, isExtension } from "@/plugins/extension"
+import { toPixel } from "@/utils/format"
+import { useStore } from "@/store"
+import { SearchGetters, SearchMutations } from "@/store/search"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY)
-const searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"])
-const searchSetting = computed(() => searchStore.state.setting)
+const store = useStore()
+const searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines])
+const searchSetting = computed(() => store.state.search.setting)
 
 // Ref
 const searchDrawer = ref()
@@ -92,7 +89,7 @@ const isOpenPageByBlank = computed({
 })
 
 function updateSearchSetting(data: SearchSetting) {
-  searchStore.commit("updateSearchSetting", data)
+  store.commit(SearchMutations.updateSearchSetting, data)
 }
 
 // 监听到设置变化则更新数据

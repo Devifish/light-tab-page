@@ -12,20 +12,20 @@ export const CURRENT_THEME_KEY: InjectionKey<Ref<ThemeMode>> = Symbol.for("")
 
 <script lang="ts" setup>
 import { computed, watch, onBeforeMount, ref, provide } from "vue"
-import { useStore } from "vuex"
+import { useStore } from "./store"
 import { ThemeMode } from "./types"
-import { SETTING_STORE_KEY } from "./store/setting"
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const themeMode = computed(() => settingStore.state.themeMode)
+const store = useStore()
+const themeMode = computed(() => store.state.setting.themeMode)
 
 const currentTheme = ref<ThemeMode>()
+const darkColorScheme = "(prefers-color-scheme: dark)"
 
 function changeThemeMode(themeMode: ThemeMode) {
   let isDarkMode: boolean
   switch (themeMode) {
     case ThemeMode.Auto:
-      isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+      isDarkMode = window.matchMedia(darkColorScheme).matches
       currentTheme.value = isDarkMode ? ThemeMode.Dart : ThemeMode.Light
       break
     default:
@@ -44,7 +44,7 @@ function changeThemeMode(themeMode: ThemeMode) {
  * 如果主题设置是Auto则同步修改
  */
 function onSystemThemeChange() {
-  const darkMedia: MediaQueryList = window.matchMedia("(prefers-color-scheme: dark)")
+  const darkMedia: MediaQueryList = window.matchMedia(darkColorScheme)
 
   if (typeof darkMedia.addEventListener === "function") {
     darkMedia.addEventListener("change", e => {

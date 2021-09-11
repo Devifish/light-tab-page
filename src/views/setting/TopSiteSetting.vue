@@ -1,6 +1,6 @@
 <template>
   <div class="top-site-setting-warp">
-    <setting-item lable="开启导航栏" horizontal>
+    <setting-item lable="导航栏" horizontal>
       <a-switch :checked="true" disabled />
     </setting-item>
 
@@ -23,14 +23,23 @@
     <setting-item lable="图标大小" horizontal>
       <a-slider
         v-model:value="topSiteSetting.iconSize"
-        :step="8"
+        :min="16"
         :max="topSiteSetting.boardSize"
+        :step="8"
+        :tipFormatter="toPixel"
         style="width: 200px"
       />
     </setting-item>
 
     <setting-item lable="底板大小" horizontal>
-      <a-slider v-model:value="topSiteSetting.boardSize" :step="8" :max="96" style="width: 200px" />
+      <a-slider
+        v-model:value="topSiteSetting.boardSize"
+        :min="16"
+        :max="96"
+        :step="8"
+        :tipFormatter="toPixel"
+        style="width: 200px"
+      />
     </setting-item>
     <setting-item lable="底板颜色" horizontal>
       <color-radio
@@ -44,6 +53,7 @@
         v-model:value="topSiteSetting.boardOpacity"
         :step="0.01"
         :max="1"
+        :tipFormatter="toPercent"
         style="width: 200px"
       />
     </setting-item>
@@ -51,26 +61,34 @@
       <a-slider
         v-model:value="topSiteSetting.boardRadius"
         :max="topSiteSetting.boardSize / 2"
+        :tipFormatter="toPixel"
         style="width: 200px"
       />
     </setting-item>
     <setting-item lable="间距" horizontal>
-      <a-slider v-model:value="topSiteSetting.gap" :min="0" :max="48" style="width: 200px" />
+      <a-slider
+        v-model:value="topSiteSetting.gap"
+        :min="0"
+        :max="48"
+        :tipFormatter="toPixel"
+        style="width: 200px"
+      />
     </setting-item>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, watch } from "vue"
-import { useStore } from "vuex"
-import { SETTING_STORE_KEY } from "@/store/setting"
 import { TopSiteSetting } from "@/types"
+import { toPixel, toPercent } from "@/utils/format"
+import { useStore } from "@/store"
+import { SettingMutations } from "@/store/setting"
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const topSiteSetting = computed(() => settingStore.state.topSite)
+const store = useStore()
+const topSiteSetting = computed(() => store.state.setting.topSite)
 
 function updateTopSiteSetting(data: TopSiteSetting) {
-  settingStore.commit("updateTopSiteSetting", data)
+  store.commit(SettingMutations.updateTopSiteSetting, data)
 }
 
 // 监听到设置变化则更新数据

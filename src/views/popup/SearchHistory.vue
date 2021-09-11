@@ -45,22 +45,22 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { useStore } from "vuex"
-import { SEARCH_SETTING_KEY } from "@/store/search"
 import { CloseOutlined, HistoryOutlined, RestOutlined } from "@ant-design/icons-vue"
 import { HistoryItem, OpenPageTarget, SearchData, SearchEngineData } from "@/types"
-import { timediff } from "@/utils/common"
+import { timediff } from "@/utils/format"
+import { useStore } from "@/store"
+import { SearchActions, SearchGetters, SearchMutations } from "@/store/search"
 
 // Vuex
-const searchStore = useStore(SEARCH_SETTING_KEY)
-const searchHistory = computed(() => searchStore.state.history),
-  searchEngines = computed<SearchEngineData>(() => searchStore.getters["getUseSearchEngines"])
+const store = useStore()
+const searchHistory = computed(() => store.state.search.history),
+  searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines])
 
 const current = ref<any>()
 const now = Date.now()
 
 function openSearchPage(history: HistoryItem) {
-  searchStore.dispatch("openSearchPage", <SearchData>{
+  store.dispatch(SearchActions.openSearchPage, <SearchData>{
     engine: history.engineId,
     text: history.searchText,
     target: OpenPageTarget.Blank
@@ -68,11 +68,11 @@ function openSearchPage(history: HistoryItem) {
 }
 
 function deleteHistory(index: number) {
-  searchStore.commit("deleteHistory", index)
+  store.commit(SearchMutations.deleteHistory, index)
 }
 
 function cleanHistory() {
-  searchStore.commit("cleanHistory")
+  store.commit(SearchMutations.cleanHistory)
 }
 </script>
 

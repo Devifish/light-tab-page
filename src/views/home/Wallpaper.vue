@@ -10,14 +10,14 @@
 
 <script lang="ts" setup>
 import { computed, inject, onBeforeMount } from "vue"
-import { useStore } from "vuex"
 import { verifyImageUrl } from "@/utils/image"
-import { SETTING_STORE_KEY } from "@/store/setting"
 import { BackgroundType, ThemeMode } from "@/types"
 import { CURRENT_THEME_KEY } from "@/App.vue"
+import { useStore } from "@/store"
+import { SettingActions } from "@/store/setting"
 
-const settingStore = useStore(SETTING_STORE_KEY)
-const background = computed(() => settingStore.state.background)
+const store = useStore()
+const background = computed(() => store.state.setting.background)
 
 // 获取当前主题
 const currentTheme = inject(CURRENT_THEME_KEY)
@@ -36,11 +36,11 @@ async function init() {
   const { url, type } = background.value
 
   // 加载Bing每日壁纸
-  if (type === BackgroundType.Bing) settingStore.dispatch("loadBingDailyWallpaper")
+  if (type === BackgroundType.Bing) store.dispatch(SettingActions.loadBingDailyWallpaper)
 
   // 如果 URL无效则重新加载
   const verify = await verifyImageUrl(url!)
-  if (!verify) settingStore.dispatch("reloadBackgroundImage")
+  if (!verify) store.dispatch(SettingActions.reloadBackgroundImage)
 }
 
 onBeforeMount(init)
