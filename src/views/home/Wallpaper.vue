@@ -1,7 +1,7 @@
 <template>
   <div
     id="wallpaper-image"
-    v-if="background.type !== BackgroundType.None"
+    v-if="!isEmpty(background.url)"
     :style="{ backgroundImage: `url(${background.url})` }"
   >
     <div class="wallpaper-mask"></div>
@@ -15,6 +15,7 @@ import { BackgroundType, ThemeMode } from "@/types"
 import { CURRENT_THEME_KEY } from "@/App.vue"
 import { useStore } from "@/store"
 import { SettingActions } from "@/store/setting"
+import { isEmpty } from "@/utils/common"
 
 const store = useStore()
 const background = computed(() => store.state.setting.background)

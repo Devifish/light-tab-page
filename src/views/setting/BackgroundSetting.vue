@@ -1,16 +1,12 @@
 <template>
   <div class="background-setting">
-    <setting-item lable="壁纸设置" horizontal>
+    <setting-item lable="壁纸设置">
       <a-radio-group v-model:value="background.type" button-style="solid">
-        <a-radio-button :value="BackgroundType.None">无</a-radio-button>
-        <a-radio-button :value="BackgroundType.Local">本地图片</a-radio-button>
-        <a-radio-button
-          :value="BackgroundType.Bing"
-          :disabled="!isExtension"
-          v-permis="Permis.bing"
-        >
+        <a-radio :value="BackgroundType.None">无</a-radio>
+        <a-radio :value="BackgroundType.Local">本地图片</a-radio>
+        <a-radio :value="BackgroundType.Bing" :disabled="!isExtension" v-permis="Permis.bing">
           Bing每日壁纸
-        </a-radio-button>
+        </a-radio>
       </a-radio-group>
     </setting-item>
 

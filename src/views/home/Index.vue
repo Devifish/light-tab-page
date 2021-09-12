@@ -1,7 +1,13 @@
 <template>
-  <main class="main-wrap">
-    <search />
-    <top-site />
+  <main
+    class="main-wrap"
+    :class="{
+      'search-center': state.align === AlignType.searchCenter,
+      'overall-center': state.align === AlignType.overallCenter
+    }"
+  >
+    <search class="search" />
+    <top-site v-if="state.enableTopSite" />
   </main>
 
   <!-- 设置 -->
@@ -13,7 +19,7 @@
 
   <!-- 壁纸 -->
   <div class="wallpaper-wrap">
-    <wallpaper />
+    <wallpaper v-if="state.enableWallpaper" />
   </div>
 
   <common-drawer :width="400" :footer="false" ref="settingDrawer">
@@ -22,25 +28,48 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import Search from "./Search.vue"
 import TopSite from "./TopSite.vue"
 import Wallpaper from "./Wallpaper.vue"
 import Setting from "@/views/setting/Index.vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
+import { useStore } from "@/store"
+import { AlignType, BackgroundType } from "@/types"
 
+const store = useStore()
 const settingDrawer = ref()
+
+const state = reactive({
+  align: computed(() => store.state.setting.layout.align),
+  enableTopSite: computed(() => store.state.setting.topSite.enable),
+  enableWallpaper: computed(() => store.state.setting.background.type !== BackgroundType.None)
+})
 </script>
 
 <style lang="less">
 .main-wrap {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 42px;
+
+  &.search-center {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+
+    .search {
+      align-self: end;
+    }
+  }
+
+  &.overall-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 42px;
+  }
 }
 
 .setting-wrap {
