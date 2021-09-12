@@ -201,19 +201,22 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param searchText
      */
-    [SearchActions.submitSearch]: ({ state, commit, dispatch }, searchText: string) => {
+    [SearchActions.submitSearch]: ({ state, commit, dispatch }, search: string) => {
+      const searchTrim = search.trim()
+      if (isEmpty(searchTrim)) return
+
       const { setting } = state
       const currentEngine = setting.currentEngine!
       const history: HistoryItem = {
-        searchText,
         engineId: currentEngine,
+        searchText: searchTrim,
         timestamp: Date.now()
       }
       commit(SearchMutations.putHistory, history)
 
       const data: SearchData = {
         engine: currentEngine,
-        text: searchText,
+        text: searchTrim,
         target: setting.openPageTarget!
       }
       dispatch(SearchActions.openSearchPage, data)
