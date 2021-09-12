@@ -1,5 +1,13 @@
 import { createStoreModule } from "./index"
-import { BackgroundSetting, BackgroundType, ThemeMode, TopSiteSetting, Option } from "@/types"
+import {
+  BackgroundSetting,
+  BackgroundType,
+  ThemeMode,
+  TopSiteSetting,
+  Option,
+  LayoutSetting,
+  AlignType
+} from "@/types"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/image"
@@ -10,12 +18,14 @@ export interface SettingState {
   themeMode: ThemeMode
   background: BackgroundSetting
   topSite: TopSiteSetting
+  layout: LayoutSetting
 }
 
 export enum SettingMutations {
   updateThemeMode = "UPDATE_THEME_MODE",
   updateBackgroundSetting = "UPDATE_BACKGROUND_SETTING",
-  updateTopSiteSetting = "UPDATE_TOP_SITE_SETTING"
+  updateTopSiteSetting = "UPDATE_TOP_SITE_SETTING",
+  updateLayoutSetting = "UPDATE_LAYOUT_SETTING"
 }
 
 export enum SettingActions {
@@ -40,6 +50,7 @@ export default createStoreModule<SettingState>({
         autoOpacity: true
       },
       topSite: {
+        enable: true,
         col: 6,
         row: 2,
         gap: 16,
@@ -48,11 +59,14 @@ export default createStoreModule<SettingState>({
         boardRadius: 4,
         boardColor: "#fff",
         boardOpacity: 0.8
+      },
+      layout: {
+        align: AlignType.searchCenter
       }
     }
 
     const settingData = JSON.parse(localStorage[SETTING_STORAGE] ?? "{}")
-    copy(settingData, defaultState, true)
+    copy(settingData, defaultState, true, true, 1)
 
     return defaultState
   },
@@ -85,6 +99,16 @@ export default createStoreModule<SettingState>({
      */
     [SettingMutations.updateTopSiteSetting]: (state, topSite: Option<TopSiteSetting>) => {
       copy(topSite, state.topSite)
+      saveSettingState(state)
+    },
+
+    /**
+     * 更新布局设置
+     * @param state
+     * @param topSite
+     */
+    [SettingMutations.updateLayoutSetting]: (state, layout: Option<LayoutSetting>) => {
+      copy(layout, state.layout)
       saveSettingState(state)
     }
   },

@@ -25,6 +25,7 @@ export interface TopSiteIcon {
 }
 
 export interface TopSiteSetting {
+  enable: boolean,
   row: number
   col: number
   gap: number
@@ -33,4 +34,13 @@ export interface TopSiteSetting {
   boardColor: string
   boardOpacity: number
   boardRadius: number
+}
+
+export enum AlignType {
+  searchCenter,
+  overallCenter
+}
+
+export interface LayoutSetting {
+  align: AlignType
 }

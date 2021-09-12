@@ -1,3 +1,4 @@
+import { Option } from "@/types"
 import { computed, reactive } from "vue"
 
 /**
@@ -61,12 +62,14 @@ export function deepClone<E extends object>(obj: E, ...ignoreKeys: string[]): E 
  *
  * @param source 来源
  * @param target 目标
+ * @param deep 深度
  */
 export function copy(
   source: Object,
   target: Object,
   onlyExist: boolean = false,
-  skipEmpty: boolean = true
+  skipEmpty: boolean = true,
+  deep: number = 0
 ) {
   const keys = Object.keys(source)
   for (const key of keys) {
@@ -75,8 +78,12 @@ export function copy(
     if (skipEmpty && isEmpty(temp)) continue
     if (onlyExist && !Reflect.has(target, key)) continue
 
-    // 复制对应参数
-    target[key] = temp
+    // 如果deep大于0且为对象则递归复制内部参数
+    if (typeof temp === "object" && deep > 0) {
+      copy(temp, target[key], onlyExist, skipEmpty, deep - 1)
+    } else {
+      target[key] = temp
+    }
   }
 }
 
@@ -158,15 +165,15 @@ export function deepComputed<T extends object, K extends keyof T>(
   get: () => T,
   set?: (newObj: T, key: string, newVal: any) => void,
   ...ignoreKeys: K[]
-) {
+): Option<T> {
   const obj = get(),
     keys = Object.keys(obj),
-    tempObj: T = Object.create(null)
+    tempObj: Option<T> = Object.create(null)
 
   const isWrite = typeof set === "function"
   for (let key of keys) {
     if (ignoreKeys.includes(key as K)) {
-      tempObj[key] = obj[key]
+      continue
     } else if (isWrite) {
       tempObj[key] = computed({
         get: () => get()[key],
