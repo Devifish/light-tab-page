@@ -81,7 +81,7 @@ watch(
   () => background.type,
   type => {
     if (type === BackgroundType.Bing) {
-      store.dispatch("loadBingDailyWallpaper")
+      store.dispatch(SettingActions.loadBingDailyWallpaper)
     }
   }
 )
