@@ -7,7 +7,7 @@ export interface TopSiteItem {
   icon?: string
   color?: string
   textIcon: boolean
-  order?: number
+  custom: boolean
 }
 
 export type TopSites = Array<TopSiteItem>
@@ -22,4 +22,8 @@ export enum DragType {
 export type SortData = {
   from: number
   to: number
+}
+
+export type Option<T> = {
+  [K in keyof T]?: T[K]
 }

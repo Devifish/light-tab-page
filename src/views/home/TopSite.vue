@@ -2,18 +2,19 @@
   <div class="top-site-warp">
     <transition-group class="top-site-grid" name="flip-list" tag="ul">
       <li
-        class="top-site-item"
-        :class="{
-          hide: dragState.current === index
-        }"
         v-for="(item, index) of topSites"
         :key="item.url"
+        class="top-site-item"
+        :class="{
+          hide: state.currentDrag === index
+        }"
       >
         <div
           class="top-site-icon"
-          :class="{ 'shake-active': dragState.shake }"
+          :class="{ 'shake-active': state.shake }"
           draggable="true"
           @click="openPage(item.url)"
+          @contextmenu.prevent="openEditStatus"
           @dragstart="onDragIcon(DragType.start, index)"
           @dragenter="onDragIcon(DragType.enter, index, $event)"
           @dragover="onDragIcon(DragType.over, index, $event)"
@@ -25,6 +26,14 @@
           <img v-else class="icon-content" :src="item.icon" alt="logo" draggable="false" />
 
           <div class="icon-board"></div>
+
+          <transition name="scale">
+            <div
+              v-show="state.editStatus"
+              class="bubble delete-btn"
+              @click.stop="deleteTopSite(index)"
+            ></div>
+          </transition>
         </div>
 
         <div class="icon-title">
@@ -46,13 +55,36 @@ const store = useStore()
 const topSiteSetting = computed(() => store.state.setting.topSite)
 const topSites = computed<TopSites>(() => store.getters[TopSiteGetters.getCurrentTopSites])
 
-const dragState = reactive({
-  current: -1,
-  shake: false
+const state = reactive({
+  currentDrag: -1,
+  shake: false,
+  editStatus: false
 })
 
 function openPage(url: string) {
   window.open(url, OpenPageTarget.Blank)
+}
+
+function deleteTopSite(index: number) {
+  store.commit(TopSiteMutations.deleteTopSite, index)
+}
+
+function openEditStatus() {
+  state.shake = true
+  state.editStatus = true
+
+  // 点击其他位置关闭编辑状态
+  document.body.addEventListener("click", closeEditStatus)
+}
+
+function closeEditStatus(e: Event) {
+  if (state.editStatus) {
+    e.stopPropagation()
+
+    state.shake = false
+    state.editStatus = false
+    document.body.removeEventListener("click", closeEditStatus)
+  }
 }
 
 function getFontIcon(text: string) {
@@ -63,25 +95,24 @@ function getFontIcon(text: string) {
 function onDragIcon(type: DragType, index: number, e?: Event) {
   switch (type) {
     case DragType.start:
-      dragState.current = index
-      dragState.shake = true
+      state.currentDrag = index
+      openEditStatus()
       return
     case DragType.enter:
-      if (dragState.current === index) return
+      if (state.currentDrag === index) return
       const sortData: SortData = {
-        from: dragState.current,
+        from: state.currentDrag,
         to: index
       }
 
       store.commit(TopSiteMutations.sortTopSites, sortData)
-      dragState.current = index
+      state.currentDrag = index
       return
     case DragType.over:
       e?.preventDefault()
       return
     case DragType.end:
-      dragState.shake = false
-      dragState.current = -1
+      state.currentDrag = -1
       return
   }
 }
@@ -129,6 +160,11 @@ onBeforeMount(init)
       opacity: 0;
     }
 
+    &.flip-list-enter-from,
+    &.flip-list-leave-to {
+      transform: translateY(@board-size);
+    }
+
     .top-site-icon {
       width: @board-size;
       height: @board-size;
@@ -160,6 +196,27 @@ onBeforeMount(init)
         background-color: @board-color;
         opacity: @board-opacity;
         border-radius: @board-radius;
+      }
+
+      .bubble {
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        border-radius: 50%;
+
+        &.delete-btn {
+          color: #f5f5f5;
+          background-color: #f5222d;
+          text-align: center;
+          line-height: 18px;
+          font-size: 12px;
+
+          &::before {
+            content: "X";
+          }
+        }
       }
     }
 

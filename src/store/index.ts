@@ -1,5 +1,5 @@
 import type { App, InjectionKey } from "vue"
-import { createStore, useStore as baseUseStore, Module, Store, GetterTree, Getter } from "vuex"
+import { createStore, useStore as baseUseStore, Module, Store } from "vuex"
 import search, { SearchState } from "./search"
 import setting, { SettingState } from "./setting"
 import topSite, { TopSiteState } from "./top-site"
@@ -21,6 +21,7 @@ export function useStore() {
 }
 
 const store = createStore<RootState>({
+  strict: import.meta.env.DEV,
   modules: {
     search,
     setting,

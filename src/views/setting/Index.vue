@@ -20,12 +20,14 @@ import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
 import TopSiteSetting from "./TopSiteSetting.vue"
+import LayoutSetting from "./LayoutSetting.vue"
 import { DefineComponent, FunctionalComponent } from "vue"
 import {
   BgColorsOutlined,
   SearchOutlined,
   PictureOutlined,
-  InsertRowAboveOutlined
+  InsertRowAboveOutlined,
+  AppstoreOutlined
 } from "@ant-design/icons-vue"
 
 interface SettingItem {
@@ -51,8 +53,13 @@ const settingList: SettingItem[] = [
     component: BackgroundSetting
   },
   {
-    title: "导航栏设置",
+    title: "布局设置",
     icon: InsertRowAboveOutlined,
+    component: LayoutSetting
+  },
+  {
+    title: "图标设置",
+    icon: AppstoreOutlined,
     component: TopSiteSetting
   }
 ]

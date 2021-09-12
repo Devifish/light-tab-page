@@ -62,38 +62,42 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion } from "@/types"
+import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion, Option } from "@/types"
 import SearchManage from "./SearchManage.vue"
 import { Permis, isExtension } from "@/plugins/extension"
 import { toPixel } from "@/utils/format"
 import { useStore } from "@/store"
 import { SearchGetters, SearchMutations } from "@/store/search"
+import { deepComputed } from "@/utils/common"
 
 // Vuex
 const store = useStore()
-const searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines])
-const searchSetting = computed(() => store.state.search.setting)
+const searchEngines = computed<SearchEngineData>(
+  () => store.getters[SearchGetters.getUseSearchEngines]
+)
+const searchSetting = deepComputed(
+  () => store.state.search.setting,
+  updateSearchSetting,
+  "openPageTarget"
+)
 
 // Ref
 const searchDrawer = ref()
 
 // 是否在新标签页中打开
 const isOpenPageByBlank = computed({
-  get: () => searchSetting.value.openPageTarget === OpenPageTarget.Blank,
-  set: (isOpenPageByBlank: boolean) =>
+  get: () => store.state.search.setting.openPageTarget === OpenPageTarget.Blank,
+  set: isOpenPageByBlank =>
     updateSearchSetting({
       openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
     })
 })
 
-function updateSearchSetting(data: SearchSetting) {
+function updateSearchSetting(data: Option<SearchSetting>) {
   store.commit(SearchMutations.updateSearchSetting, data)
 }
-
-// 监听到设置变化则更新数据
-watch(searchSetting, updateSearchSetting, { deep: true })
 </script>
 
 <style lang="less">

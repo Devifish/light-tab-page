@@ -1,3 +1,5 @@
+import { computed, reactive } from "vue"
+
 /**
  * 校验各种类型数据是否为空
  *
@@ -19,6 +21,13 @@ export function isEmpty(obj: any): boolean {
   }
 }
 
+/**
+ * 字符串忽略大小写相等
+ *
+ * @param source
+ * @param target
+ * @returns boolean
+ */
 export function equalsIgnoreCase(source?: string, target?: string) {
   if (source && target) {
     const sourceLow = source.toLowerCase(),
@@ -72,6 +81,17 @@ export function copy(
 }
 
 /**
+ * 获取除keys参数外对象的key
+ *
+ * @param source 来源
+ * @param keys Key
+ * @returns 除keys参数外的key
+ */
+export function otherKeys<T, K extends keyof T>(source: T, ...keys: K[]): Array<K> {
+  return Object.keys(source).filter(key => !keys.includes(key as K)) as Array<K>
+}
+
+/**
  * 生成UUID
  *
  * @returns string uuid
@@ -122,4 +142,43 @@ export function base64ToBlob(base64: string) {
   }
 
   return new Blob([u8arr], { type: mime })
+}
+
+/**
+ * 深computed实现
+ * 将传入的整个Obj转换成computedObj
+ * 并使用reactive去除ref
+ *
+ * @param get getter
+ * @param set setter
+ * @param ignoreKey 忽略转换的Key
+ * @returns computedObj
+ */
+export function deepComputed<T extends object, K extends keyof T>(
+  get: () => T,
+  set?: (newObj: T, key: string, newVal: any) => void,
+  ...ignoreKeys: K[]
+) {
+  const obj = get(),
+    keys = Object.keys(obj),
+    tempObj: T = Object.create(null)
+
+  const isWrite = typeof set === "function"
+  for (let key of keys) {
+    if (ignoreKeys.includes(key as K)) {
+      tempObj[key] = obj[key]
+    } else if (isWrite) {
+      tempObj[key] = computed({
+        get: () => get()[key],
+        set: newVal => {
+          const newObj = Object.assign({}, get(), { [key]: newVal })
+          set(newObj, key, newVal)
+        }
+      })
+    } else {
+      tempObj[key] = computed(() => get()[key])
+    }
+  }
+
+  return reactive(tempObj)
 }

@@ -1,5 +1,5 @@
 import { createStoreModule } from "./index"
-import { BackgroundSetting, BackgroundType, ThemeMode, TopSiteSetting } from "@/types"
+import { BackgroundSetting, BackgroundType, ThemeMode, TopSiteSetting, Option } from "@/types"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/image"
@@ -73,7 +73,7 @@ export default createStoreModule<SettingState>({
      * @param state
      * @param background
      */
-    [SettingMutations.updateBackgroundSetting]: (state, background: BackgroundSetting) => {
+    [SettingMutations.updateBackgroundSetting]: (state, background: Option<BackgroundSetting>) => {
       copy(background, state.background)
       saveSettingState(state)
     },
@@ -83,7 +83,7 @@ export default createStoreModule<SettingState>({
      * @param state
      * @param topSite
      */
-    [SettingMutations.updateTopSiteSetting]: (state, topSite: TopSiteSetting) => {
+    [SettingMutations.updateTopSiteSetting]: (state, topSite: Option<TopSiteSetting>) => {
       copy(topSite, state.topSite)
       saveSettingState(state)
     }

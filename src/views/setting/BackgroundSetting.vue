@@ -56,16 +56,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from "vue"
+import { watch } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { BackgroundSetting, BackgroundType } from "@/types"
 import { isExtension, Permis } from "@/plugins/extension"
 import { toPixel, toPercent } from "@/utils/format"
 import { useStore } from "@/store"
 import { SettingActions, SettingMutations } from "@/store/setting"
+import { deepComputed } from "@/utils/common"
 
 const store = useStore()
-const background = computed(() => store.state.setting.background)
+const background = deepComputed(() => store.state.setting.background, updateBackgroundSetting)
 
 function uploadBackgroundImage(e) {
   store.dispatch(SettingActions.uploadBackgroundImage, e.file)
@@ -75,12 +76,9 @@ function updateBackgroundSetting(value: BackgroundSetting) {
   store.commit(SettingMutations.updateBackgroundSetting, value)
 }
 
-// 监听到设置变化则更新数据
-watch(background, updateBackgroundSetting, { deep: true })
-
 // 监听到背景类型为Bing则拉取壁纸
 watch(
-  () => background.value.type,
+  () => background.type,
   type => {
     if (type === BackgroundType.Bing) {
       store.dispatch("loadBingDailyWallpaper")

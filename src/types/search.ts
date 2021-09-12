@@ -25,12 +25,12 @@ export enum SearchSuggestion {
 }
 
 export interface SearchSetting {
-  currentEngine?: string
-  openPageTarget?: OpenPageTarget
-  showEngineSelect?: boolean
-  searchInputRadius?: number
-  useSearchEngines?: Array<string>
-  suggestion?: SearchSuggestion
+  currentEngine: string
+  openPageTarget: OpenPageTarget
+  showEngineSelect: boolean
+  searchInputRadius: number
+  useSearchEngines: Array<string>
+  suggestion: SearchSuggestion
 }
 
 export interface HistoryItem {

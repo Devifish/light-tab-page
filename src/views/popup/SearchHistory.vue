@@ -1,18 +1,5 @@
 <template>
   <div class="search-history-layout">
-    <div class="title">
-      <h3>
-        <history-outlined />
-        最近搜索
-      </h3>
-
-      <a-tooltip title="清空">
-        <a-button type="text" size="small" @click="cleanHistory">
-          <rest-outlined />
-        </a-button>
-      </a-tooltip>
-    </div>
-
     <ul class="history-list">
       <li
         class="history-list-item"
@@ -23,7 +10,7 @@
         @click="openSearchPage(item)"
       >
         <span class="search-text">
-          <img :src="searchEngines[item.engineId].icon" :key="item.engineId" />
+          <img :src="searchEngines[item.engineId]?.icon" :key="item.engineId" />
           {{ item.searchText }}
         </span>
 
@@ -45,7 +32,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { CloseOutlined, HistoryOutlined, RestOutlined } from "@ant-design/icons-vue"
+import { CloseOutlined } from "@ant-design/icons-vue"
 import { HistoryItem, OpenPageTarget, SearchData, SearchEngineData } from "@/types"
 import { timediff } from "@/utils/format"
 import { useStore } from "@/store"
@@ -70,32 +57,10 @@ function openSearchPage(history: HistoryItem) {
 function deleteHistory(index: number) {
   store.commit(SearchMutations.deleteHistory, index)
 }
-
-function cleanHistory() {
-  store.commit(SearchMutations.cleanHistory)
-}
 </script>
 
 <style lang="less">
 .search-history-layout {
-  .title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    height: 38px;
-    line-height: 38px;
-    padding: 0 8px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid #f0f0f0;
-
-    h3 {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 0;
-    }
-  }
-
   .ant-divider {
     margin: 2px 0;
   }

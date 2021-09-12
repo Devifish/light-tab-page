@@ -20,6 +20,7 @@ export enum TopSiteGetters {
 
 export enum TopSiteMutations {
   updateTopSite = "UPDATE_TOP_SITE",
+  deleteTopSite = "DELETE_TOP_SITE",
   sortTopSites = "SORT_TOP_SITES",
   updateTopSites = "UPDATE_TOP_SITES"
 }
@@ -65,6 +66,16 @@ export default createStoreModule<TopSiteState>({
       saveTopSiteState(state)
     },
 
+     /**
+     * 删除导航
+     * @param state
+     * @param data
+     */
+      [TopSiteMutations.deleteTopSite]: (state, index: number) => {
+        state.topSites.splice(index, 1)
+        saveTopSiteState(state)
+      },
+
     /**
      * 对导航栏排序
      * @param state
@@ -109,7 +120,8 @@ export default createStoreModule<TopSiteState>({
             title: item.title ?? "无标题",
             url: item.url,
             icon: verify ? icon : undefined,
-            textIcon: !verify
+            textIcon: !verify,
+            custom: false
           }
         })
       )
