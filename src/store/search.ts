@@ -119,7 +119,10 @@ export default createStoreModule<SearchState>({
      * @param newHistory
      */
     [SearchMutations.putHistory]: (state, newHistory: HistoryItem) => {
-      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+      let history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+
+      // 去重并在头添加
+      history = history.filter(item => item.searchText !== newHistory.searchText)
       history.unshift(newHistory)
 
       state.history = history
