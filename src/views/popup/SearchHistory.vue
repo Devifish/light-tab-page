@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed, onBeforeMount, ref } from "vue"
 import { CloseOutlined } from "@ant-design/icons-vue"
 import { HistoryItem, OpenPageTarget, SearchData, SearchEngineData } from "@/types"
 import { timediff } from "@/utils/format"
@@ -57,6 +57,12 @@ function openSearchPage(history: HistoryItem) {
 function deleteHistory(index: number) {
   store.commit(SearchMutations.deleteHistory, index)
 }
+
+function loadHistory() {
+  store.commit(SearchMutations.loadHistory)
+}
+
+onBeforeMount(loadHistory)
 </script>
 
 <style lang="less">

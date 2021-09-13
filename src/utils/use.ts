@@ -1,4 +1,4 @@
-import { Ref, inject } from "vue"
+import { Ref, inject, onUnmounted, ref } from "vue"
 
 export const CommonDrawerData = Symbol()
 export const CommonModalData = Symbol()
@@ -28,4 +28,33 @@ export function useModal(): ModalData {
   }
 
   return modal
+}
+
+/**
+ * Reactive Media Query.
+ *
+ * @see https://vueuse.org/useMediaQuery
+ * @param query
+ * @param options
+ */
+export function useMediaQuery(query: string) {
+  if (!window) return ref(false)
+
+  const mediaQuery = window.matchMedia(query)
+  const matches = ref(mediaQuery.matches)
+
+  const handler = (event: MediaQueryListEvent) => {
+    matches.value = event.matches
+  }
+
+  mediaQuery.addEventListener("change", handler)
+
+  onUnmounted(() => {
+    mediaQuery.removeEventListener("change", handler)
+  })
+  return matches
+}
+
+export function usePreferredDark() {
+  return useMediaQuery("(prefers-color-scheme: dark)")
 }

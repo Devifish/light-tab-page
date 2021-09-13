@@ -12,7 +12,7 @@
 
       <div v-if="!isEmpty(currentActions)">
         <a-tooltip v-for="item of currentActions" :key="item" :title="item.title">
-          <a-button type="text" size="small">
+          <a-button type="text" size="small" @click="item.click">
             <component :is="item.icon" />
           </a-button>
         </a-tooltip>

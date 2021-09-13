@@ -28,6 +28,7 @@ export enum SearchMutations {
   putHistory = "PUT_HISTORY",
   deleteHistory = "DELETE_HISTORY",
   cleanHistory = "CLEAN_HISTORY",
+  loadHistory = "LOAD_HISTORY",
   updateCurrentEngine = "UPDATE_CURRENT_ENGINE",
   updateSearchSetting = "UPDATE_SEARCH_SETTING",
   addSearchEngine = "ADD_SEARCH_ENGINE",
@@ -90,9 +91,6 @@ export default createStoreModule<SearchState>({
     const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
     Object.assign(defaultState.searchEngines, searchEngines)
 
-    const history = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
-    if (!isEmpty(history)) defaultState.history = history
-
     return defaultState
   },
   getters: {
@@ -120,8 +118,11 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param newHistory
      */
-    [SearchMutations.putHistory]: ({ history }, newHistory: HistoryItem) => {
+    [SearchMutations.putHistory]: (state, newHistory: HistoryItem) => {
+      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
       history.unshift(newHistory)
+
+      state.history = history
       saveSearchHistory(history)
     },
 
@@ -130,10 +131,21 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param index
      */
-    [SearchMutations.deleteHistory]: ({ history }, index: number) => {
+    [SearchMutations.deleteHistory]: (state, index: number) => {
+      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
       history.splice(index, 1)
 
+      state.history = history
       saveSearchHistory(history)
+    },
+
+    /**
+     * 加载搜索历史
+     * @param state
+     */
+    [SearchMutations.loadHistory]: state => {
+      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+      state.history = history
     },
 
     /**
