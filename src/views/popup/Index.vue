@@ -20,7 +20,9 @@
     </div>
 
     <div class="content-warp">
-      <component :is="currentComponent" />
+      <keep-alive>
+        <component :is="currentComponent" />
+      </keep-alive>
     </div>
   </main>
 </template>

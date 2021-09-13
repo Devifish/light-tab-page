@@ -40,7 +40,7 @@
     <setting-item lable="底板圆角" horizontal>
       <a-slider
         v-model:value="topSiteSetting.boardRadius"
-        :max="topSiteSetting.boardSize / 2"
+        :max="(topSiteSetting.boardSize ?? 0) / 2"
         :tipFormatter="toPixel"
         style="width: 200px"
       />

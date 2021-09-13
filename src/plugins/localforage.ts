@@ -1,7 +1,7 @@
 import localForage from "localforage"
 
 const COMMON_CONFIG: LocalForageOptions = {
-  name: "light-tab-page",
+  name: import.meta.env.npm_package_name,
   driver: localForage.INDEXEDDB
 }
 

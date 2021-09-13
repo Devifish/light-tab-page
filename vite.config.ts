@@ -2,9 +2,10 @@ import { defineConfig } from "vite"
 import { resolve } from "path"
 import vue from "@vitejs/plugin-vue"
 import ViteComponents, { AntDesignVueResolver } from "vite-plugin-components"
+import { viteBuildManifest } from "./script/build-manifest"
 
 export default defineConfig({
-  envPrefix: "APP_",
+  envPrefix: ["APP_", "npm_package_name", "npm_package_version"],
   resolve: {
     alias: {
       "@/": `${resolve(__dirname, "src")}/`
@@ -26,6 +27,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    viteBuildManifest(),
     ViteComponents({
       globalComponentsDeclaration: true,
       customComponentResolvers: [
