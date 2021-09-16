@@ -1,7 +1,7 @@
 <template>
   <div class="setting-layout">
     <template v-for="item of settingList" :key="item.title">
-      <div class="setting-menu">
+      <section class="setting-menu">
         <h3>
           <component :is="item.icon" />
           {{ item.title }}
@@ -9,7 +9,7 @@
 
         <!-- content -->
         <component :is="item.component" />
-      </div>
+      </section>
       <a-divider />
     </template>
   </div>

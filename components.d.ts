@@ -21,7 +21,6 @@ declare module 'vue' {
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
     ASlider: typeof import('ant-design-vue/es')['Slider']
-    ASpace: typeof import('ant-design-vue/es')['Space']
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
@@ -30,6 +29,7 @@ declare module 'vue' {
     ColorRadio: typeof import('E:/Project/light-tab-page/src/components/ColorRadio.vue')['default']
     CommonDrawer: typeof import('E:/Project/light-tab-page/src/components/CommonDrawer.vue')['default']
     CommonModal: typeof import('E:/Project/light-tab-page/src/components/CommonModal.vue')['default']
+    Icon: typeof import('E:/Project/light-tab-page/src/components/Icon.vue')['default']
     SettingItem: typeof import('E:/Project/light-tab-page/src/components/SettingItem.vue')['default']
   }
 }

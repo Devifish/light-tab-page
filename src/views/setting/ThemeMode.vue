@@ -1,14 +1,14 @@
 <template>
-  <div class="theme-mode">
+  <div class="theme-setting">
     <setting-item lable="主题模式">
-      <a-space>
+      <div class="theme-mode">
         <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
           <div class="theme-item" @click="onThemeChange(item.mode)">
             <img :src="item.icon" />
             <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
           </div>
         </a-tooltip>
-      </a-space>
+      </div>
     </setting-item>
   </div>
 </template>
@@ -52,16 +52,26 @@ function onThemeChange(themeMode: ThemeMode) {
 <style lang="less">
 @import "ant-design-vue/lib/style/themes/index.less";
 
-.theme-mode {
-  .theme-item {
-    cursor: pointer;
-    position: relative;
+.theme-setting {
+  .theme-mode {
+    display: flex;
+    column-gap: 8px;
 
-    .select-icon {
-      color: @primary-color;
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
+    .theme-item {
+      position: relative;
+      cursor: pointer;
+
+      img {
+        height: 45px;
+        width: 52px;
+      }
+
+      .select-icon {
+        color: @primary-color;
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+      }
     }
   }
 }
