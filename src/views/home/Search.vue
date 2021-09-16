@@ -41,8 +41,9 @@
 
 <script lang="ts" setup>
 import { useStore } from "@/store"
-import { SearchActions, SearchGetters, SearchMutations } from "@/store/search"
-import { SearchEngineData } from "@/types"
+import { SearchActions, SearchGetters } from "@/store/search"
+import { SettingMutations } from "@/store/setting"
+import { Option, SearchEngineData, SearchSetting } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
@@ -50,20 +51,26 @@ import { ref, computed } from "vue"
 // Vuex
 const store = useStore()
 
-const searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines]),
-  searchSetting = computed(() => store.state.search.setting),
+const searchEngines = computed<SearchEngineData>(
+    () => store.getters[SearchGetters.getUseSearchEngines]
+  ),
+  searchSetting = computed(() => store.state.setting.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<string[]>()
 
 // 当前搜索引擎
 const currentEngine = computed({
   get: () => searchSetting.value.currentEngine!,
-  set: value => store.commit(SearchMutations.updateCurrentEngine, value)
+  set: currentEngine => updateSearchSetting({ currentEngine })
 })
 
 // 搜索内容
 const searchText = ref("")
 const debounceSearchSuggestion = debounce(handleSearchSuggestion)
+
+function updateSearchSetting(data: Option<SearchSetting>) {
+  store.commit(SettingMutations.updateSearchSetting, data)
+}
 
 /**
  * 搜索框搜索事件

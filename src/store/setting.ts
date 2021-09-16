@@ -1,4 +1,10 @@
 import { createStoreModule } from "./index"
+import { copy, isEmpty, uuid } from "@/utils/common"
+import { wallpaperStore } from "@/plugins/localforage"
+import { isImageFile } from "@/utils/image"
+import { getDailyWallpaperUrl } from "@/api/bing"
+import { debounce } from "@/utils/async"
+import { isObjectURL } from "@/utils/browser"
 import {
   BackgroundSetting,
   BackgroundType,
@@ -7,17 +13,15 @@ import {
   Option,
   LayoutSetting,
   AlignType,
-  PopupSettting
+  PopupSettting,
+  SearchSetting,
+  OpenPageTarget,
+  SearchSuggestion
 } from "@/types"
-import { copy, isEmpty, uuid } from "@/utils/common"
-import { wallpaperStore } from "@/plugins/localforage"
-import { isImageFile } from "@/utils/image"
-import { getDailyWallpaperUrl } from "@/api/bing"
-import { debounce } from "@/utils/async"
-import { isObjectURL } from "@/utils/browser"
 
 export interface SettingState {
   themeMode: ThemeMode
+  search: SearchSetting
   background: BackgroundSetting
   topSite: TopSiteSetting
   layout: LayoutSetting
@@ -27,6 +31,7 @@ export interface SettingState {
 export enum SettingMutations {
   updateThemeMode = "UPDATE_THEME_MODE",
   updateBackgroundSetting = "UPDATE_BACKGROUND_SETTING",
+  updateSearchSetting = "UPDATE_SEARCH_SETTING",
   updateTopSiteSetting = "UPDATE_TOP_SITE_SETTING",
   updateLayoutSetting = "UPDATE_LAYOUT_SETTING",
   updatePopupSetting = "UPDATE_POPUP_SETTING"
@@ -52,6 +57,14 @@ export default createStoreModule<SettingState>({
         maskColor: "#000",
         maskOpacity: 0,
         autoOpacity: true
+      },
+      search: {
+        currentEngine: "bing",
+        openPageTarget: OpenPageTarget.Blank,
+        showEngineSelect: true,
+        searchInputRadius: 4,
+        useSearchEngines: ["bing", "google", "baidu"],
+        suggestion: SearchSuggestion.none
       },
       topSite: {
         enable: false,
@@ -96,6 +109,16 @@ export default createStoreModule<SettingState>({
      */
     [SettingMutations.updateBackgroundSetting]: (state, background: Option<BackgroundSetting>) => {
       copy(background, state.background)
+      saveSettingState(state)
+    },
+
+    /**
+     * 更新搜索设置
+     * @param state
+     * @param setting
+     */
+    [SettingMutations.updateSearchSetting]: (state, search: SearchSetting) => {
+      copy(search, state.search)
       saveSettingState(state)
     },
 

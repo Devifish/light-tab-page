@@ -70,8 +70,9 @@ import SearchManage from "./SearchManage.vue"
 import { Permis, isExtension } from "@/plugins/extension"
 import { toPixel } from "@/utils/format"
 import { useStore } from "@/store"
-import { SearchGetters, SearchMutations } from "@/store/search"
+import { SearchGetters } from "@/store/search"
 import { deepComputed } from "@/utils/common"
+import { SettingMutations } from "@/store/setting"
 
 // Vuex
 const store = useStore()
@@ -79,7 +80,7 @@ const searchEngines = computed<SearchEngineData>(
   () => store.getters[SearchGetters.getUseSearchEngines]
 )
 const searchSetting = deepComputed(
-  () => store.state.search.setting,
+  () => store.state.setting.search,
   updateSearchSetting,
   "openPageTarget"
 )
@@ -89,7 +90,7 @@ const searchDrawer = ref()
 
 // 是否在新标签页中打开
 const isOpenPageByBlank = computed({
-  get: () => store.state.search.setting.openPageTarget === OpenPageTarget.Blank,
+  get: () => store.state.setting.search.openPageTarget === OpenPageTarget.Blank,
   set: isOpenPageByBlank =>
     updateSearchSetting({
       openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
@@ -97,7 +98,7 @@ const isOpenPageByBlank = computed({
 })
 
 function updateSearchSetting(data: Option<SearchSetting>) {
-  store.commit(SearchMutations.updateSearchSetting, data)
+  store.commit(SettingMutations.updateSearchSetting, data)
 }
 </script>
 

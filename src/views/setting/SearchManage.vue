@@ -91,14 +91,15 @@
 import { ref, reactive, computed } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { DEFAULT_SEARCH_ENGINES, SearchMutations } from "@/store/search"
-import { SearchEngineItem } from "@/types"
+import { Option, SearchEngineItem, SearchSetting } from "@/types"
 import { Form } from "ant-design-vue"
 import { useStore } from "@/store"
+import { SettingMutations } from "@/store/setting"
 
 // Vuex
 const store = useStore()
-const currentEngine = computed(() => store.state.search.setting.currentEngine!),
-  useSearchEngines = computed(() => store.state.search.setting.useSearchEngines!),
+const currentEngine = computed(() => store.state.setting.search.currentEngine!),
+  useSearchEngines = computed(() => store.state.setting.search.useSearchEngines!),
   searchEngines = computed(() => Object.values(store.state.search.searchEngines))
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
@@ -132,7 +133,7 @@ function onEngineDragenter(e, moveId: string) {
     temp.splice(currentIndex, 1)
     temp.splice(moveIndex, 0, currentId)
 
-    store.commit(SearchMutations.updateSearchSetting, {
+    updateSearchSetting({
       useSearchEngines: temp
     })
   }
@@ -142,7 +143,7 @@ function addUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value)
   temp.add(engineId)
 
-  store.commit(SearchMutations.updateSearchSetting, {
+  updateSearchSetting({
     useSearchEngines: Array.from(temp)
   })
 }
@@ -151,9 +152,13 @@ function removeUseSearchEngines(engineId: string) {
   const temp = new Set(useSearchEngines.value)
   temp.delete(engineId)
 
-  store.commit(SearchMutations.updateSearchSetting, {
+  updateSearchSetting({
     useSearchEngines: Array.from(temp)
   })
+}
+
+function updateSearchSetting(data: Option<SearchSetting>) {
+  store.commit(SettingMutations.updateSearchSetting, data)
 }
 
 async function addSearchEngine() {

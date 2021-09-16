@@ -1,8 +1,6 @@
 import { createStoreModule } from "./index"
 import {
   SearchEngineData,
-  OpenPageTarget,
-  SearchSetting,
   SearchEngineItem,
   SearchSuggestion,
   HistoryItem,
@@ -11,12 +9,11 @@ import {
 import BaiduLogo from "@/assets/baidu.png"
 import BingLogo from "@/assets/bing.svg"
 import GoogleLogo from "@/assets/google.png"
-import { copy, deepClone, isEmpty } from "@/utils/common"
+import { deepClone, isEmpty } from "@/utils/common"
 import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/api/suggestion"
 
 export interface SearchState {
   searchEngines: SearchEngineData
-  setting: SearchSetting
   history: Array<HistoryItem>
 }
 
@@ -29,8 +26,6 @@ export enum SearchMutations {
   deleteHistory = "DELETE_HISTORY",
   cleanHistory = "CLEAN_HISTORY",
   loadHistory = "LOAD_HISTORY",
-  updateCurrentEngine = "UPDATE_CURRENT_ENGINE",
-  updateSearchSetting = "UPDATE_SEARCH_SETTING",
   addSearchEngine = "ADD_SEARCH_ENGINE",
   deleteSearchEngine = "DELETE_SEARCH_ENGINE"
 }
@@ -41,7 +36,6 @@ export enum SearchActions {
   getSuggestion = "GET_SUGGESTION"
 }
 
-const SEARCH_SETTING_STORAGE = "search-setting"
 const SEARCH_ENGINES_STORAGE = "search-engines"
 const SEARCH_HISTORY_STORAGE = "search-history"
 const SEARCH_HISTORY_LENGTH = 100
@@ -74,19 +68,8 @@ export default createStoreModule<SearchState>({
   state() {
     const defaultState: SearchState = {
       searchEngines: { ...DEFAULT_SEARCH_ENGINES },
-      setting: {
-        currentEngine: "bing",
-        openPageTarget: OpenPageTarget.Blank,
-        showEngineSelect: true,
-        searchInputRadius: 4,
-        useSearchEngines: Object.keys(DEFAULT_SEARCH_ENGINES),
-        suggestion: SearchSuggestion.none
-      },
       history: []
     }
-
-    const searchSetting = JSON.parse(localStorage[SEARCH_SETTING_STORAGE] ?? "{}")
-    copy(searchSetting, defaultState.setting, true)
 
     const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
     Object.assign(defaultState.searchEngines, searchEngines)
@@ -99,9 +82,10 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @returns
      */
-    [SearchGetters.getUseSearchEngines]: ({ searchEngines, setting }) => {
-      const useSearchEngines = setting.useSearchEngines!
-      const temp: SearchEngineData = {}
+    [SearchGetters.getUseSearchEngines]: ({ searchEngines }, _, rootState) => {
+      const setting = rootState.setting.search,
+        useSearchEngines = setting.useSearchEngines!,
+        temp: SearchEngineData = {}
 
       for (let id of useSearchEngines) {
         const searchEngine = searchEngines[id]
@@ -161,29 +145,6 @@ export default createStoreModule<SearchState>({
     },
 
     /**
-     * 更新当前搜索引擎
-     * @param state
-     * @param currentEngine
-     * @returns
-     */
-    [SearchMutations.updateCurrentEngine]: (state, currentEngine: string) => {
-      if (isEmpty(state.searchEngines[currentEngine])) return
-
-      state.setting.currentEngine = currentEngine
-      saveSettingState(state.setting)
-    },
-
-    /**
-     * 更新搜索设置
-     * @param state
-     * @param setting
-     */
-    [SearchMutations.updateSearchSetting]: (state, setting: SearchSetting) => {
-      copy(setting, state.setting)
-      saveSettingState(state.setting)
-    },
-
-    /**
      * 添加自定义搜索引擎
      * @param state
      * @param data
@@ -216,11 +177,11 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param searchText
      */
-    [SearchActions.submitSearch]: ({ state, commit, dispatch }, search: string) => {
+    [SearchActions.submitSearch]: ({ rootState, commit, dispatch }, search: string) => {
       const searchTrim = search.trim()
       if (isEmpty(searchTrim)) throw new Error("搜索内容不能为空")
 
-      const { setting } = state
+      const setting = rootState.setting.search
       const currentEngine = setting.currentEngine!
       const history: HistoryItem = {
         engineId: currentEngine,
@@ -259,8 +220,8 @@ export default createStoreModule<SearchState>({
      * @param searchText
      * @returns
      */
-    [SearchActions.getSuggestion]: ({ state }, searchText: string) => {
-      const { setting } = state
+    [SearchActions.getSuggestion]: ({ rootState }, searchText: string) => {
+      const setting = rootState.setting.search
 
       switch (setting.suggestion) {
         case SearchSuggestion.baidu:
@@ -275,11 +236,6 @@ export default createStoreModule<SearchState>({
     }
   }
 })
-
-function saveSettingState(data: SearchSetting) {
-  const settingJson = JSON.stringify(data)
-  localStorage.setItem(SEARCH_SETTING_STORAGE, settingJson)
-}
 
 function saveSearchEngineData(data: SearchEngineData) {
   const saveData = deepClone(data, ...Object.keys(DEFAULT_SEARCH_ENGINES))

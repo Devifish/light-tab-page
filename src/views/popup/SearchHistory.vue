@@ -33,15 +33,15 @@
 <script lang="ts" setup>
 import { computed, onBeforeMount, ref } from "vue"
 import { CloseOutlined } from "@ant-design/icons-vue"
-import { HistoryItem, OpenPageTarget, SearchData, SearchEngineData } from "@/types"
+import { HistoryItem, OpenPageTarget, SearchData } from "@/types"
 import { timediff } from "@/utils/format"
 import { useStore } from "@/store"
-import { SearchActions, SearchGetters, SearchMutations } from "@/store/search"
+import { SearchActions, SearchMutations } from "@/store/search"
 
 // Vuex
 const store = useStore()
 const searchHistory = computed(() => store.state.search.history),
-  searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines])
+  searchEngines = computed(() => store.state.search.searchEngines)
 
 const current = ref()
 const now = Date.now()
