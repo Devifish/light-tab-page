@@ -19,7 +19,9 @@
 
   <!-- 壁纸 -->
   <div class="wallpaper-wrap">
-    <wallpaper v-if="state.enableWallpaper" />
+    <suspense>
+      <wallpaper v-if="state.enableWallpaper" />
+    </suspense>
   </div>
 
   <common-drawer :width="400" :footer="false" ref="settingDrawer">

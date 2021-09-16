@@ -33,18 +33,16 @@ const maskOpacity = computed(() => {
     : maskOpacity
 })
 
-async function init() {
-  const { url, type } = background.value
-
-  // 加载Bing每日壁纸
-  if (type === BackgroundType.Bing) store.dispatch(SettingActions.loadBingDailyWallpaper)
-
-  // 如果 URL无效则重新加载
-  const verify = await verifyImageUrl(url!)
-  if (!verify) store.dispatch(SettingActions.reloadBackgroundImage)
+// 如果 URL无效则重新加载
+const verifyBackground = await verifyImageUrl(background.value.url!)
+if (!verifyBackground) {
+  await store.dispatch(SettingActions.reloadBackgroundImage)
 }
 
-onBeforeMount(init)
+// 加载Bing每日壁纸
+if (background.value.type === BackgroundType.Bing) {
+  await store.dispatch(SettingActions.loadBingDailyWallpaper)
+}
 </script>
 
 <style lang="less">
