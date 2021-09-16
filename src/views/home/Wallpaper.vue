@@ -9,13 +9,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onBeforeMount } from "vue"
+import { computed, inject } from "vue"
 import { verifyImageUrl } from "@/utils/image"
 import { BackgroundType, ThemeMode } from "@/types"
-import { CURRENT_THEME_KEY } from "@/App.vue"
 import { useStore } from "@/store"
 import { SettingActions } from "@/store/setting"
 import { isEmpty } from "@/utils/common"
+import { CURRENT_THEME_KEY } from "@/components/ThemeProvider.vue"
 
 const store = useStore()
 const background = computed(() => store.state.setting.background)
