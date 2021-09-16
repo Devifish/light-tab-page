@@ -1,5 +1,5 @@
 import { createStoreModule } from "./index"
-import { getBrowserTopSites } from "@/plugins/extension"
+import { getBrowserTopSites, getFavicon } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
 import { copy } from "@/utils/common"
 import { debounce } from "@/utils/async"
@@ -26,7 +26,7 @@ export enum TopSiteMutations {
 }
 
 export enum TopSiteActions {
-  initTopSites = "INIT_TOP_SITES"
+  syncBrowserTopSites = "SYNC_BROWSER_TOP_SITES"
 }
 
 const TOP_SITE_STORAGE = "top-site-data"
@@ -66,15 +66,15 @@ export default createStoreModule<TopSiteState>({
       saveTopSiteState(state)
     },
 
-     /**
+    /**
      * 删除导航
      * @param state
      * @param data
      */
-      [TopSiteMutations.deleteTopSite]: (state, index: number) => {
-        state.topSites.splice(index, 1)
-        saveTopSiteState(state)
-      },
+    [TopSiteMutations.deleteTopSite]: (state, index: number) => {
+      state.topSites.splice(index, 1)
+      saveTopSiteState(state)
+    },
 
     /**
      * 对导航栏排序
@@ -102,12 +102,13 @@ export default createStoreModule<TopSiteState>({
   },
   actions: {
     /**
-     * 初始化导航
+     * 同步浏览器导航
      * 从浏览器获取最近浏览
      * @param param0
      */
-    [TopSiteActions.initTopSites]: async ({ state, commit }) => {
+    [TopSiteActions.syncBrowserTopSites]: async ({ state, commit }) => {
       const startTime = Date.now()
+      const customTopSites = state.topSites.filter(item => item.custom)
       const list = await getBrowserTopSites()
 
       // 并行校验图标是否有效
@@ -128,7 +129,7 @@ export default createStoreModule<TopSiteState>({
       state.init = true
 
       console.log("load browser top-sites:", `${Date.now() - startTime}ms`)
-      commit(TopSiteMutations.updateTopSites, topSites)
+      commit(TopSiteMutations.updateTopSites, customTopSites.concat(topSites))
     }
   }
 })
@@ -137,9 +138,4 @@ export default createStoreModule<TopSiteState>({
 const saveTopSiteState = debounce((data: TopSiteState) => {
   const settingJson = JSON.stringify(data)
   localStorage.setItem(TOP_SITE_STORAGE, settingJson)
-}, 1000)
-
-function getFavicon(url: string) {
-  const urlObj = new URL(url)
-  return `${urlObj.origin}/favicon.ico`
-}
+}, 250)

@@ -1,8 +1,10 @@
-import { isEmpty } from "@/utils/common"
 import type { App, ObjectDirective } from "vue"
 import { permissions, Permissions, topSites } from "webextension-polyfill"
+import { isEmpty } from "@/utils/common"
+import { isChrome as isChromeBrowser } from "@/utils/browser"
 
 export const isExtension = chrome && chrome.extension ? true : false
+export const isChrome = isChromeBrowser()
 
 export const Permis: Record<string, Permissions.Permissions> = {
   bing: { origins: ["https://cn.bing.com/"] },
@@ -46,6 +48,15 @@ export async function getBrowserTopSites() {
     return await topSites.get()
   } else {
     return []
+  }
+}
+
+export function getFavicon(url: string) {
+  if (isChrome) {
+    return `chrome://favicon/size/48/${url}`
+  } else {
+    const urlObj = new URL(url)
+    return `${urlObj.origin}/favicon.ico`
   }
 }
 
