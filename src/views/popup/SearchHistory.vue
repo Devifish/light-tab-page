@@ -43,7 +43,7 @@ const store = useStore()
 const searchHistory = computed(() => store.state.search.history),
   searchEngines = computed<SearchEngineData>(() => store.getters[SearchGetters.getUseSearchEngines])
 
-const current = ref<any>()
+const current = ref()
 const now = Date.now()
 
 function openSearchPage(history: HistoryItem) {

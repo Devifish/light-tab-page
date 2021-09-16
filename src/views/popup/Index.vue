@@ -10,8 +10,8 @@
         </a-select-option>
       </a-select>
 
-      <div v-if="!isEmpty(currentActions)">
-        <a-tooltip v-for="item of currentActions" :key="item" :title="item.title">
+      <div class="action-menu" v-if="currentMenu">
+        <a-tooltip v-for="item of currentMenu.actions" :key="item" :title="item.title">
           <a-button type="text" size="small" @click="item.click">
             <component :is="item.icon" />
           </a-button>
@@ -19,21 +19,28 @@
       </div>
     </div>
 
-    <div class="content-warp">
+    <div v-if="currentMenu" class="content-warp">
       <keep-alive>
-        <component :is="currentComponent" />
+        <component :is="currentMenu.component" />
       </keep-alive>
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
-import { computed, DefineComponent, FunctionalComponent, ref } from "vue"
+import { computed, DefineComponent, FunctionalComponent } from "vue"
 import { useStore } from "@/store"
 import { SearchMutations } from "@/store/search"
-import { HistoryOutlined, RestOutlined } from "@ant-design/icons-vue"
+import {
+  HistoryOutlined,
+  RestOutlined,
+  AppstoreOutlined,
+  PlusOutlined
+} from "@ant-design/icons-vue"
+import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
-import { isEmpty } from "@/utils/common"
+import { SettingMutations } from "@/store/setting"
+import { Option, PopupSettting } from "@/types"
 
 interface ActionItem {
   title: string
@@ -50,6 +57,17 @@ interface PopupMenuItem {
 
 const popupMenu: Array<PopupMenuItem> = [
   {
+    title: "首页导航",
+    icon: AppstoreOutlined,
+    component: HomeTopSite,
+    actions: [
+      {
+        title: "添加",
+        icon: PlusOutlined
+      }
+    ]
+  },
+  {
     title: "最近搜索",
     icon: HistoryOutlined,
     component: SearchHistory,
@@ -63,12 +81,19 @@ const popupMenu: Array<PopupMenuItem> = [
   }
 ]
 
-const current = ref(0)
-const currentActions = computed(() => popupMenu[current.value].actions)
-const currentComponent = computed(() => popupMenu[current.value].component)
-
 // Vuex
 const store = useStore()
+const current = computed({
+  get: () => store.state.setting.popup.current,
+  set: current => updatePopupSetting({ current })
+})
+
+// 当前菜单
+const currentMenu = computed(() => popupMenu[current.value])
+
+function updatePopupSetting(popup: Option<PopupSettting>) {
+  store.commit(SettingMutations.updatePopupSetting, popup)
+}
 
 function cleanHistory() {
   store.commit(SearchMutations.cleanHistory)
@@ -106,6 +131,7 @@ function cleanHistory() {
 
   .content-warp {
     overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100% - @title-h);
   }
 }

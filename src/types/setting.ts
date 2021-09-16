@@ -44,3 +44,7 @@ export enum AlignType {
 export interface LayoutSetting {
   align: AlignType
 }
+
+export interface PopupSettting {
+  current: number
+}

@@ -6,26 +6,30 @@ import {
   TopSiteSetting,
   Option,
   LayoutSetting,
-  AlignType
+  AlignType,
+  PopupSettting
 } from "@/types"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/image"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { debounce } from "@/utils/async"
+import { isObjectURL } from "@/utils/browser"
 
 export interface SettingState {
   themeMode: ThemeMode
   background: BackgroundSetting
   topSite: TopSiteSetting
   layout: LayoutSetting
+  popup: PopupSettting
 }
 
 export enum SettingMutations {
   updateThemeMode = "UPDATE_THEME_MODE",
   updateBackgroundSetting = "UPDATE_BACKGROUND_SETTING",
   updateTopSiteSetting = "UPDATE_TOP_SITE_SETTING",
-  updateLayoutSetting = "UPDATE_LAYOUT_SETTING"
+  updateLayoutSetting = "UPDATE_LAYOUT_SETTING",
+  updatePopupSetting = "UPDATE_POPUP_SETTING"
 }
 
 export enum SettingActions {
@@ -62,6 +66,9 @@ export default createStoreModule<SettingState>({
       },
       layout: {
         align: AlignType.searchCenter
+      },
+      popup: {
+        current: 0
       }
     }
 
@@ -110,6 +117,16 @@ export default createStoreModule<SettingState>({
     [SettingMutations.updateLayoutSetting]: (state, layout: Option<LayoutSetting>) => {
       copy(layout, state.layout)
       saveSettingState(state)
+    },
+
+    /**
+     * 更新Popup菜单设置
+     * @param state
+     * @param popup
+     */
+    [SettingMutations.updatePopupSetting]: (state, popup: Option<PopupSettting>) => {
+      copy(popup, state.popup)
+      saveSettingState(state)
     }
   },
 
@@ -119,14 +136,18 @@ export default createStoreModule<SettingState>({
      * @param param0
      * @param imageFile
      */
-    [SettingActions.uploadBackgroundImage]: async ({ commit }, imageFile: File) => {
+    [SettingActions.uploadBackgroundImage]: async ({ state, commit }, imageFile: File) => {
       if (!isImageFile(imageFile)) throw new Error("这不是一个图片文件")
 
-      const id = uuid()
-      const url = URL.createObjectURL(imageFile)
+      const id = uuid(),
+        url = URL.createObjectURL(imageFile),
+        url_old = state.background.url
 
-      // 清除上次壁纸
+      // 清除上次壁纸，ObjectURL可能导致内存溢出
       await wallpaperStore.clear()
+      if (url_old && isObjectURL(url_old)) {
+        URL.revokeObjectURL(url_old)
+      }
 
       // 保存图片到IndexedDB
       await wallpaperStore.setItem<Blob>(id, imageFile)
@@ -173,4 +194,4 @@ export default createStoreModule<SettingState>({
 const saveSettingState = debounce((data: SettingState) => {
   const settingJson = JSON.stringify(data)
   localStorage.setItem(SETTING_STORAGE, settingJson)
-}, 1000)
+}, 250)

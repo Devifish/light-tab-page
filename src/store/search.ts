@@ -218,7 +218,7 @@ export default createStoreModule<SearchState>({
      */
     [SearchActions.submitSearch]: ({ state, commit, dispatch }, search: string) => {
       const searchTrim = search.trim()
-      if (isEmpty(searchTrim)) return
+      if (isEmpty(searchTrim)) throw new Error("搜索内容不能为空")
 
       const { setting } = state
       const currentEngine = setting.currentEngine!
