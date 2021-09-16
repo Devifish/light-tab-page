@@ -1,4 +1,4 @@
-const SECOND = 1000,
+export const SECOND = 1000,
   MIN = 60 * SECOND,
   HOUR = 60 * MIN,
   DAY = 24 * HOUR,

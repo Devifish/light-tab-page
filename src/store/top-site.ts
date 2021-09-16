@@ -7,7 +7,7 @@ import { verifyImageUrl } from "@/utils/image"
 
 export interface TopSiteState {
   topSites: TopSites
-  init: boolean
+  lastUpdateTime?: number
 }
 
 export interface TopSiteItemVo extends TopSiteItem {
@@ -22,7 +22,8 @@ export enum TopSiteMutations {
   updateTopSite = "UPDATE_TOP_SITE",
   deleteTopSite = "DELETE_TOP_SITE",
   sortTopSites = "SORT_TOP_SITES",
-  updateTopSites = "UPDATE_TOP_SITES"
+  updateTopSites = "UPDATE_TOP_SITES",
+  editLastUpdateTime = "EDIT_LAST_UPDATE_TIME"
 }
 
 export enum TopSiteActions {
@@ -35,7 +36,7 @@ export default createStoreModule<TopSiteState>({
   state() {
     const defaultState: TopSiteState = {
       topSites: [],
-      init: false
+      lastUpdateTime: undefined
     }
 
     const topSitesData = JSON.parse(localStorage[TOP_SITE_STORAGE] ?? "[]")
@@ -98,6 +99,16 @@ export default createStoreModule<TopSiteState>({
     [TopSiteMutations.updateTopSites]: (state, topSites: TopSites) => {
       state.topSites = topSites
       saveTopSiteState(state)
+    },
+
+    /**
+     * 更新上次更新时间
+     * @param state
+     * @param newTime
+     */
+    [TopSiteMutations.editLastUpdateTime]: (state, newTime: number) => {
+      state.lastUpdateTime = newTime
+      saveTopSiteState(state)
     }
   },
   actions: {
@@ -107,7 +118,7 @@ export default createStoreModule<TopSiteState>({
      * @param param0
      */
     [TopSiteActions.syncBrowserTopSites]: async ({ state, commit }) => {
-      const startTime = Date.now()
+      const now = Date.now()
       const customTopSites = state.topSites.filter(item => item.custom)
       const list = await getBrowserTopSites()
 
@@ -126,10 +137,10 @@ export default createStoreModule<TopSiteState>({
           }
         })
       )
-      state.init = true
 
-      console.log("load browser top-sites:", `${Date.now() - startTime}ms`)
+      console.log("load browser top-sites:", `${Date.now() - now}ms`)
       commit(TopSiteMutations.updateTopSites, customTopSites.concat(topSites))
+      commit(TopSiteMutations.editLastUpdateTime, now)
     }
   }
 })

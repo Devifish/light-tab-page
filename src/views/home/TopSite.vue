@@ -109,7 +109,7 @@ function onDragIcon(type: DragType, index: number) {
 }
 
 async function init() {
-  if (!store.state.topSite.init) {
+  if (!store.state.topSite.lastUpdateTime) {
     await store.dispatch(TopSiteActions.syncBrowserTopSites)
   }
 }
