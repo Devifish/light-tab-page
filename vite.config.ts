@@ -30,7 +30,6 @@ export default defineConfig({
     vue(),
     viteBuildManifest(),
     ViteComponents({
-      dts: true,
       resolvers: [
         AntDesignVueResolver({
           importLess: true
