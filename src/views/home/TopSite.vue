@@ -128,10 +128,14 @@ onBeforeMount(init)
 @board-radius: v-bind("`${topSiteSetting.boardRadius}px`");
 
 .top-site-warp {
+  height: calc(@row * @item-size-max + (@row - 1) * @gap);
+  width: calc(@col * @item-size-max + (@col - 1) * @gap);
+
   .top-site-grid {
     display: grid;
-    grid-template-columns: repeat(@col, calc(@item-size-max + @gap));
-    grid-template-rows: repeat(@row, calc(@item-size-max + @gap));
+    grid-template-columns: repeat(@col, @item-size-max);
+    grid-template-rows: repeat(@row, @item-size-max);
+    gap: @gap;
   }
 
   .top-site-item {
