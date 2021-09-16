@@ -2,7 +2,7 @@
   <main id="popup-layout">
     <div class="title">
       <a-select v-model:value="current" :bordered="false" size="small">
-        <a-select-option v-for="(item, index) of popupMenu" :value="index" :key="item.title">
+        <a-select-option v-for="(item, index) of filterPopupMenu" :value="index" :key="item.title">
           <span>
             <component :is="item.icon" />
             {{ item.title }}
@@ -28,14 +28,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, DefineComponent, FunctionalComponent } from "vue"
+import { computed, DefineComponent, FunctionalComponent, Ref, ref } from "vue"
 import { useStore } from "@/store"
 import { SearchMutations } from "@/store/search"
 import {
   HistoryOutlined,
   RestOutlined,
-  AppstoreOutlined,
-  PlusOutlined
+  AppstoreOutlined
 } from "@ant-design/icons-vue"
 import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
@@ -51,21 +50,18 @@ interface ActionItem {
 interface PopupMenuItem {
   title: string
   icon: FunctionalComponent
+  skip?: boolean | Ref<boolean>
   component: DefineComponent<{}, {}, any>
   actions?: Array<ActionItem>
 }
 
-const popupMenu: Array<PopupMenuItem> = [
+const store = useStore()
+const popupMenu = ref<PopupMenuItem[]>([
   {
     title: "首页导航",
     icon: AppstoreOutlined,
+    skip: computed(() => !store.state.setting.topSite.enable),
     component: HomeTopSite,
-    actions: [
-      {
-        title: "添加",
-        icon: PlusOutlined
-      }
-    ]
   },
   {
     title: "最近搜索",
@@ -79,17 +75,16 @@ const popupMenu: Array<PopupMenuItem> = [
       }
     ]
   }
-]
+])
 
-// Vuex
-const store = useStore()
+const filterPopupMenu = computed(() => popupMenu.value.filter(item => !item.skip))
 const current = computed({
   get: () => store.state.setting.popup.current,
   set: current => updatePopupSetting({ current })
 })
 
 // 当前菜单
-const currentMenu = computed(() => popupMenu[current.value])
+const currentMenu = computed(() => filterPopupMenu.value[current.value])
 
 function updatePopupSetting(popup: Option<PopupSettting>) {
   store.commit(SettingMutations.updatePopupSetting, popup)

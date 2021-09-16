@@ -8,8 +8,9 @@ export default defineManifest({
   default_locale: "zh_CN",
   content_security_policy: "script-src 'self'; object-src 'self';",
   minimum_chrome_version: "81.0.0",
-  permissions: ["topSites", "chrome://favicon/"],
+  permissions: ["chrome://favicon/"],
   optional_permissions: [
+    "topSites",
     "https://cn.bing.com/",
     "https://suggestion.baidu.com/",
     "https://api.bing.com/",

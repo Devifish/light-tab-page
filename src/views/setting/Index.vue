@@ -1,6 +1,6 @@
 <template>
   <div class="setting-layout">
-    <template v-for="item of settingList" :key="item.title">
+    <template v-for="item of filterSettingList" :key="item.title">
       <section class="setting-menu">
         <h3>
           <component :is="item.icon" />
@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, Ref, ref } from "vue"
+import { useStore } from "@/store"
 import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
@@ -34,9 +36,11 @@ interface SettingItem {
   title: string
   icon: FunctionalComponent
   component: DefineComponent<{}, {}, any>
+  skip?: boolean | Ref<boolean>
 }
 
-const settingList: SettingItem[] = [
+const store = useStore()
+const settingList = ref<SettingItem[]>([
   {
     title: "主题设置",
     icon: BgColorsOutlined,
@@ -58,11 +62,14 @@ const settingList: SettingItem[] = [
     component: LayoutSetting
   },
   {
-    title: "图标设置",
+    title: "导航栏设置",
     icon: AppstoreOutlined,
-    component: TopSiteSetting
+    component: TopSiteSetting,
+    skip: computed(() => !store.state.setting.topSite.enable)
   }
-]
+])
+
+const filterSettingList = computed(() => settingList.value.filter(item => !item.skip))
 </script>
 
 <style lang="less">

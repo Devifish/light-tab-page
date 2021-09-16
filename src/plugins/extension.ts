@@ -14,7 +14,8 @@ export const Permis: Record<string, Permissions.Permissions> = {
       "https://api.bing.com/",
       "https://suggestqueries.google.com/"
     ]
-  }
+  },
+  topSite: { permissions: ["topSites"] }
 }
 
 const vPermis: ObjectDirective<any, Permissions.Permissions> = {

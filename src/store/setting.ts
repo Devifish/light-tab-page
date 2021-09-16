@@ -54,7 +54,7 @@ export default createStoreModule<SettingState>({
         autoOpacity: true
       },
       topSite: {
-        enable: true,
+        enable: false,
         col: 6,
         row: 2,
         gap: 16,

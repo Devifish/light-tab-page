@@ -42,6 +42,12 @@
         </a-select-option>
       </a-select>
     </setting-item>
+    <a-alert
+      v-if="searchSetting.suggestion === SearchSuggestion.none"
+      message="搜索建议需请求网站接口，开启需要相关权限"
+      type="warning"
+      banner
+    />
 
     <setting-item lable="搜索框圆角">
       <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tipFormatter="toPixel" />
