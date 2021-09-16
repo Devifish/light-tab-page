@@ -1,6 +1,6 @@
 <template>
   <div class="search-warp">
-    <div class="search-logo">
+    <div v-if="searchSetting.showEngineIcon" class="search-logo">
       <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
     <div class="search-input">
@@ -123,16 +123,17 @@ function onSwitchEngines(e: KeyboardEvent) {
 @search-radius: v-bind(searchInputRadius);
 
 .search-warp {
-  height: 164px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  row-gap: 64px;
 
   .search-logo img {
     height: @logo-h;
     width: auto;
   }
+
   .search-input {
     width: 700px;
     align-self: end;

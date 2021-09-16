@@ -25,6 +25,7 @@ export enum SearchSuggestion {
 export interface SearchSetting {
   currentEngine: string
   openPageTarget: OpenPageTarget
+  showEngineIcon: boolean
   showEngineSelect: boolean
   searchInputRadius: number
   useSearchEngines: Array<string>

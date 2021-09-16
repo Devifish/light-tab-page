@@ -61,6 +61,7 @@ export default createStoreModule<SettingState>({
       search: {
         currentEngine: "bing",
         openPageTarget: OpenPageTarget.Blank,
+        showEngineIcon: true,
         showEngineSelect: true,
         searchInputRadius: 4,
         useSearchEngines: ["bing", "google", "baidu"],

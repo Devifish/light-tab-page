@@ -52,6 +52,10 @@
       <a-switch v-model:checked="isOpenPageByBlank" />
     </setting-item>
 
+    <setting-item lable="在搜索框上方显示搜索引擎图标" horizontal>
+      <a-switch v-model:checked="searchSetting.showEngineIcon" />
+    </setting-item>
+
     <setting-item lable="在搜索框前添加搜索引擎下拉列表" horizontal>
       <a-switch v-model:checked="searchSetting.showEngineSelect" />
     </setting-item>
