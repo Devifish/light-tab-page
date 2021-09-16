@@ -1,16 +1,16 @@
 <template>
   <div class="setting-layout">
-    <template v-for="item of filterSettingList" :key="item.title">
+    <template v-for="(item, index) of filterSettingList" :key="item.title">
       <section class="setting-menu">
         <h3>
-          <component :is="item.icon" />
+          <component v-if="item.icon" :is="item.icon" />
           {{ item.title }}
         </h3>
 
         <!-- content -->
         <component :is="item.component" />
       </section>
-      <a-divider />
+      <a-divider v-if="index < filterSettingList.length - 1" />
     </template>
   </div>
 </template>
@@ -23,6 +23,7 @@ import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
 import TopSiteSetting from "./TopSiteSetting.vue"
 import LayoutSetting from "./LayoutSetting.vue"
+import About from "./About.vue"
 import { DefineComponent, FunctionalComponent } from "vue"
 import {
   BgColorsOutlined,
@@ -34,7 +35,7 @@ import {
 
 interface SettingItem {
   title: string
-  icon: FunctionalComponent
+  icon?: FunctionalComponent
   component: DefineComponent<{}, {}, any>
   skip?: boolean | Ref<boolean>
 }
@@ -66,6 +67,10 @@ const settingList = ref<SettingItem[]>([
     icon: AppstoreOutlined,
     component: TopSiteSetting,
     skip: computed(() => !store.state.setting.topSite.enable)
+  },
+  {
+    title: "关于",
+    component: About
   }
 ])
 

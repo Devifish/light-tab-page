@@ -27,24 +27,19 @@
     <setting-item lable="搜索建议接口" horizontal>
       <a-select
         v-model:value="searchSetting.suggestion"
+        :disabled="!isExtension"
         v-permis="Permis.suggestion"
         style="width: 100px"
       >
         <a-select-option :value="SearchSuggestion.none"> 不使用 </a-select-option>
-        <a-select-option :value="SearchSuggestion.baidu" :disabled="!isExtension">
-          百度 API
-        </a-select-option>
-        <a-select-option :value="SearchSuggestion.bing" :disabled="!isExtension">
-          Bing API
-        </a-select-option>
-        <a-select-option :value="SearchSuggestion.google" :disabled="!isExtension">
-          Google API
-        </a-select-option>
+        <a-select-option :value="SearchSuggestion.baidu"> 百度 API </a-select-option>
+        <a-select-option :value="SearchSuggestion.bing"> Bing API </a-select-option>
+        <a-select-option :value="SearchSuggestion.google"> Google API </a-select-option>
       </a-select>
     </setting-item>
     <a-alert
       v-if="searchSetting.suggestion === SearchSuggestion.none"
-      message="搜索建议需请求网站接口，开启需要相关权限"
+      message="搜索建议需请求网站接口，开启需要授权"
       type="warning"
       banner
     />

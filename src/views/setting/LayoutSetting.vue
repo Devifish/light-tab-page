@@ -1,10 +1,14 @@
 <template>
   <setting-item lable="导航栏" horizontal>
-    <a-switch v-model:checked="topSiteSetting.enable" v-permis="Permis.topSite" />
+    <a-switch
+      v-model:checked="topSiteSetting.enable"
+      :disabled="!isExtension"
+      v-permis="Permis.topSite"
+    />
   </setting-item>
   <a-alert
     v-if="!topSiteSetting.enable"
-    message="导航栏数据来源于最近浏览，开启需要相关权限"
+    message="导航栏数据来源于最近浏览，开启需要授权"
     type="warning"
     banner
   />
@@ -45,7 +49,7 @@ import { deepComputed, otherKeys } from "@/utils/common"
 import { SettingMutations } from "@/store/setting"
 import { TopSiteSetting, Option, LayoutSetting, AlignType } from "@/types"
 import { toPixel } from "@/utils/format"
-import { Permis } from "@/plugins/extension"
+import { isExtension, Permis } from "@/plugins/extension"
 
 const store = useStore()
 const topSiteSetting = deepComputed(
