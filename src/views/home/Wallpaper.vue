@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { computed, inject } from "vue"
-import { verifyImageUrl } from "@/utils/image"
+import { verifyImageUrl } from "@/utils/file"
 import { BackgroundType, ThemeMode } from "@/types"
 import { useStore } from "@/store"
 import { SettingActions } from "@/store/setting"

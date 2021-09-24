@@ -1,7 +1,7 @@
 import { createStoreModule } from "./index"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
-import { isImageFile } from "@/utils/image"
+import { isImageFile } from "@/utils/file"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { debounce } from "@/utils/async"
 import { isObjectURL } from "@/utils/browser"

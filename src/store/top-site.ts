@@ -3,7 +3,7 @@ import { getBrowserTopSites, getFavicon } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
 import { copy } from "@/utils/common"
 import { debounce } from "@/utils/async"
-import { verifyImageUrl } from "@/utils/image"
+import { verifyImageUrl } from "@/utils/file"
 
 export interface TopSiteState {
   topSites: TopSites

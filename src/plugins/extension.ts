@@ -1,4 +1,4 @@
-import type { App, ObjectDirective } from "vue"
+import type { App, ObjectDirective, Plugin } from "vue"
 import { permissions, Permissions, topSites } from "webextension-polyfill"
 import { isEmpty } from "@/utils/common"
 import { isChrome as isChromeBrowser } from "@/utils/browser"
@@ -19,28 +19,33 @@ export const Permis: Record<string, Permissions.Permissions> = {
 }
 
 const vPermis: ObjectDirective<any, Permissions.Permissions> = {
-  created(el, bind) {
+  async created(el, bind) {
     if (!isExtension) return
     if (isEmpty(bind.value)) return
 
     // 如果没有权限则绑定请求权限事件
-    permissions.contains(bind.value).then(res => {
-      if (res) return
+    const hasPermis = await permissions.contains(bind.value)
+    if (hasPermis) return
 
-      const onRequestPermissions = (e: Event) => {
-        e.preventDefault()
+    const onRequestPermissions = (e: Event) => {
+      e.preventDefault()
 
-        // 请求权限，如果成功则重新请求事件
-        permissions.request(bind.value).then(isOk => {
-          if (isOk) {
-            el.removeEventListener("click", onRequestPermissions)
-            el.click()
-          }
-        })
-      }
+      // 请求权限，如果成功则重新请求事件
+      permissions.request(bind.value).then(isOk => {
+        if (isOk) {
+          el.removeEventListener("click", onRequestPermissions)
+          el.click()
+        }
+      })
+    }
 
-      el.addEventListener("click", onRequestPermissions)
-    })
+    el.addEventListener("click", onRequestPermissions)
+  }
+}
+
+const vuePlugin: Plugin = {
+  install(app: App) {
+    app.directive("permis", vPermis)
   }
 }
 
@@ -61,8 +66,4 @@ export function getFavicon(url: string) {
   }
 }
 
-export default {
-  install(app: App) {
-    app.directive("permis", vPermis)
-  }
-}
+export default vuePlugin
