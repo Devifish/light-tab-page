@@ -1,0 +1,31 @@
+home:
+  search: "搜索"
+theme:
+  setting: "主题设置"
+  mode: "主题模式"
+search:
+  setting: "搜索设置"
+  engine: "搜索引擎"
+  suggestApi: "搜索建议接口"
+  suggestApiTip: "搜索建议需请求网站接口，开启需要授权"
+  searchRound: "搜索框圆角"
+  newTabOpen: "在新标签页中打开搜索结果"
+  showEngineIcon: "在搜索框上方显示搜索引擎图标"
+  showEngineSelet: "在搜索框前添加搜索引擎下拉列表"
+background:
+  setting: "背景设置"
+  wallpaper:
+    setting: "壁纸设置"
+    none: "无"
+    local: "本地图片"
+    bing: "Bing每日壁纸"
+    upload: "上传壁纸"
+  blur: "模糊强度"
+  maskOpacity: "遮罩不透明度"
+  wallpaperDark: "在深色模式下使壁纸更暗"
+about:
+  about: "关于"
+  projectHome: "项目地址"
+  changelog: "更新日志"
+  feedback: "问题反馈"
+  license: "遵循 MIT 开源协议"

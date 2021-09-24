@@ -1,6 +1,6 @@
 <template>
   <div class="theme-setting">
-    <setting-item lable="主题模式">
+    <setting-item :lable="t('theme.mode')">
       <div class="theme-mode">
         <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
           <div class="theme-item" @click="onThemeChange(item.mode)">
@@ -22,6 +22,7 @@ import LightMode from "@/assets/light-mode.svg"
 import DarkMode from "@/assets/dark-mode.svg"
 import { useStore } from "@/store"
 import { SettingMutations } from "@/store/setting"
+import { useI18n } from "vue-i18n"
 
 const themeModes = [
   {
@@ -41,6 +42,7 @@ const themeModes = [
   }
 ]
 
+const { t } = useI18n()
 const store = useStore()
 const themeMode = computed(() => store.state.setting.themeMode)
 

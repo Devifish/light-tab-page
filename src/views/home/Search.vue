@@ -19,7 +19,7 @@
         </template>
 
         <a-input-search
-          placeholder="搜索"
+          :placeholder="t('home.search')"
           autoFocus
           enter-button
           size="large"
@@ -47,8 +47,9 @@ import { Option, SearchEngineData, SearchSetting } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
+import { useI18n } from "vue-i18n"
 
-// Vuex
+const { t } = useI18n()
 const store = useStore()
 
 const searchEngines = computed<SearchEngineData>(

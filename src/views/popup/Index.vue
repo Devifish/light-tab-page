@@ -28,14 +28,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, DefineComponent, FunctionalComponent, Ref, ref } from "vue"
+import { computed, DefineComponent, FunctionalComponent, Ref, shallowRef } from "vue"
 import { useStore } from "@/store"
 import { SearchMutations } from "@/store/search"
-import {
-  HistoryOutlined,
-  RestOutlined,
-  AppstoreOutlined
-} from "@ant-design/icons-vue"
+import { HistoryOutlined, RestOutlined, AppstoreOutlined } from "@ant-design/icons-vue"
 import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
 import { SettingMutations } from "@/store/setting"
@@ -56,12 +52,12 @@ interface PopupMenuItem {
 }
 
 const store = useStore()
-const popupMenu = ref<PopupMenuItem[]>([
+const popupMenu = shallowRef<PopupMenuItem[]>([
   {
     title: "首页导航",
     icon: AppstoreOutlined,
     skip: computed(() => !store.state.setting.topSite.enable),
-    component: HomeTopSite,
+    component: HomeTopSite
   },
   {
     title: "最近搜索",

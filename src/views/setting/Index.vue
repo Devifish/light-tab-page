@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, Ref, ref } from "vue"
+import { computed, Ref, shallowRef } from "vue"
 import { useStore } from "@/store"
 import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
@@ -32,6 +32,7 @@ import {
   InsertRowAboveOutlined,
   AppstoreOutlined
 } from "@ant-design/icons-vue"
+import { useI18n } from "vue-i18n"
 
 interface SettingItem {
   title: string
@@ -40,20 +41,21 @@ interface SettingItem {
   skip?: boolean | Ref<boolean>
 }
 
+const { t } = useI18n()
 const store = useStore()
-const settingList = ref<SettingItem[]>([
+const settingList = shallowRef<SettingItem[]>([
   {
-    title: "主题设置",
+    title: t("theme.setting"),
     icon: BgColorsOutlined,
     component: ThemeMode
   },
   {
-    title: "搜索设置",
+    title: t("search.setting"),
     icon: SearchOutlined,
     component: SearchSetting
   },
   {
-    title: "背景设置",
+    title: t("background.setting"),
     icon: PictureOutlined,
     component: BackgroundSetting
   },
@@ -69,7 +71,7 @@ const settingList = ref<SettingItem[]>([
     skip: computed(() => !store.state.setting.topSite.enable)
   },
   {
-    title: "关于",
+    title: t("about.about"),
     component: About
   }
 ])

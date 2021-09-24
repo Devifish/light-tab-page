@@ -2,7 +2,7 @@
   <div class="search-setting">
     <setting-item horizontal>
       <template #lable>
-        <span>搜索引擎</span>
+        <span>{{ t("search.engine") }}</span>
 
         <a-tooltip title="管理搜索引擎">
           <a-button
@@ -24,7 +24,7 @@
       </a-select>
     </setting-item>
 
-    <setting-item lable="搜索建议接口" horizontal>
+    <setting-item :lable="t('search.suggestApi')" horizontal>
       <a-select
         v-model:value="searchSetting.suggestion"
         :disabled="!isExtension"
@@ -39,24 +39,24 @@
     </setting-item>
     <a-alert
       v-if="searchSetting.suggestion === SearchSuggestion.none"
-      message="搜索建议需请求网站接口，开启需要授权"
+      :message="t('search.suggestApiTip')"
       type="warning"
       banner
     />
 
-    <setting-item lable="搜索框圆角">
+    <setting-item :lable="t('search.searchRound')">
       <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tipFormatter="toPixel" />
     </setting-item>
 
-    <setting-item lable="在新标签页中打开搜索结果" horizontal>
+    <setting-item :lable="t('search.newTabOpen')" horizontal>
       <a-switch v-model:checked="isOpenPageByBlank" />
     </setting-item>
 
-    <setting-item lable="在搜索框上方显示搜索引擎图标" horizontal>
+    <setting-item :lable="t('search.showEngineIcon')" horizontal>
       <a-switch v-model:checked="searchSetting.showEngineIcon" />
     </setting-item>
 
-    <setting-item lable="在搜索框前添加搜索引擎下拉列表" horizontal>
+    <setting-item :lable="t('search.showEngineSelet')" horizontal>
       <a-switch v-model:checked="searchSetting.showEngineSelect" />
     </setting-item>
   </div>
@@ -77,9 +77,11 @@ import { useStore } from "@/store"
 import { SearchGetters } from "@/store/search"
 import { deepComputed } from "@/utils/common"
 import { SettingMutations } from "@/store/setting"
+import { useI18n } from "vue-i18n"
 
-// Vuex
+const { t } = useI18n()
 const store = useStore()
+
 const searchEngines = computed<SearchEngineData>(
   () => store.getters[SearchGetters.getUseSearchEngines]
 )

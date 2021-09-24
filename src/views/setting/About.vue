@@ -13,8 +13,9 @@
     </ul>
 
     <p class="copyright">
-      遵循
-      <a href="https://github.com/Devifish/light-tab-page/blob/master/LICENSE">MIT 开源协议</a>
+      <a href="https://github.com/Devifish/light-tab-page/blob/master/LICENSE">
+        {{ t("about.license") }}
+      </a>
       <br />
       Copyright © 2021 Devifish. All rights reserved.
     </p>
@@ -22,13 +23,17 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
+
 const appName = import.meta.env.npm_package_name
 const appVersion = import.meta.env.npm_package_version
 
 const social: Record<string, string> = {
-  项目地址: "https://github.com/Devifish/light-tab-page",
-  更新日志: "https://github.com/Devifish/light-tab-page/blob/master/CHANGELOG.md",
-  问题反馈: "https://github.com/Devifish/light-tab-page/issues"
+  [t("about.projectHome")]: "https://github.com/Devifish/light-tab-page",
+  [t("about.changelog")]: "https://github.com/Devifish/light-tab-page/blob/master/CHANGELOG.md",
+  [t("about.feedback")]: "https://github.com/Devifish/light-tab-page/issues"
 }
 </script>
 

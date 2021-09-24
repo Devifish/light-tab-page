@@ -1,11 +1,11 @@
 <template>
   <div class="background-setting">
-    <setting-item lable="壁纸设置">
+    <setting-item :lable="t('background.wallpaper.setting')">
       <a-radio-group v-model:value="background.type" button-style="solid">
-        <a-radio :value="BackgroundType.None">无</a-radio>
-        <a-radio :value="BackgroundType.Local">本地图片</a-radio>
+        <a-radio :value="BackgroundType.None">{{ t("background.wallpaper.none") }}</a-radio>
+        <a-radio :value="BackgroundType.Local">{{ t("background.wallpaper.local") }}</a-radio>
         <a-radio :value="BackgroundType.Bing" :disabled="!isExtension" v-permis="Permis.bing">
-          Bing每日壁纸
+          {{ t("background.wallpaper.bing") }}
         </a-radio>
       </a-radio-group>
     </setting-item>
@@ -13,7 +13,7 @@
     <setting-item
       v-if="background.type === BackgroundType.Local"
       class="upload-layout"
-      lable="上传壁纸"
+      :lable="t('background.wallpaper.upload')"
     >
       <a-upload
         class="background-uploader"
@@ -31,11 +31,11 @@
     </setting-item>
 
     <template v-if="background.type !== BackgroundType.None">
-      <setting-item lable="模糊强度">
+      <setting-item :lable="t('background.blur')">
         <a-slider v-model:value="background.blur" :max="48" :tipFormatter="toPixel" />
       </setting-item>
 
-      <setting-item lable="遮罩不透明度">
+      <setting-item :lable="t('background.maskOpacity')">
         <a-slider
           v-model:value="background.maskOpacity"
           :step="0.01"
@@ -44,7 +44,7 @@
         />
       </setting-item>
 
-      <setting-item lable="在深色模式下使壁纸更暗" horizontal>
+      <setting-item :lable="t('background.wallpaperDark')" horizontal>
         <a-switch v-model:checked="background.autoOpacity" />
       </setting-item>
     </template>
@@ -60,7 +60,9 @@ import { toPixel, toPercent } from "@/utils/format"
 import { useStore } from "@/store"
 import { SettingActions, SettingMutations } from "@/store/setting"
 import { deepComputed } from "@/utils/common"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const store = useStore()
 const background = deepComputed(() => store.state.setting.background, updateBackgroundSetting)
 

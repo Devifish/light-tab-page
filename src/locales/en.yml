@@ -1,0 +1,31 @@
+home:
+  search: "Search"
+theme:
+  setting: "Theme Setting"
+  mode: "Theme mode"
+search:
+  setting: "Search Setting"
+  engine: "Search engine"
+  suggestApi: "Suggest api"
+  suggestApiTip: "Search suggestions need to request the website interface, opening requires authorization"
+  searchRound: "Search box rounded corners"
+  newTabOpen: "Open search results in a new tab"
+  showEngineIcon: "Show search engine icon above the search box"
+  showEngineSelet: "Add a search engine drop-down list in front of the search box"
+background:
+  setting: "Background Setting"
+  wallpaper:
+    setting: "Wallpaper setting"
+    none: "None"
+    local: "Local"
+    bing: "Bing wallpaper"
+    upload: "Upload wallpaper"
+  blur: "Blur"
+  maskOpacity: "Mask opacity"
+  wallpaperDark: "Make the wallpaper darker in dark mode"
+about:
+  about: "About"
+  projectHome: "Project Home"
+  changelog: "Changelog"
+  feedback: "Feedback"
+  license: "Released under the MIT License"
