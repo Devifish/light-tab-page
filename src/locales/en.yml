@@ -1,6 +1,7 @@
 lang: "English"
 common:
   auto: "Auto"
+  clean: "Clean"
 
 home:
   search: "Search"
@@ -58,8 +59,12 @@ other:
   lang: "Language"
 
 about:
-  about: "About"
+  text: "About"
   projectHome: "Project Home"
   changelog: "Changelog"
   feedback: "Feedback"
   license: "Released under the MIT License"
+
+popup:
+  topsite: "Topsite"
+  searchHistory: "SearchHistory"

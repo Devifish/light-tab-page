@@ -36,6 +36,7 @@ import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
 import { SettingMutations } from "@/store/setting"
 import { Option, PopupSettting } from "@/types"
+import { useI18n } from "vue-i18n"
 
 interface ActionItem {
   title: string
@@ -51,22 +52,24 @@ interface PopupMenuItem {
   actions?: Array<ActionItem>
 }
 
+const { t } = useI18n()
 const store = useStore()
+
 const popupMenu = computed<PopupMenuItem[]>(() =>
   [
     {
-      title: "首页导航",
+      title: t("popup.topsite"),
       icon: AppstoreOutlined,
       skip: !store.state.setting.topSite.enable,
       component: HomeTopSite
     },
     {
-      title: "最近搜索",
+      title: t("popup.searchHistory"),
       icon: HistoryOutlined,
       component: SearchHistory,
       actions: [
         {
-          title: "清空",
+          title: t("common.clean"),
           icon: RestOutlined,
           click: cleanHistory
         }

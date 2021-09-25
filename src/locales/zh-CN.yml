@@ -1,6 +1,7 @@
 lang: "简体中文"
 common:
   auto: "自动"
+  clean: "清空"
 
 home:
   search: "搜索"
@@ -63,3 +64,7 @@ about:
   changelog: "更新日志"
   feedback: "问题反馈"
   license: "遵循 MIT 开源协议"
+
+popup:
+  topsite: "首页导航"
+  searchHistory: "搜索历史"
