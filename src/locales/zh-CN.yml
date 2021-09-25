@@ -1,8 +1,14 @@
+lang: "简体中文"
+common:
+  auto: "自动"
+
 home:
   search: "搜索"
+
 theme:
   setting: "主题设置"
   mode: "主题模式"
+
 search:
   setting: "搜索设置"
   engine: "搜索引擎"
@@ -12,6 +18,7 @@ search:
   newTabOpen: "在新标签页中打开搜索结果"
   showEngineIcon: "在搜索框上方显示搜索引擎图标"
   showEngineSelet: "在搜索框前添加搜索引擎下拉列表"
+
 background:
   setting: "背景设置"
   wallpaper:
@@ -23,8 +30,35 @@ background:
   blur: "模糊强度"
   maskOpacity: "遮罩不透明度"
   wallpaperDark: "在深色模式下使壁纸更暗"
+
+layout:
+  setting: "布局设置"
+  topSiteBar: "导航栏"
+  topSiteBarTip: "导航栏数据来源于最近浏览，开启需要授权"
+  colRow: "行/列数"
+  space: "间距"
+  align:
+    text: "对齐"
+    searchCenter: "仅搜索居中 (默认)"
+    overallCenter: "整体居中"
+
+topsite:
+  setting: "导航栏设置"
+  topSiteData: "最近浏览数据"
+  topSiteDataTip: "最近同步: {0}"
+  sync: "同步"
+  iconSize: "图标大小"
+  boardSize: "底板大小"
+  boardColor: "底板颜色"
+  boardOpacity: "底板不透明度"
+  boardRound: "底板圆角"
+
+other:
+  setting: "其他设置"
+  lang: "语言"
+
 about:
-  about: "关于"
+  text: "关于"
   projectHome: "项目地址"
   changelog: "更新日志"
   feedback: "问题反馈"

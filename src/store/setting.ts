@@ -20,6 +20,7 @@ import {
 } from "@/types"
 
 export interface SettingState {
+  lang: string
   themeMode: ThemeMode
   search: SearchSetting
   background: BackgroundSetting
@@ -28,7 +29,12 @@ export interface SettingState {
   popup: PopupSettting
 }
 
+export enum SettingGetters {
+  getCurrentLanguage = "GET_CURRENT_LANGUAGE"
+}
+
 export enum SettingMutations {
+  updateLanguage = "UPDATE_LANGUAGE",
   updateThemeMode = "UPDATE_THEME_MODE",
   updateBackgroundSetting = "UPDATE_BACKGROUND_SETTING",
   updateSearchSetting = "UPDATE_SEARCH_SETTING",
@@ -48,6 +54,7 @@ const SETTING_STORAGE = "setting-data"
 export default createStoreModule<SettingState>({
   state() {
     const defaultState: SettingState = {
+      lang: "auto",
       themeMode: ThemeMode.Auto,
       background: {
         id: "",
@@ -91,8 +98,27 @@ export default createStoreModule<SettingState>({
 
     return defaultState
   },
-  getters: {},
+  getters: {
+    /**
+     * 获取当前的语言
+     * @param param0
+     * @returns
+     */
+    [SettingGetters.getCurrentLanguage]: ({ lang }) => {
+      return lang === "auto" ? navigator.language : lang
+    }
+  },
   mutations: {
+    /**
+     * 更新语言
+     * @param state
+     * @param lang
+     */
+    [SettingMutations.updateLanguage]: (state, lang: string) => {
+      state.lang = lang
+      saveSettingState(state)
+    },
+
     /**
      * 更新主题模式
      * @param state

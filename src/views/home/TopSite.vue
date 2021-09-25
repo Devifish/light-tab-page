@@ -4,10 +4,8 @@
       <li
         v-for="(item, index) of topSites"
         :key="item.url"
-        class="top-site-item"
-        :class="{
-          hide: state.currentDrag === index
-        }"
+        :class="['top-site-item', { hide: state.currentDrag === index }]"
+        :title="item.title"
       >
         <icon
           :class="['top-site-icon', { 'shake-active': state.shake }]"

@@ -1,8 +1,14 @@
+lang: "English"
+common:
+  auto: "Auto"
+
 home:
   search: "Search"
+
 theme:
   setting: "Theme Setting"
   mode: "Theme mode"
+
 search:
   setting: "Search Setting"
   engine: "Search engine"
@@ -11,7 +17,8 @@ search:
   searchRound: "Search box rounded corners"
   newTabOpen: "Open search results in a new tab"
   showEngineIcon: "Show search engine icon above the search box"
-  showEngineSelet: "Add a search engine drop-down list in front of the search box"
+  showEngineSelet: "Show search engine drop-down in front of the search box"
+
 background:
   setting: "Background Setting"
   wallpaper:
@@ -23,6 +30,33 @@ background:
   blur: "Blur"
   maskOpacity: "Mask opacity"
   wallpaperDark: "Make the wallpaper darker in dark mode"
+
+layout:
+  setting: "Layout Setting"
+  topSiteBar: "Topsite Bar"
+  topSiteBarTip: "Topsite Bar data comes from the most recent browsing, opening requires authorization"
+  colRow: "Col/Row"
+  space: "Space"
+  align:
+    text: "Align"
+    searchCenter: "Search only center (Default)"
+    overallCenter: "Overall center"
+
+topsite:
+  setting: "Topsite Setting"
+  topSiteData: "Topsite data"
+  topSiteDataTip: "last sync: {0}"
+  sync: "Sync"
+  iconSize: "Icon size"
+  boardSize: "Board size"
+  boardColor: "Board color"
+  boardOpacity: "Board opacity"
+  boardRound: "Board round"
+
+other:
+  setting: "Other Setting"
+  lang: "Language"
+
 about:
   about: "About"
   projectHome: "Project Home"

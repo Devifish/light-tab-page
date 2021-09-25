@@ -2,9 +2,9 @@
   <div class="top-site-setting-warp">
     <setting-item horizontal>
       <template #lable>
-        最近浏览数据
+        {{ t("topsite.topSiteData") }}
         <span style="font-size: 10px; color: #a0a0a0">
-          (上次同步: {{ lastUpdateTime ? timediff(lastUpdateTime) : "无" }})
+          ({{ t("topsite.topSiteDataTip", [lastUpdateTime ? timediff(lastUpdateTime) : "无"]) }})
         </span>
       </template>
 
@@ -13,11 +13,11 @@
         :disabled="state.disableSyncBtn"
         @click="syncBrowserTopSites"
       >
-        同步
+        {{ t("topsite.sync") }}
       </a-button>
     </setting-item>
 
-    <setting-item lable="图标大小" horizontal>
+    <setting-item :lable="t('topsite.iconSize')" horizontal>
       <a-slider
         v-model:value="topSiteSetting.iconSize"
         :min="16"
@@ -28,7 +28,7 @@
       />
     </setting-item>
 
-    <setting-item lable="底板大小" horizontal>
+    <setting-item :lable="t('topsite.boardSize')" horizontal>
       <a-slider
         v-model:value="topSiteSetting.boardSize"
         :min="16"
@@ -38,14 +38,14 @@
         style="width: 200px"
       />
     </setting-item>
-    <setting-item lable="底板颜色" horizontal>
+    <setting-item :lable="t('topsite.boardColor')" horizontal>
       <color-radio
         v-model:value="topSiteSetting.boardColor"
         :colors="['#FFF', '#00A4EF', '#7FBA00', '#F25022', '#FFB900', '#1F1F1F']"
         style="width: 215px"
       />
     </setting-item>
-    <setting-item lable="底板不透明度" horizontal>
+    <setting-item :lable="t('topsite.boardOpacity')" horizontal>
       <a-slider
         v-model:value="topSiteSetting.boardOpacity"
         :step="0.01"
@@ -54,7 +54,7 @@
         style="width: 200px"
       />
     </setting-item>
-    <setting-item lable="底板圆角" horizontal>
+    <setting-item :lable="t('topsite.boardRound')" horizontal>
       <a-slider
         v-model:value="topSiteSetting.boardRadius"
         :max="(topSiteSetting.boardSize ?? 0) / 2"
@@ -74,8 +74,11 @@ import { deepComputed } from "@/utils/common"
 import { computed, reactive } from "vue"
 import { TopSiteActions } from "@/store/top-site"
 import { sleep } from "@/utils/async"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const store = useStore()
+
 const lastUpdateTime = computed(() => store.state.topSite.lastUpdateTime)
 const topSiteSetting = deepComputed(
   () => store.state.setting.topSite,

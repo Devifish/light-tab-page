@@ -2,8 +2,7 @@
   <div class="color-radio-warp">
     <div
       v-for="item of colors"
-      class="color-item"
-      :class="{ active: equalsIgnoreCase(value, item) }"
+      :class="['color-item', { active: equalsIgnoreCase(value, item) }]"
       :key="item"
       :style="{
         backgroundColor: item,

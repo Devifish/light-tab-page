@@ -1,5 +1,5 @@
 <template>
-  <setting-item lable="导航栏" horizontal>
+  <setting-item :lable="t('layout.topSiteBar')" horizontal>
     <a-switch
       v-model:checked="topSiteSetting.enable"
       :disabled="!isExtension"
@@ -8,13 +8,13 @@
   </setting-item>
   <a-alert
     v-if="!topSiteSetting.enable"
-    message="导航栏数据来源于最近浏览，开启需要授权"
+    :message="t('layout.topSiteBarTip')"
     type="warning"
     banner
   />
 
   <template v-if="topSiteSetting.enable">
-    <setting-item lable="行/列数">
+    <setting-item :lable="t('layout.colRow')">
       <a-slider
         v-model:value="topSiteSetting.col"
         :min="4"
@@ -30,15 +30,15 @@
       />
     </setting-item>
 
-    <setting-item lable="间距">
+    <setting-item :lable="t('layout.space')">
       <a-slider v-model:value="topSiteSetting.gap" :min="0" :max="48" :tipFormatter="toPixel" />
     </setting-item>
   </template>
 
-  <setting-item lable="对齐">
+  <setting-item :lable="t('layout.align.text')">
     <a-radio-group v-model:value="layoutSetting.align" button-style="solid">
-      <a-radio :value="AlignType.searchCenter">仅搜索居中</a-radio>
-      <a-radio :value="AlignType.overallCenter">整体居中(搜索+导航)</a-radio>
+      <a-radio :value="AlignType.searchCenter">{{ t("layout.align.searchCenter") }}</a-radio>
+      <a-radio :value="AlignType.overallCenter">{{ t("layout.align.overallCenter") }}</a-radio>
     </a-radio-group>
   </setting-item>
 </template>
@@ -50,7 +50,9 @@ import { SettingMutations } from "@/store/setting"
 import { TopSiteSetting, Option, LayoutSetting, AlignType } from "@/types"
 import { toPixel } from "@/utils/format"
 import { isExtension, Permis } from "@/plugins/extension"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const store = useStore()
 const topSiteSetting = deepComputed(
   () => store.state.setting.topSite,

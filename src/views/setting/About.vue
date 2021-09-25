@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
@@ -30,11 +31,11 @@ const { t } = useI18n()
 const appName = import.meta.env.npm_package_name
 const appVersion = import.meta.env.npm_package_version
 
-const social: Record<string, string> = {
+const social = computed<Record<string, string>>(() => ({
   [t("about.projectHome")]: "https://github.com/Devifish/light-tab-page",
   [t("about.changelog")]: "https://github.com/Devifish/light-tab-page/blob/master/CHANGELOG.md",
   [t("about.feedback")]: "https://github.com/Devifish/light-tab-page/issues"
-}
+}))
 </script>
 
 <style lang="less">

@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-item" :class="{ horizontal: props.horizontal }">
+  <div :class="['setting-item', { horizontal: props.horizontal }]">
     <div class="setting-lable">
       <slot name="lable">
         <span>{{ props.lable }}</span>
@@ -22,9 +22,10 @@ const props = withDefaults(defineProps<SettingItemProps>(), {
 
 <style lang="less">
 .setting-item {
+  min-height: 38px;
+
   .setting-lable {
-    height: 38px;
-    line-height: 38px;
+    margin: 8px 0;
 
     span {
       font-size: 14px;
@@ -35,6 +36,10 @@ const props = withDefaults(defineProps<SettingItemProps>(), {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .setting-lable {
+      margin: 0;
+    }
   }
 }
 </style>
