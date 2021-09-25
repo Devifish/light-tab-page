@@ -11,10 +11,11 @@ import ThemeProvider from "./components/ThemeProvider.vue"
 import { useI18n } from "vue-i18n"
 import { SettingGetters } from "./store/setting"
 
-const { locale } = useI18n()
 const store = useStore()
 const themeMode = computed(() => store.state.setting.themeMode)
 
+// 设置语言
+const { locale } = useI18n()
 watchEffect(() => {
   locale.value = store.getters[SettingGetters.getCurrentLanguage]
 })

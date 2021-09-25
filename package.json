@@ -18,6 +18,7 @@
     "@ant-design/icons-vue": "^6.0.1",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
+    "file-saver": "^2.0.5",
     "localforage": "^1.10.0",
     "moment": "^2.29.1",
     "vue": "^3.2.16",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^2.4.0",
     "@types/chrome": "^0.0.155",
+    "@types/file-saver": "^2.0.3",
     "@types/node": "14",
     "@types/webextension-polyfill": "^0.8.0",
     "@vitejs/plugin-vue": "^1.9.1",

@@ -5,6 +5,7 @@ import { isImageFile } from "@/utils/file"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { debounce } from "@/utils/async"
 import { isObjectURL } from "@/utils/browser"
+import { saveAs } from "file-saver"
 import {
   BackgroundSetting,
   BackgroundType,
@@ -46,10 +47,13 @@ export enum SettingMutations {
 export enum SettingActions {
   uploadBackgroundImage = "UPLOAD_BACKGROUND_IMAGE",
   reloadBackgroundImage = "RELOAD_BACKGROUND_IMAGE",
-  loadBingDailyWallpaper = "LOAD_BING_DAILY_WALLPAPER"
+  loadBingDailyWallpaper = "LOAD_BING_DAILY_WALLPAPER",
+  exportSetting = "EXPORT_SETTING",
+  importSetting = "IMPORT_SETTING"
 }
 
 const SETTING_STORAGE = "setting-data"
+const BACKUP_FILE_MARK = "_MARK_"
 
 export default createStoreModule<SettingState>({
   state() {
@@ -236,6 +240,40 @@ export default createStoreModule<SettingState>({
 
       if (isEmpty(url)) return
       commit(SettingMutations.updateBackgroundSetting, { url })
+    },
+
+    /**
+     * 导出设置数据
+     * 使用JSON格式保存
+     */
+    [SettingActions.exportSetting]: () => {
+      const { npm_package_name, npm_package_version } = import.meta.env
+      const dataJson = JSON.stringify({
+        [BACKUP_FILE_MARK]: npm_package_name,
+        ...window.localStorage
+      })
+
+      // 保存文件
+      const blob = new Blob([dataJson], { type: "application/json;charset=utf-8" })
+      saveAs(blob, `${npm_package_name}_${npm_package_version}.json`)
+    },
+
+    /**
+     * 导入设置数据
+     * 使用JSON格式保存
+     */
+    [SettingActions.importSetting]: async (_, file: File) => {
+      if (!file.type.includes("json")) throw new Error("导入文件不匹配")
+
+      const dataJson = await file.text()
+      const data = JSON.parse(dataJson)
+      const { npm_package_name } = import.meta.env
+      if (data[BACKUP_FILE_MARK] !== npm_package_name) throw new Error("备份文件已损坏")
+
+      for (let item in data) {
+        if (item === BACKUP_FILE_MARK) continue
+        localStorage.setItem(item, data[item])
+      }
     }
   }
 })

@@ -4,12 +4,14 @@ specifiers:
   '@ant-design/icons-vue': ^6.0.1
   '@intlify/vite-plugin-vue-i18n': ^2.4.0
   '@types/chrome': ^0.0.155
+  '@types/file-saver': ^2.0.3
   '@types/node': '14'
   '@types/webextension-polyfill': ^0.8.0
   '@vitejs/plugin-vue': ^1.9.1
   '@vue/compiler-sfc': ^3.2.16
   ant-design-vue: ^2.2.8
   axios: ^0.21.4
+  file-saver: ^2.0.5
   less: ^4.1.1
   localforage: ^1.10.0
   moment: ^2.29.1
@@ -27,6 +29,7 @@ dependencies:
   '@ant-design/icons-vue': 6.0.1_vue@3.2.16
   ant-design-vue: 2.2.8_fd76851691d416b8795192dbe2c7252a
   axios: 0.21.4
+  file-saver: 2.0.5
   localforage: 1.10.0
   moment: 2.29.1
   vue: 3.2.16
@@ -38,6 +41,7 @@ dependencies:
 devDependencies:
   '@intlify/vite-plugin-vue-i18n': 2.4.0_vite@2.5.10+vue-i18n@9.1.7
   '@types/chrome': 0.0.155
+  '@types/file-saver': 2.0.3
   '@types/node': 14.17.18
   '@types/webextension-polyfill': 0.8.0
   '@vitejs/plugin-vue': 1.9.1_vite@2.5.10
@@ -245,6 +249,10 @@ packages:
     dependencies:
       '@types/filesystem': 0.0.32
       '@types/har-format': 1.2.7
+    dev: true
+
+  /@types/file-saver/2.0.3:
+    resolution: {integrity: sha512-MBIou8pd/41jkff7s97B47bc9+p0BszqqDJsO51yDm49uUxeKzrfuNl5fSLC6BpLEWKA8zlwyqALVmXrFwoBHQ==}
     dev: true
 
   /@types/filesystem/0.0.32:
@@ -694,6 +702,10 @@ packages:
     dependencies:
       reusify: 1.0.4
     dev: true
+
+  /file-saver/2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /fill-range/7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}

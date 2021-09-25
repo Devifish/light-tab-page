@@ -57,6 +57,10 @@ topsite:
 other:
   setting: "其他设置"
   lang: "语言"
+  backup:
+    text: "备份配置"
+    export: "导出配置"
+    import: "导入配置"
 
 about:
   text: "关于"

@@ -57,6 +57,10 @@ topsite:
 other:
   setting: "其他設置"
   lang: "語言"
+  backup:
+    text: "備份設置"
+    export: "導出設置"
+    import: "導入設置"
 
 about:
   text: "關於"

@@ -57,6 +57,10 @@ topsite:
 other:
   setting: "Other Setting"
   lang: "Language"
+  backup:
+    text: "Backup setting"
+    export: "Export setting"
+    import: "Import setting"
 
 about:
   text: "About"

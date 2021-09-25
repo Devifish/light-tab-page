@@ -32,7 +32,8 @@ import {
   SearchOutlined,
   PictureOutlined,
   InsertRowAboveOutlined,
-  AppstoreOutlined
+  AppstoreOutlined,
+  ControlOutlined
 } from "@ant-design/icons-vue"
 
 interface SettingItem {
@@ -81,6 +82,7 @@ const settingList = computed<Array<SettingItem>>(() =>
     {
       key: "OtherSetting",
       title: t("other.setting"),
+      icon: ControlOutlined,
       component: OtherSetting
     },
     {
