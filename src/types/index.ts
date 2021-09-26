@@ -1,6 +1,13 @@
 export * from "./search"
 export * from "./setting"
 
+export enum LanguageType {
+  Auto = "auto",
+  SimplifiedChinese = "zh-CN",
+  TraditionalChinese = "zh-TW",
+  English = "en"
+}
+
 export interface TopSiteItem {
   title: string
   url: string

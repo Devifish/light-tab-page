@@ -23,7 +23,7 @@
           <close-outlined />
         </a-button>
         <span v-else class="time-text">
-          {{ timediff(item.timestamp, now) }}
+          {{ dayjs(item.timestamp).fromNow() }}
         </span>
       </li>
     </ul>
@@ -34,7 +34,7 @@
 import { computed, onBeforeMount, ref } from "vue"
 import { CloseOutlined } from "@ant-design/icons-vue"
 import { HistoryItem, OpenPageTarget, SearchData } from "@/types"
-import { timediff } from "@/utils/format"
+import dayjs from "@/plugins/dayjs"
 import { useStore } from "@/store"
 import { SearchActions, SearchMutations } from "@/store/search"
 

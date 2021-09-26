@@ -6,23 +6,17 @@
     <div class="search-input">
       <a-auto-complete
         v-model:value="searchText"
-        size="large"
+        :options="searchSuggestion"
         :defaultActiveFirstOption="false"
+        size="large"
+        autofocus
         backfill
         style="width: 100%"
         @search="debounceSearchSuggestion"
       >
-        <template #options>
-          <a-select-option v-for="item of searchSuggestion" :key="item">
-            {{ item }}
-          </a-select-option>
-        </template>
-
         <a-input-search
           :placeholder="t('home.search')"
-          autoFocus
           enter-button
-          size="large"
           @keydown="onSwitchEngines"
           @search="onSearch"
         >
@@ -49,6 +43,11 @@ import { isEmpty } from "@/utils/common"
 import { ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
 
+interface SuggestionItem {
+  title?: string
+  value: string
+}
+
 const { t } = useI18n()
 const store = useStore()
 
@@ -57,7 +56,7 @@ const searchEngines = computed<SearchEngineData>(
   ),
   searchSetting = computed(() => store.state.setting.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
-  searchSuggestion = ref<string[]>()
+  searchSuggestion = ref<SuggestionItem[]>()
 
 // 当前搜索引擎
 const currentEngine = computed({
@@ -89,8 +88,8 @@ async function handleSearchSuggestion(value: string) {
   if (isEmpty(value)) {
     searchSuggestion.value = []
   } else {
-    const suggestion = await store.dispatch(SearchActions.getSuggestion, value)
-    searchSuggestion.value = suggestion
+    const suggestion: string[] = await store.dispatch(SearchActions.getSuggestion, value)
+    searchSuggestion.value = suggestion.map(item => ({ value: item }))
   }
 }
 

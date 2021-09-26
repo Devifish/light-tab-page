@@ -1,22 +1,15 @@
 <template>
-  <theme-provider :mode="themeMode">
+  <config-provider :theme="themeMode" :lang="lang">
     <router-view />
-  </theme-provider>
+  </config-provider>
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from "vue"
+import { computed } from "vue"
 import { useStore } from "./store"
-import ThemeProvider from "./components/ThemeProvider.vue"
-import { useI18n } from "vue-i18n"
-import { SettingGetters } from "./store/setting"
+import ConfigProvider from "./components/ConfigProvider.vue"
 
 const store = useStore()
 const themeMode = computed(() => store.state.setting.themeMode)
-
-// 设置语言
-const { locale } = useI18n()
-watchEffect(() => {
-  locale.value = store.getters[SettingGetters.getCurrentLanguage]
-})
+const lang = computed(() => store.state.setting.lang)
 </script>

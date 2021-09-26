@@ -1,41 +1,39 @@
 <template>
-  <div class="top-site-setting-warp">
+  <div class="top-site-setting">
     <setting-item horizontal>
       <template #lable>
         {{ t("topsite.topSiteData") }}
         <span style="font-size: 10px; color: #a0a0a0">
-          ({{ t("topsite.topSiteDataTip", [lastUpdateTime ? timediff(lastUpdateTime) : "无"]) }})
+          ({{
+            t("topsite.topSiteDataTip", [lastUpdateTime ? dayjs(lastUpdateTime).fromNow() : "无"])
+          }})
         </span>
       </template>
 
-      <a-button
-        :loading="state.syncing"
-        :disabled="state.disableSyncBtn"
-        @click="syncBrowserTopSites"
-      >
+      <a-button :loading="state.syncing" @click="syncBrowserTopSites">
         {{ t("topsite.sync") }}
       </a-button>
     </setting-item>
 
     <setting-item :lable="t('topsite.iconSize')" horizontal>
       <a-slider
+        class="horizontal-item"
         v-model:value="topSiteSetting.iconSize"
         :min="16"
         :max="topSiteSetting.boardSize"
         :step="8"
         :tipFormatter="toPixel"
-        style="width: 200px"
       />
     </setting-item>
 
     <setting-item :lable="t('topsite.boardSize')" horizontal>
       <a-slider
+        class="horizontal-item"
         v-model:value="topSiteSetting.boardSize"
         :min="16"
         :max="96"
         :step="8"
         :tipFormatter="toPixel"
-        style="width: 200px"
       />
     </setting-item>
     <setting-item :lable="t('topsite.boardColor')" horizontal>
@@ -47,19 +45,19 @@
     </setting-item>
     <setting-item :lable="t('topsite.boardOpacity')" horizontal>
       <a-slider
+        class="horizontal-item"
         v-model:value="topSiteSetting.boardOpacity"
         :step="0.01"
         :max="1"
         :tipFormatter="toPercent"
-        style="width: 200px"
       />
     </setting-item>
     <setting-item :lable="t('topsite.boardRound')" horizontal>
       <a-slider
+        class="horizontal-item"
         v-model:value="topSiteSetting.boardRadius"
         :max="(topSiteSetting.boardSize ?? 0) / 2"
         :tipFormatter="toPixel"
-        style="width: 200px"
       />
     </setting-item>
   </div>
@@ -67,13 +65,14 @@
 
 <script lang="ts" setup>
 import { TopSiteSetting, Option } from "@/types"
-import { toPixel, toPercent, timediff, DAY } from "@/utils/format"
+import { toPixel, toPercent } from "@/utils/format"
 import { useStore } from "@/store"
 import { SettingMutations } from "@/store/setting"
 import { deepComputed } from "@/utils/common"
 import { computed, reactive } from "vue"
 import { TopSiteActions } from "@/store/top-site"
 import { sleep } from "@/utils/async"
+import dayjs from "@/plugins/dayjs"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
@@ -88,10 +87,8 @@ const topSiteSetting = deepComputed(
   "gap"
 )
 
-const now = Date.now()
 const state = reactive({
-  syncing: false,
-  disableSyncBtn: computed(() => (now - (lastUpdateTime.value ?? 0)) / DAY <= 1)
+  syncing: false
 })
 
 function updateTopSiteSetting(data: Option<TopSiteSetting>) {
@@ -109,3 +106,11 @@ async function syncBrowserTopSites() {
   state.syncing = false
 }
 </script>
+
+<style lang="less">
+.top-site-setting {
+  .horizontal-item {
+    width: 210px;
+  }
+}
+</style>

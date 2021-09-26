@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
-    "ant-design-vue": "^2.2.8",
+    "ant-design-vue": "^3.0.0-alpha.0",
     "axios": "^0.21.4",
+    "dayjs": "^1.10.7",
     "file-saver": "^2.0.5",
     "localforage": "^1.10.0",
-    "moment": "^2.29.1",
     "vue": "^3.2.16",
     "vue-i18n": "^9.1.7",
     "vue-router": "^4.0.11",

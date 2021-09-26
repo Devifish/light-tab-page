@@ -9,12 +9,12 @@ specifiers:
   '@types/webextension-polyfill': ^0.8.0
   '@vitejs/plugin-vue': ^1.9.1
   '@vue/compiler-sfc': ^3.2.16
-  ant-design-vue: ^2.2.8
+  ant-design-vue: ^3.0.0-alpha.0
   axios: ^0.21.4
+  dayjs: ^1.10.7
   file-saver: ^2.0.5
   less: ^4.1.1
   localforage: ^1.10.0
-  moment: ^2.29.1
   typescript: ^4.4.3
   unplugin-vue-components: ^0.15.3
   vite: ^2.5.10
@@ -27,11 +27,11 @@ specifiers:
 
 dependencies:
   '@ant-design/icons-vue': 6.0.1_vue@3.2.16
-  ant-design-vue: 2.2.8_fd76851691d416b8795192dbe2c7252a
+  ant-design-vue: 3.0.0-alpha.0_fd76851691d416b8795192dbe2c7252a
   axios: 0.21.4
+  dayjs: 1.10.7
   file-saver: 2.0.5
   localforage: 1.10.0
-  moment: 2.29.1
   vue: 3.2.16
   vue-i18n: 9.1.7_vue@3.2.16
   vue-router: 4.0.11_vue@3.2.16
@@ -432,24 +432,24 @@ packages:
     hasBin: true
     dev: true
 
-  /ant-design-vue/2.2.8_fd76851691d416b8795192dbe2c7252a:
-    resolution: {integrity: sha512-3graq9/gCfJQs6hznrHV6sa9oDmk/D1H3Oo0vLdVpPS/I61fZPk8NEyNKCHpNA6fT2cx6xx9U3QS63uuyikg/Q==}
+  /ant-design-vue/3.0.0-alpha.0_fd76851691d416b8795192dbe2c7252a:
+    resolution: {integrity: sha512-QRtQYhnXc5wOcfHH6ZUV5bfbxlfmLYGxlFK/qPg43lCbR1uqUTxcB5TWGRvG6vUZlzCk2K/zzDhk3jpSztWYbw==}
     peerDependencies:
       '@vue/compiler-sfc': '>=3.1.0'
       vue: '>=3.1.0'
     dependencies:
+      '@ant-design/colors': 5.1.1
       '@ant-design/icons-vue': 6.0.1_vue@3.2.16
       '@babel/runtime': 7.15.4
       '@simonwep/pickr': 1.8.2
       '@vue/compiler-sfc': 3.2.16
       array-tree-filter: 2.1.0
       async-validator: 3.5.2
+      dayjs: 1.10.7
       dom-align: 1.12.2
       dom-scroll-into-view: 2.0.1
       lodash: 4.17.21
       lodash-es: 4.17.21
-      moment: 2.29.1
-      omit.js: 2.0.2
       resize-observer-polyfill: 1.5.1
       scroll-into-view-if-needed: 2.2.28
       shallow-equal: 1.2.1
@@ -576,6 +576,10 @@ packages:
 
   /csstype/2.6.18:
     resolution: {integrity: sha512-RSU6Hyeg14am3Ah4VZEmeX8H7kLwEEirXe6aU2IPfKNvhXwTflK5HQRDNI0ypQXoqmm+QPyG2IaPuQE5zMwSIQ==}
+    dev: false
+
+  /dayjs/1.10.7:
+    resolution: {integrity: sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==}
     dev: false
 
   /debug/3.2.7:
@@ -994,10 +998,6 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /moment/2.29.1:
-    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
-    dev: false
-
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
@@ -1040,10 +1040,6 @@ packages:
     resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /omit.js/2.0.2:
-    resolution: {integrity: sha512-hJmu9D+bNB40YpL9jYebQl4lsTW6yEHRTroJzNLqQJYHm7c+NQnJGfZmIWh8S3q3KoaxV1aLhV6B3+0N0/kyJg==}
-    dev: false
 
   /parse-node-version/1.0.1:
     resolution: {integrity: sha512-3YHlOa/JgH6Mnpr05jP9eDG254US9ek25LyIxZlDItp2iJtwyaXQb57lBYLdT3MowkUFYEV2XXNAYIPlESvJlA==}
