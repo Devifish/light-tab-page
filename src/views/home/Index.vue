@@ -12,7 +12,7 @@
 
   <!-- 设置 -->
   <div class="setting-wrap">
-    <a-button type="text" @click="settingDrawer.open()">
+    <a-button type="text" @click="state.settingVisible = true">
       <setting-outlined style="font-size: 18px" />
     </a-button>
   </div>
@@ -24,13 +24,13 @@
     </suspense>
   </div>
 
-  <common-drawer :width="400" :footer="false" ref="settingDrawer">
+  <a-drawer v-model:visible="state.settingVisible" :width="400" destroy-on-close>
     <setting />
-  </common-drawer>
+  </a-drawer>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from "vue"
+import { computed, reactive } from "vue"
 import Search from "./Search.vue"
 import TopSite from "./TopSite.vue"
 import Wallpaper from "./Wallpaper.vue"
@@ -40,9 +40,8 @@ import { useStore } from "@/store"
 import { AlignType, BackgroundType } from "@/types"
 
 const store = useStore()
-const settingDrawer = ref()
-
 const state = reactive({
+  settingVisible: false,
   align: computed(() => store.state.setting.layout.align),
   enableTopSite: computed(() => store.state.setting.topSite.enable),
   enableWallpaper: computed(() => store.state.setting.background.type !== BackgroundType.None)

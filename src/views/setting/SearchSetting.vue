@@ -10,7 +10,7 @@
             type="text"
             shape="circle"
             size="small"
-            @click="searchDrawer.open()"
+            @click="manageVisible = true"
           >
             <setting-outlined />
           </a-button>
@@ -61,9 +61,9 @@
     </setting-item>
   </div>
 
-  <common-drawer title="管理搜索引擎" :width="400" :footer="false" ref="searchDrawer">
+  <a-drawer v-model:visible="manageVisible" title="管理搜索引擎" :width="400" destroy-on-close>
     <search-manage />
-  </common-drawer>
+  </a-drawer>
 </template>
 
 <script lang="ts" setup>
@@ -92,7 +92,7 @@ const searchSetting = deepComputed(
 )
 
 // Ref
-const searchDrawer = ref()
+const manageVisible = ref(false)
 
 // 是否在新标签页中打开
 const isOpenPageByBlank = computed({
