@@ -41,6 +41,26 @@ export function equalsIgnoreCase(source?: string, target?: string) {
 }
 
 /**
+ * 存在任意字符
+ * @param source
+ * @param tragets
+ * @returns
+ */
+export function containsAny(source: string, ...tragets: string[]) {
+  return tragets.some(item => source.includes(item))
+}
+
+/**
+ * 存在全部字符
+ * @param source
+ * @param tragets
+ * @returns
+ */
+ export function containsAll(source: string, ...tragets: string[]) {
+  return tragets.every(item => source.includes(item))
+}
+
+/**
  * 深克隆
  *
  * @param obj 对象
