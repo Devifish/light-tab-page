@@ -14,7 +14,9 @@ export default defineManifest({
     "https://cn.bing.com/",
     "https://suggestion.baidu.com/",
     "https://api.bing.com/",
-    "https://suggestqueries.google.com/"
+    "https://suggestqueries.google.com/",
+    "http://*/",
+    "https://*/"
   ],
   chrome_url_overrides: {
     newtab: "index.html#/"

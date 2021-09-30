@@ -5,7 +5,6 @@ import { viteBuildManifest } from "./script/build-manifest"
 import ViteComponents from "unplugin-vue-components/vite"
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers"
 import vueI18n from "@intlify/vite-plugin-vue-i18n"
-import { containsAny } from "./src/utils/common"
 
 export default defineConfig(env => ({
   envPrefix: ["APP_", "npm_package_name", "npm_package_version"],
@@ -62,9 +61,17 @@ export default defineConfig(env => ({
 
 function getManualChunks(data: Record<string, string[]>) {
   return (id: string) => {
+    if (!id.includes("node_modules")) return undefined
+
+    const temp = id.split("node_modules/")
+    const relativePath = temp[temp.length - 1] // 兼容pnpm
     for (let key in data) {
-      if (containsAny(id, ...data[key])) return key
-      else if (id.includes("node_modules")) return "vendor"
+      for (let lib of data[key]) {
+        if (relativePath.startsWith(`${lib}/`)) {
+          return key
+        }
+      }
     }
+    return "vendor"
   }
 }

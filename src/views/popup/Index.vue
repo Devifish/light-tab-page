@@ -20,9 +20,11 @@
     </div>
 
     <div v-if="currentMenu" class="content-warp">
-      <keep-alive>
-        <component :is="currentMenu.component" />
-      </keep-alive>
+      <transition name="fade" mode="out-in">
+        <keep-alive>
+          <component :is="currentMenu.component" />
+        </keep-alive>
+      </transition>
     </div>
   </main>
 </template>

@@ -1,0 +1,15 @@
+{
+    "id": "baidu",
+    "name": "百度",
+    "icon": "img/baidu.png",
+    "description": "百度是中国使用群体最多的一款搜索引擎",
+    "search": {
+        "url": "https://www.baidu.com/s?ie={inputEncoding}&wd={searchText}&pn={page}0",
+        "list": "#content_left div.result, #content_left div.result-op",
+        "itemTitle": "h3 a@text",
+        "itemUrl": "h3 a:first-child@href",
+        "itemIcon": "",
+        "itemCover": "img.c-img@src",
+        "itemDesc": "div.c-abstract@text"
+    }
+}

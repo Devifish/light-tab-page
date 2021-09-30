@@ -5,8 +5,8 @@ export const SECOND = 1000,
   MONTH = 30 * DAY,
   YEAR = 365 * DAY
 
-export const toPixel = (px: string | number) => `${px}px`
-export const toPercent = (percent: number) => `${Math.round(percent * 100)}%`
+export const toPixel = (px: string | number | undefined) => `${px ?? 0}px`
+export const toPercent = (percent: number | undefined) => `${Math.round((percent ?? 0) * 100)}%`
 
 export function timediff(source: number, target: number = Date.now()) {
   const diff = target - source

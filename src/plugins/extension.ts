@@ -15,7 +15,8 @@ export const Permis: Record<string, Permissions.Permissions> = {
       "https://suggestqueries.google.com/"
     ]
   },
-  topSite: { permissions: ["topSites"] }
+  topSite: { permissions: ["topSites"] },
+  all: { origins: ["http://*/", "https://*/"] }
 }
 
 const vPermis: ObjectDirective<any, Permissions.Permissions> = {

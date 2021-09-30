@@ -45,7 +45,7 @@
     />
 
     <setting-item :lable="t('search.searchRound')">
-      <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tipFormatter="toPixel" />
+      <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tip-formatter="toPixel" />
     </setting-item>
 
     <setting-item :lable="t('search.newTabOpen')" horizontal>

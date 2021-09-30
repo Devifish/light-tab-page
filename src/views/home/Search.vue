@@ -1,9 +1,9 @@
 <template>
-  <div class="search-warp">
+  <div :class="['search-warp', { fixed: fixed }]" ref="searchWarp">
     <div v-if="searchSetting.showEngineIcon" class="search-logo">
       <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
-    <div class="search-input">
+    <div class="search-input" ref="searchInput">
       <a-auto-complete
         v-model:value="searchText"
         :options="searchSuggestion"
@@ -40,8 +40,13 @@ import { SettingMutations } from "@/store/setting"
 import { Option, SearchEngineData, SearchSetting } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
-import { ref, computed } from "vue"
+import { ref, computed, watch, nextTick } from "vue"
 import { useI18n } from "vue-i18n"
+
+interface SearchProps {
+  fixed?: boolean
+  value?: string
+}
 
 interface SuggestionItem {
   title?: string
@@ -49,12 +54,11 @@ interface SuggestionItem {
 }
 
 const { t } = useI18n()
-const store = useStore()
+const { state: stateX, getters, commit, dispatch } = useStore()
+const props = defineProps<SearchProps>()
 
-const searchEngines = computed<SearchEngineData>(
-    () => store.getters[SearchGetters.getUseSearchEngines]
-  ),
-  searchSetting = computed(() => store.state.setting.search),
+const searchEngines = computed<SearchEngineData>(() => getters[SearchGetters.getUseSearchEngines]),
+  searchSetting = computed(() => stateX.setting.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<SuggestionItem[]>()
 
@@ -65,30 +69,55 @@ const currentEngine = computed({
 })
 
 // 搜索内容
-const searchText = ref("")
-const debounceSearchSuggestion = debounce(handleSearchSuggestion)
+const searchText = ref(props.value)
+watch(
+  () => props.value,
+  value => (searchText.value = value ?? "")
+)
 
-function updateSearchSetting(data: Option<SearchSetting>) {
-  store.commit(SettingMutations.updateSearchSetting, data)
-}
+// 当fixed变化时添加动画
+const searchInput = ref<Element>()
+watch(
+  () => props.fixed,
+  () => {
+    const $el = searchInput.value!
+    const first = $el.getBoundingClientRect()
+
+    // 获取新位置并添加动画
+    nextTick(() => {
+      const last = $el.getBoundingClientRect(),
+        invertY = first.y - last.y,
+        invertX = first.x - last.x
+
+      $el.animate(
+        [{ transform: `translate(${invertX}px ,${invertY}px)` }, { transform: "translate(0, 0)" }],
+        {
+          duration: 300,
+          easing: "cubic-bezier(0,0,0.32,1)"
+        }
+      )
+    })
+  }
+)
 
 /**
  * 搜索框搜索事件
  * 将搜索内容重定向到搜索引擎
  */
 function onSearch(search: string) {
-  store.dispatch(SearchActions.submitSearch, search)
+  dispatch(SearchActions.submitSearch, search)
 }
 
 /**
  * 搜索建议自动完成处理
  * 获取搜索建议数据
  */
+const debounceSearchSuggestion = debounce(handleSearchSuggestion)
 async function handleSearchSuggestion(value: string) {
   if (isEmpty(value)) {
     searchSuggestion.value = []
   } else {
-    const suggestion: string[] = await store.dispatch(SearchActions.getSuggestion, value)
+    const suggestion: string[] = await dispatch(SearchActions.getSuggestion, value)
     searchSuggestion.value = suggestion.map(item => ({ value: item }))
   }
 }
@@ -115,6 +144,10 @@ function onSwitchEngines(e: KeyboardEvent) {
       ? engineKeys[currentIndex]
       : engineKeys[0]
 }
+
+function updateSearchSetting(data: Option<SearchSetting>) {
+  commit(SettingMutations.updateSearchSetting, data)
+}
 </script>
 
 <style lang="less">
@@ -129,14 +162,34 @@ function onSwitchEngines(e: KeyboardEvent) {
   justify-content: space-between;
   row-gap: 64px;
 
+  &.fixed {
+    position: fixed;
+    flex-direction: row;
+    justify-content: center;
+    height: 96px;
+    width: 100%;
+    top: 0;
+    column-gap: 16px;
+    z-index: 10;
+    background-color: rgba(225, 225, 225, 0.5);
+    backdrop-filter: saturate(125%) blur(8px);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.15);
+
+    .search-logo img {
+      width: 128px;
+      height: 32px;
+      object-fit: contain;
+    }
+  }
+
   .search-logo img {
     height: @logo-h;
     width: auto;
+    transition: all 0.3s ease;
   }
 
   .search-input {
     width: 700px;
-    align-self: end;
 
     .ant-input {
       height: @input-h;
@@ -178,8 +231,14 @@ function onSwitchEngines(e: KeyboardEvent) {
   }
 }
 
-// 深色模式搜索按钮半透明
-[data-theme="dark"] .ant-input-search-button {
-  opacity: 0.5;
+[data-theme="dark"] {
+  .search-warp.fixed {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  // 深色模式搜索按钮半透明
+  .ant-input-search-button {
+    opacity: 0.5;
+  }
 }
 </style>

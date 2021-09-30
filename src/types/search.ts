@@ -43,3 +43,14 @@ export interface SearchData {
   text: string
   target: OpenPageTarget
 }
+
+export interface SearchResultItem {
+  title?: string
+  urlText?: string
+  url?: string
+  description?: string
+  icon?: string
+  cover?: string
+}
+
+export type SearchResultData = Array<SearchResultItem>
