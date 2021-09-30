@@ -9,7 +9,7 @@ import { computed } from "vue"
 import { useStore } from "./store"
 import ConfigProvider from "./components/ConfigProvider.vue"
 
-const store = useStore()
-const themeMode = computed(() => store.state.setting.themeMode)
-const lang = computed(() => store.state.setting.lang)
+const { state } = useStore()
+const themeMode = computed(() => state.setting.themeMode)
+const lang = computed(() => state.setting.lang)
 </script>

@@ -6,8 +6,19 @@
       'overall-center': state.align === AlignType.overallCenter
     }"
   >
-    <search class="search" />
-    <top-site v-if="state.enableTopSite" />
+    <search class="search" :value="state.searchText" :fixed="state.fixedSearch" />
+
+    <transition name="fade">
+      <top-site v-if="state.enableTopSite" v-show="!state.fixedSearch" />
+    </transition>
+
+    <router-view v-slot="{ route, Component }">
+      <transition name="moveY" mode="out-in">
+        <keep-alive>
+          <component :is="Component" :key="route.path" />
+        </keep-alive>
+      </transition>
+    </router-view>
   </main>
 
   <!-- 设置 -->
@@ -31,20 +42,24 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue"
+import { SettingOutlined } from "@ant-design/icons-vue"
+import { useStore } from "@/store"
+import { AlignType, BackgroundType } from "@/types"
 import Search from "./Search.vue"
 import TopSite from "./TopSite.vue"
 import Wallpaper from "./Wallpaper.vue"
 import Setting from "@/views/setting/Index.vue"
-import { SettingOutlined } from "@ant-design/icons-vue"
-import { useStore } from "@/store"
-import { AlignType, BackgroundType } from "@/types"
+import { useRoute } from "vue-router"
 
-const store = useStore()
+const route = useRoute()
+const { state: stateX } = useStore()
 const state = reactive({
+  fixedSearch: computed(() => route.path !== "/"),
+  searchText: computed(() => route.params.text as string),
   settingVisible: false,
-  align: computed(() => store.state.setting.layout.align),
-  enableTopSite: computed(() => store.state.setting.topSite.enable),
-  enableWallpaper: computed(() => store.state.setting.background.type !== BackgroundType.None)
+  align: computed(() => stateX.setting.layout.align),
+  enableTopSite: computed(() => stateX.setting.topSite.enable),
+  enableWallpaper: computed(() => stateX.setting.background.type !== BackgroundType.None)
 })
 </script>
 
@@ -77,6 +92,7 @@ const state = reactive({
   position: fixed;
   top: 32px;
   right: 32px;
+  z-index: 10;
 
   .ant-btn {
     transition: none;

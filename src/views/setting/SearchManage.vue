@@ -1,51 +1,49 @@
 <template>
-  <a-list class="search-list" item-layout="horizontal" :data-source="searchEngines">
-    <template #renderItem="{ item }">
-      <a-list-item>
-        <a-list-item-meta :description="item.description">
-          <template #title>
-            <span>
-              {{ item.name }}
-              <template v-if="defaultEngineKeys.includes(item.id)">(内置)</template>
-            </span>
-            <a-tag v-if="currentEngine === item.id" color="processing"> 使用中 </a-tag>
-            <a-tag v-else-if="useSearchEngines.includes(item.id)" color="success"> 已添加 </a-tag>
-          </template>
-          <template #avatar>
-            <img :src="item.icon" />
-          </template>
-        </a-list-item-meta>
-
-        <template #actions>
-          <a-button
-            v-if="!useSearchEngines.includes(item.id)"
-            type="link"
-            size="small"
-            @click="addUseSearchEngines(item.id)"
-          >
-            添加
-          </a-button>
-          <a-button
-            v-else
-            type="link"
-            size="small"
-            :disabled="currentEngine === item.id"
-            @click="removeUseSearchEngines(item.id)"
-          >
-            移出
-          </a-button>
-          <a-button
-            v-if="!defaultEngineKeys.includes(item.id)"
-            type="link"
-            size="small"
-            :disabled="currentEngine === item.id"
-            @click="deleteSearchEngine(item.id)"
-          >
-            删除
-          </a-button>
+  <a-list class="search-list">
+    <a-list-item v-for="item of searchEngines" :key="item.id">
+      <a-list-item-meta :description="item.description">
+        <template #title>
+          <span>
+            {{ item.name }}
+            <template v-if="defaultEngineKeys.includes(item.id)">(内置)</template>
+          </span>
+          <a-tag v-if="currentEngine === item.id" color="processing"> 使用中 </a-tag>
+          <a-tag v-else-if="useSearchEngines.includes(item.id)" color="success"> 已添加 </a-tag>
         </template>
-      </a-list-item>
-    </template>
+        <template #avatar>
+          <img :src="item.icon" />
+        </template>
+      </a-list-item-meta>
+
+      <template #actions>
+        <a-button
+          v-if="!useSearchEngines.includes(item.id)"
+          type="link"
+          size="small"
+          @click="addUseSearchEngines(item.id)"
+        >
+          添加
+        </a-button>
+        <a-button
+          v-else
+          type="link"
+          size="small"
+          :disabled="currentEngine === item.id"
+          @click="removeUseSearchEngines(item.id)"
+        >
+          移出
+        </a-button>
+        <a-button
+          v-if="!defaultEngineKeys.includes(item.id)"
+          type="link"
+          size="small"
+          :disabled="currentEngine === item.id"
+          @click="deleteSearchEngine(item.id)"
+        >
+          删除
+        </a-button>
+      </template>
+    </a-list-item>
 
     <template #loadMore>
       <div v-if="addEngineState.show" class="add-engine-layout">
@@ -97,10 +95,10 @@ import { useStore } from "@/store"
 import { SettingMutations } from "@/store/setting"
 
 // Vuex
-const store = useStore()
-const currentEngine = computed(() => store.state.setting.search.currentEngine!),
-  useSearchEngines = computed(() => store.state.setting.search.useSearchEngines!),
-  searchEngines = computed(() => Object.values(store.state.search.searchEngines))
+const { state, commit } = useStore()
+const currentEngine = computed(() => state.setting.search.currentEngine!),
+  useSearchEngines = computed(() => state.setting.search.useSearchEngines!),
+  searchEngines = computed(() => Object.values(state.search.searchEngines))
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
 const currentDragEngineId = ref<string>()
@@ -158,7 +156,7 @@ function removeUseSearchEngines(engineId: string) {
 }
 
 function updateSearchSetting(data: Option<SearchSetting>) {
-  store.commit(SettingMutations.updateSearchSetting, data)
+  commit(SettingMutations.updateSearchSetting, data)
 }
 
 async function addSearchEngine() {
@@ -173,7 +171,7 @@ async function addSearchEngine() {
       baseUrl: url
     }
 
-    store.commit(SearchMutations.addSearchEngine, data)
+    commit(SearchMutations.addSearchEngine, data)
     addUseSearchEngines(name)
 
     // 重置并关闭表单
@@ -183,7 +181,7 @@ async function addSearchEngine() {
 }
 
 function deleteSearchEngine(engineId: string) {
-  store.commit(SearchMutations.deleteSearchEngine, engineId)
+  commit(SearchMutations.deleteSearchEngine, engineId)
 }
 </script>
 

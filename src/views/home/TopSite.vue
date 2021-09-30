@@ -4,11 +4,11 @@
       <li
         v-for="(item, index) of topSites"
         :key="item.url"
-        :class="['top-site-item', { hide: state.currentDrag === index }]"
+        :class="['top-site-item', { hide: data.currentDrag === index }]"
         :title="item.title"
       >
         <icon
-          :class="['top-site-icon', { 'shake-active': state.shake }]"
+          :class="['top-site-icon', { 'shake-active': data.shake }]"
           :text-icon="item.textIcon"
           :src="item.icon"
           :title="item.title"
@@ -25,7 +25,7 @@
 
           <transition name="scale">
             <sup
-              v-show="state.editStatus"
+              v-show="data.editStatus"
               class="bubble-delete"
               @click.stop="deleteTopSite(index)"
             ></sup>
@@ -47,12 +47,12 @@ import { useStore } from "@/store"
 import { TopSiteActions, TopSiteGetters, TopSiteMutations } from "@/store/top-site"
 import Icon from "@/components/Icon.vue"
 
-const store = useStore()
+const { state, getters, commit, dispatch } = useStore()
 
-const topSiteSetting = computed(() => store.state.setting.topSite)
-const topSites = computed<TopSites>(() => store.getters[TopSiteGetters.getCurrentTopSites])
+const topSiteSetting = computed(() => state.setting.topSite)
+const topSites = computed<TopSites>(() => getters[TopSiteGetters.getCurrentTopSites])
 
-const state = reactive({
+const data = reactive({
   currentDrag: -1,
   shake: false,
   editStatus: false
@@ -63,23 +63,23 @@ function openPage(url: string) {
 }
 
 function deleteTopSite(index: number) {
-  store.commit(TopSiteMutations.deleteTopSite, index)
+  commit(TopSiteMutations.deleteTopSite, index)
 }
 
 function openEditStatus() {
-  state.shake = true
-  state.editStatus = true
+  data.shake = true
+  data.editStatus = true
 
   // 点击其他位置关闭编辑状态
   document.body.addEventListener("click", closeEditStatus)
 }
 
 function closeEditStatus(e: Event) {
-  if (state.editStatus) {
+  if (data.editStatus) {
     e.stopPropagation()
 
-    state.shake = false
-    state.editStatus = false
+    data.shake = false
+    data.editStatus = false
     document.body.removeEventListener("click", closeEditStatus)
   }
 }
@@ -87,28 +87,28 @@ function closeEditStatus(e: Event) {
 function onDragIcon(type: DragType, index: number) {
   switch (type) {
     case DragType.start:
-      state.currentDrag = index
+      data.currentDrag = index
       openEditStatus()
       return
     case DragType.enter:
-      if (state.currentDrag === index) return
+      if (data.currentDrag === index) return
       const sortData: SortData = {
-        from: state.currentDrag,
+        from: data.currentDrag,
         to: index
       }
 
-      store.commit(TopSiteMutations.sortTopSites, sortData)
-      state.currentDrag = index
+      commit(TopSiteMutations.sortTopSites, sortData)
+      data.currentDrag = index
       return
     case DragType.end:
-      state.currentDrag = -1
+      data.currentDrag = -1
       return
   }
 }
 
 async function init() {
-  if (!store.state.topSite.lastUpdateTime) {
-    await store.dispatch(TopSiteActions.syncBrowserTopSites)
+  if (!state.topSite.lastUpdateTime) {
+    await dispatch(TopSiteActions.syncBrowserTopSites)
   }
 }
 

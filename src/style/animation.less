@@ -18,10 +18,21 @@
   transform: scale(0);
 }
 
+.moveY-enter-active,
+.moveY-leave-active {
+  transition: all 0.3s ease;
+}
+
+.moveY-enter-from,
+.moveY-leave-to {
+  opacity: 0;
+  transform: translateY(32px);
+}
+
 .flip-list-enter-active,
 .flip-list-leave-active,
 .flip-list-move {
-  transition: all 0.3s ease;
+  transition: all 10s ease;
 }
 
 .flip-list-enter-active {

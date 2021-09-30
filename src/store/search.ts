@@ -1,20 +1,23 @@
+import router from "@/router"
 import { createStoreModule } from "./index"
 import {
   SearchEngineData,
   SearchEngineItem,
   SearchSuggestion,
   HistoryItem,
-  SearchData
+  SearchData,
+  AnalyzeUrl,
+  RuleDataMap,
+  Rules,
+  RuleData
 } from "@/types"
-import BaiduLogo from "@/assets/baidu.png"
-import BingLogo from "@/assets/bing.svg"
-import GoogleLogo from "@/assets/google.png"
 import { deepClone, isEmpty } from "@/utils/common"
 import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/api/suggestion"
 
 export interface SearchState {
   searchEngines: SearchEngineData
   history: Array<HistoryItem>
+  rules: RuleDataMap
 }
 
 export enum SearchGetters {
@@ -40,35 +43,27 @@ const SEARCH_ENGINES_STORAGE = "search-engines"
 const SEARCH_HISTORY_STORAGE = "search-history"
 const SEARCH_HISTORY_LENGTH = 100
 
-export const DEFAULT_SEARCH_ENGINES: SearchEngineData = {
-  baidu: {
-    id: "baidu",
-    name: "百度",
-    description: "百度是中国使用群体最多的一款搜索引擎",
-    icon: BaiduLogo,
-    baseUrl: "https://www.baidu.com/#ie={inputEncoding}&wd={searchText}"
-  },
-  google: {
-    id: "google",
-    name: "Google",
-    description: "Google搜索是全球公认为全球最大的搜索引擎",
-    icon: GoogleLogo,
-    baseUrl: "https://www.google.com/search?q={searchText}&ie={inputEncoding}"
-  },
-  bing: {
-    id: "bing",
-    name: "Bing",
-    description: "必应是一款由微软公司推出的网络搜索引擎",
-    icon: BingLogo,
-    baseUrl: "https://cn.bing.com/search?q={searchText}"
-  }
-}
+const ruleModules = import.meta.globEager("/src/rules/*.json")
+const rules: Rules = Object.values(ruleModules).map(item => item.default)
+export const DEFAULT_SEARCH_ENGINES: SearchEngineData = Object.fromEntries(
+  rules.map(item => [
+    item.id,
+    {
+      id: item.id,
+      name: item.name,
+      icon: item.icon,
+      description: item.description,
+      baseUrl: item.search.url
+    }
+  ])
+)
 
 export default createStoreModule<SearchState>({
   state() {
     const defaultState: SearchState = {
       searchEngines: { ...DEFAULT_SEARCH_ENGINES },
-      history: []
+      history: [],
+      rules: Object.fromEntries(rules.map(item => [item.id, new RuleData(item)]))
     }
 
     const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
@@ -177,7 +172,7 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param searchText
      */
-    [SearchActions.submitSearch]: ({ rootState, commit, dispatch }, search: string) => {
+    [SearchActions.submitSearch]: async ({ rootState, commit, dispatch }, search: string) => {
       const searchTrim = search.trim()
       if (isEmpty(searchTrim)) throw new Error("搜索内容不能为空")
 
@@ -203,15 +198,21 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param search
      */
-    [SearchActions.openSearchPage]: ({ state }, search: SearchData) => {
-      const { searchEngines } = state
+    [SearchActions.openSearchPage]: ({ state, rootState }, search: SearchData) => {
+      const { engine, text, target } = search
 
-      // 构建搜索URL
-      let url = searchEngines[search.engine].baseUrl
-      if (url.includes("{searchText}")) url = url.replace("{searchText}", encodeURI(search.text))
-      if (url.includes("{inputEncoding}")) url = url.replace("{inputEncoding}", "utf-8")
+      if (rootState.setting.search.openPageTarget) {
+        router.push({ name: "SearchResult", params: { engine, text } })
+      } else {
+        const { searchEngines } = state
 
-      window.open(url, search.target)
+        // 构建搜索URL
+        const url = AnalyzeUrl.defalut(searchEngines[engine].baseUrl, {
+          searchText: text
+        }).getUrlString()
+
+        window.open(url, target)
+      }
     },
 
     /**

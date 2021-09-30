@@ -1,0 +1,15 @@
+{
+    "id": "bing",
+    "name": "Bing",
+    "icon": "img/bing.svg",
+    "description": "必应是一款由微软公司推出的网络搜索引擎",
+    "search": {
+        "url": "https://cn.bing.com/search?q={searchText}&first={page}0",
+        "list": "#b_results li.b_algo",
+        "itemTitle": "h2 a@text",
+        "itemUrl": "h2 a@href",
+        "itemIcon": "",
+        "itemCover": "",
+        "itemDesc": "div.b_caption p@text"
+    }
+}

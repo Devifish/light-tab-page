@@ -1,0 +1,15 @@
+{
+    "id": "google",
+    "name": "Google",
+    "icon": "img/google.png",
+    "description": "Google搜索是全球公认为全球最大的搜索引擎",
+    "search": {
+        "url": "https://www.google.com/search?q={searchText}&ie={inputEncoding}",
+        "list": "#content_left div.result",
+        "itemTitle": "h3 a@text",
+        "itemUrl": "h3 a:first-child@href",
+        "itemIcon": "",
+        "itemCover": "img.c-img@src",
+        "itemDesc": "div.c-abstract@text"
+    }
+}

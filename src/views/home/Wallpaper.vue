@@ -17,8 +17,8 @@ import { SettingActions } from "@/store/setting"
 import { isEmpty } from "@/utils/common"
 import { CURRENT_THEME_KEY } from "@/components/ConfigProvider.vue"
 
-const store = useStore()
-const background = computed(() => store.state.setting.background)
+const { state, dispatch } = useStore()
+const background = computed(() => state.setting.background)
 
 // 获取当前主题
 const currentTheme = inject(CURRENT_THEME_KEY)
@@ -36,12 +36,12 @@ const maskOpacity = computed(() => {
 // 如果 URL无效则重新加载
 const verifyBackground = await verifyImageUrl(background.value.url!)
 if (!verifyBackground) {
-  await store.dispatch(SettingActions.reloadBackgroundImage)
+  await dispatch(SettingActions.reloadBackgroundImage)
 }
 
 // 加载Bing每日壁纸
 if (background.value.type === BackgroundType.Bing) {
-  await store.dispatch(SettingActions.loadBingDailyWallpaper)
+  await dispatch(SettingActions.loadBingDailyWallpaper)
 }
 </script>
 
