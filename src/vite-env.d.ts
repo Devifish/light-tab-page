@@ -1,6 +1,10 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  npm_package_name: string
-  npm_package_version: string
+  readonly npm_package_name: string
+  readonly npm_package_version: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
 }

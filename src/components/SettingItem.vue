@@ -1,5 +1,5 @@
 <template>
-  <div :class="['setting-item', { horizontal: props.horizontal }]">
+  <div :class="['setting-item', { horizontal: props.horizontal !== false }]">
     <div class="setting-lable">
       <slot name="lable">
         <span>{{ props.lable }}</span>
