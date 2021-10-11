@@ -2,6 +2,7 @@ lang: "繁體中文"
 common:
   auto: "自動"
   clean: "清空"
+  experimen: "试验"
 
 home:
   search: "搜索"
@@ -57,6 +58,7 @@ topsite:
 other:
   setting: "其他設置"
   lang: "語言"
+  searchPlus: "搜索增强"
   backup:
     text: "備份設置"
     export: "導出設置"

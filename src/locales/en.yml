@@ -2,6 +2,7 @@ lang: "English"
 common:
   auto: "Auto"
   clean: "Clean"
+  experimen: "Experimen"
 
 home:
   search: "Search"
@@ -57,6 +58,7 @@ topsite:
 other:
   setting: "Other Setting"
   lang: "Language"
+  searchPlus: "Search enhancement"
   backup:
     text: "Backup setting"
     export: "Export setting"

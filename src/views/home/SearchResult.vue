@@ -1,6 +1,6 @@
 <template>
-  <div class="search-main">
-    <a-list class="search-list" :split="false" :loading="state.loading">
+  <div class="search-main" @scroll="onScroll" ref="searchMain">
+    <a-list class="search-list" :split="false">
       <template v-for="item in state.searchList">
         <a-list-item v-if="item.title" :key="item.url">
           <a-card style="width: 100%">
@@ -24,13 +24,9 @@
         </a-list-item>
       </template>
 
-      <template #loadMore>
-        <!-- <div
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-button type="text"> 加载更多 </a-button>
-        </div> -->
-      </template>
+      <a-list-item class="load-more">
+        <a-skeleton :loading="state.loading" active avatar />
+      </a-list-item>
     </a-list>
   </div>
 </template>
@@ -39,14 +35,15 @@
 import { useStore } from "@/store"
 import { SearchResultData } from "@/types"
 import { isEmpty } from "@/utils/common"
-import { computed, onMounted, reactive } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from "vue-router"
 
-const route = useRoute()
-const { state: stateX } = useStore()
-const { text } = route.params
+const route = useRoute(),
+  { state: stateX } = useStore(),
+  { text } = route.params
 
 const state = reactive({
+  page: 0,
   loading: false,
   searchList: [] as SearchResultData,
   currentRule: computed(() => stateX.search.rules[stateX.setting.search.currentEngine]),
@@ -55,11 +52,21 @@ const state = reactive({
 
 async function loadSearchList() {
   state.loading = true
-  const searchList = await state.currentRule.getSearchList(text as string, 0)
+  const searchList = await state.currentRule.getSearchList(text as string, state.page)
 
   console.log("searchList:", searchList)
-  state.searchList = searchList
+  state.searchList = state.searchList.concat(searchList)
   state.loading = false
+}
+
+const searchMain = ref<Element>()
+function onScroll() {
+  const { scrollHeight, clientHeight, scrollTop } = searchMain.value!
+
+  if (scrollHeight - (clientHeight + scrollTop) <= 1 && !state.loading) {
+    state.page += 1
+    loadSearchList()
+  }
 }
 
 onMounted(loadSearchList)
@@ -76,12 +83,14 @@ onMounted(loadSearchList)
 
   .search-list {
     width: 750px;
-    min-height: 300px;
     padding-top: 96px;
-    padding-bottom: 32px;
 
     .link-title {
       font-size: 20px;
+    }
+
+    .load-more {
+      height: 128px;
     }
 
     .item-content {
