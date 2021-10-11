@@ -35,7 +35,7 @@
     </suspense>
   </div>
 
-  <a-drawer v-model:visible="state.settingVisible" :width="400" destroy-on-close>
+  <a-drawer v-model:visible="state.settingVisible" :width="400" :closable="false" destroy-on-close>
     <setting />
   </a-drawer>
 </template>

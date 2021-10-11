@@ -45,7 +45,6 @@ import { computed, onBeforeMount, reactive } from "vue"
 import { DragType, OpenPageTarget, SortData, TopSites } from "@/types"
 import { useStore } from "@/store"
 import { TopSiteActions, TopSiteGetters, TopSiteMutations } from "@/store/top-site"
-import Icon from "@/components/Icon.vue"
 
 const { state, getters, commit, dispatch } = useStore()
 

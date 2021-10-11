@@ -7,7 +7,6 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { useStore } from "./store"
-import ConfigProvider from "./components/ConfigProvider.vue"
 
 const { state } = useStore()
 const themeMode = computed(() => state.setting.themeMode)

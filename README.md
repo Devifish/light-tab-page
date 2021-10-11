@@ -24,22 +24,22 @@
 
 ## 依赖
 
-| 依赖           | 版本   |
-| -------------- | ------ |
-| Typescript     | 4.4.3  |
-| Vue.js         | 3.2.11 |
-| Vuex           | 4.0.2  |
-| Vue Router     | 4.0.11 |
-| Vite           | 2.5.7  |
-| Ant Design Vue | 2.2.7  |
+| 依赖           | 版本          |
+| -------------- | ------------- |
+| Typescript     | 4.4.3         |
+| Vue.js         | 3.2.20        |
+| Vuex           | 4.0.2         |
+| Vue Router     | 4.0.11        |
+| Vite           | 2.6.5         |
+| Ant Design Vue | 3.0.0-alpha.2 |
 
-- 推荐使用 Node.js 12 及以上的运行/构建当前项目
+- 推荐使用 `PNPM` 及 `Node.js 12` 及以上版本运行/构建当前项目
 
 ## 开发
 
 ```
 git clone https://github.com/Devifish/light-tab-page.git
 cd light-tab-page
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
