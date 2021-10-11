@@ -48,7 +48,7 @@ export class AnalyzeCss {
   }
 
   static async load(url: string) {
-    const { data } = await axios.get(url, {
+    const { data } = await axios.get<Document>(url, {
       responseType: "document"
     })
 

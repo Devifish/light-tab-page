@@ -2,7 +2,7 @@ import axios from "@/plugins/axios"
 
 export async function getBaiduSuggestion(keyword: string): Promise<string[]> {
   try {
-    const { data } = await axios.get("https://suggestion.baidu.com/su", {
+    const { data } = await axios.get<string>("https://suggestion.baidu.com/su", {
       params: {
         p: 3,
         ie: "UTF-8",
@@ -22,7 +22,7 @@ export async function getBaiduSuggestion(keyword: string): Promise<string[]> {
 
 export async function getBingSuggestion(keyword: string): Promise<string[]> {
   try {
-    const { data } = await axios.get("https://api.bing.com/qsonhs.aspx", {
+    const { data } = await axios.get<any>("https://api.bing.com/qsonhs.aspx", {
       params: {
         type: "json",
         q: keyword
@@ -37,7 +37,7 @@ export async function getBingSuggestion(keyword: string): Promise<string[]> {
 
 export async function getGoogleSuggestion(keyword: string): Promise<string[]> {
   try {
-    const { data } = await axios.get("https://suggestqueries.google.com/complete/search", {
+    const { data } = await axios.get<string>("https://suggestqueries.google.com/complete/search", {
       params: {
         client: "gws-wiz",
         q: keyword,
