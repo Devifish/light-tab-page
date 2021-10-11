@@ -200,8 +200,9 @@ export default createStoreModule<SearchState>({
      */
     [SearchActions.openSearchPage]: ({ state, rootState }, search: SearchData) => {
       const { engine, text, target } = search
+      const { overwriteSearch } = rootState.setting.search
 
-      if (rootState.setting.search.openPageTarget) {
+      if (overwriteSearch) {
         router.push({ name: "SearchResult", params: { engine, text } })
       } else {
         const { searchEngines } = state

@@ -23,6 +23,7 @@ export enum SearchSuggestion {
 }
 
 export interface SearchSetting {
+  overwriteSearch: boolean
   currentEngine: string
   openPageTarget: OpenPageTarget
   showEngineIcon: boolean

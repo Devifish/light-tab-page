@@ -9,10 +9,11 @@ export interface AnalyzeUrlData {
 
 export class AnalyzeUrl {
   static readonly DEFAULT: AnalyzeUrlData = {
-    inputEncoding: "utf-8"
+    inputEncoding: "utf-8",
+    page: 0
   }
 
-  url: URL
+  readonly url: URL
 
   constructor(url: string, data: AnalyzeUrlData) {
     const keys = Object.keys(data)

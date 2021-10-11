@@ -24,11 +24,11 @@ export interface SearchRule {
 export type RuleDataMap = Record<string, RuleData>
 
 export class RuleData implements Rule {
-  id: string
-  name: string
-  description: string
-  icon: string
-  search: SearchRule
+  readonly id: string
+  readonly name: string
+  readonly description: string
+  readonly icon: string
+  readonly search: SearchRule
 
   constructor(data: string | Rule) {
     if (typeof data === "string") data = JSON.parse(data)

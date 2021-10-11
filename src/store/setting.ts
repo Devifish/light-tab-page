@@ -67,6 +67,7 @@ export default createStoreModule<SettingState>({
         autoOpacity: true
       },
       search: {
+        overwriteSearch: false,
         currentEngine: "bing",
         openPageTarget: OpenPageTarget.Blank,
         showEngineIcon: true,

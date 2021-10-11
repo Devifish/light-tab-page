@@ -8,6 +8,17 @@
       </a-select>
     </setting-item>
 
+    <setting-item horizontal>
+      <template #lable>
+        <span>
+          {{ t("other.searchPlus") }}
+          <a-tag color="warning">{{ t("common.experimen") }}</a-tag>
+        </span>
+      </template>
+
+      <a-switch v-model:checked="searchSetting.overwriteSearch" v-permis="Permis.all" />
+    </setting-item>
+
     <setting-item :lable="t('other.backup.text')">
       <div class="backup-btn-warp">
         <a-button @click="exportBackupFile">
@@ -42,18 +53,26 @@ import { SettingActions, SettingMutations } from "@/store/setting"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons-vue"
+import { Option, SearchSetting } from "@/types"
+import { deepComputed, otherKeys } from "@/utils/common"
+import { Permis } from "@/plugins/extension"
 
 const { t, availableLocales } = useI18n()
 const store = useStore()
+const lang = computed({
+  get: () => store.state.setting.lang,
+  set: lang => store.commit(SettingMutations.updateLanguage, lang)
+})
+
+const searchSetting = deepComputed(
+  () => store.state.setting.search,
+  updateSearchSetting,
+  ...otherKeys(store.state.setting.search, "overwriteSearch")
+)
 
 const languages = ref<Record<string, any>>({
   auto: computed(() => t("common.auto")),
   ...Object.fromEntries(availableLocales.map(item => [item, t("lang", item, { locale: item })]))
-})
-
-const lang = computed({
-  get: () => store.state.setting.lang,
-  set: lang => store.commit(SettingMutations.updateLanguage, lang)
 })
 
 async function importBackupFile(e) {
@@ -70,6 +89,10 @@ async function importBackupFile(e) {
 
 function exportBackupFile() {
   store.dispatch(SettingActions.exportSetting)
+}
+
+function updateSearchSetting(data: Option<SearchSetting>) {
+  store.commit(SettingMutations.updateSearchSetting, data)
 }
 </script>
 
