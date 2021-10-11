@@ -1,17 +1,16 @@
 <template>
-  <setting-item :lable="t('layout.topSiteBar')" horizontal>
+  <setting-item horizontal>
+    <template #lable>
+      <span>{{ t("layout.topSiteBar") }}</span>
+      <icon-tooltip v-if="!topSiteSetting.enable" :title="t('layout.topSiteBarTip')" type="warn" />
+    </template>
+
     <a-switch
       v-model:checked="topSiteSetting.enable"
       :disabled="!isExtension"
       v-permis="Permis.topSite"
     />
   </setting-item>
-  <a-alert
-    v-if="!topSiteSetting.enable"
-    :message="t('layout.topSiteBarTip')"
-    type="warning"
-    banner
-  />
 
   <template v-if="topSiteSetting.enable">
     <setting-item :lable="t('layout.colRow')">

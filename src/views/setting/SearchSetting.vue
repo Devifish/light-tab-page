@@ -3,18 +3,9 @@
     <setting-item horizontal>
       <template #lable>
         <span>{{ t("search.engine") }}</span>
-
-        <a-tooltip title="管理搜索引擎">
-          <a-button
-            class="engine-setting"
-            type="text"
-            shape="circle"
-            size="small"
-            @click="manageVisible = true"
-          >
-            <setting-outlined />
-          </a-button>
-        </a-tooltip>
+        <icon-tooltip title="管理搜索引擎" @click="manageVisible = true">
+          <setting-outlined />
+        </icon-tooltip>
       </template>
 
       <a-select v-model:value="searchSetting.currentEngine" style="width: 90px">
@@ -24,7 +15,16 @@
       </a-select>
     </setting-item>
 
-    <setting-item :lable="t('search.suggestApi')" horizontal>
+    <setting-item horizontal>
+      <template #lable>
+        <span>{{ t("search.suggestApi") }}</span>
+        <icon-tooltip
+          v-if="searchSetting.suggestion === SearchSuggestion.none"
+          :title="t('search.suggestApiTip')"
+          type="warn"
+        />
+      </template>
+
       <a-select
         v-model:value="searchSetting.suggestion"
         :disabled="!isExtension"
@@ -37,15 +37,13 @@
         <a-select-option :value="SearchSuggestion.google"> Google API </a-select-option>
       </a-select>
     </setting-item>
-    <a-alert
-      v-if="searchSetting.suggestion === SearchSuggestion.none"
-      :message="t('search.suggestApiTip')"
-      type="warning"
-      banner
-    />
 
     <setting-item :lable="t('search.searchRound')">
-      <a-slider v-model:value="searchSetting.searchInputRadius" :max="22" :tip-formatter="toPixel" />
+      <a-slider
+        v-model:value="searchSetting.searchInputRadius"
+        :max="22"
+        :tip-formatter="toPixel"
+      />
     </setting-item>
 
     <setting-item :lable="t('search.newTabOpen')" horizontal>
@@ -78,6 +76,7 @@ import { SearchGetters } from "@/store/search"
 import { deepComputed } from "@/utils/common"
 import { SettingMutations } from "@/store/setting"
 import { useI18n } from "vue-i18n"
+import IconTooltip from "@/components/IconTooltip.vue"
 
 const { t } = useI18n()
 const store = useStore()
