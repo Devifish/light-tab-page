@@ -30,6 +30,7 @@ const vPermis: ObjectDirective<any, Permissions.Permissions> = {
 
     const onRequestPermissions = (e: Event) => {
       e.preventDefault()
+      e.stopPropagation()
 
       // 请求权限，如果成功则重新请求事件
       permissions.request(bind.value).then(isOk => {

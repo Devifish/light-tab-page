@@ -1,6 +1,6 @@
 <template>
   <div class="search-main" @scroll="onScroll" ref="searchMain">
-    <a-list class="search-list" :split="false">
+    <a-list class="search-list" item-layout="horizontal" :split="false">
       <template v-for="item in state.searchList">
         <a-list-item v-if="item.title" :key="item.url">
           <a-card style="width: 100%">
@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import { useStore } from "@/store"
-import { SearchResultData } from "@/types"
+import type { SearchResultData } from "@/types"
 import { isEmpty } from "@/utils/common"
 import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from "vue-router"
@@ -54,7 +54,6 @@ async function loadSearchList() {
   state.loading = true
   const searchList = await state.currentRule.getSearchList(text as string, state.page)
 
-  console.log("searchList:", searchList)
   state.searchList = state.searchList.concat(searchList)
   state.loading = false
 }

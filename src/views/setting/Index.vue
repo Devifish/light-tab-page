@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, Ref } from "vue"
+import { computed } from "vue"
 import { useStore } from "@/store"
 import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
@@ -25,7 +25,7 @@ import TopSiteSetting from "./TopSiteSetting.vue"
 import LayoutSetting from "./LayoutSetting.vue"
 import OtherSetting from "./OtherSetting.vue"
 import About from "./About.vue"
-import { DefineComponent, FunctionalComponent } from "vue"
+import type { DefineComponent, FunctionalComponent, Ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
   BgColorsOutlined,

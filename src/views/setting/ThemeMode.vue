@@ -5,7 +5,9 @@
         <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
           <div class="theme-item" @click="onThemeChange(item.mode)">
             <img :src="item.icon" />
-            <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
+            <transition name="scale">
+              <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
+            </transition>
           </div>
         </a-tooltip>
       </div>
