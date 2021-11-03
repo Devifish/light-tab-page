@@ -5,7 +5,7 @@
 
 ## 安装
 
-- Chrome 应用商店（待上架）
+- [Chrome 应用商店](https://chrome.google.com/webstore/detail/hijeghaehaammnoaaiabbbhggaoaamkp)
 - [Edge 应用商店](https://microsoftedge.microsoft.com/addons/detail/ilebnicnppejmbmkaokpdljcanljdnic)
 - [Firefox 应用商店](https://addons.mozilla.org/zh-CN/firefox/addon/light-tab-page/)
 - [离线安装包](https://github.com/Devifish/light-tab-page/releases)
@@ -26,12 +26,12 @@
 
 | 依赖           | 版本          |
 | -------------- | ------------- |
-| Typescript     | 4.4.3         |
-| Vue.js         | 3.2.20        |
+| Typescript     | 4.4.4         |
+| Vue.js         | 3.2.21        |
 | Vuex           | 4.0.2         |
-| Vue Router     | 4.0.11        |
-| Vite           | 2.6.5         |
-| Ant Design Vue | 3.0.0-alpha.2 |
+| Vue Router     | 4.0.12        |
+| Vite           | 2.6.13         |
+| Ant Design Vue | 3.0.0-alpha.9 |
 
 - 推荐使用 `PNPM` 及 `Node.js 12` 及以上版本运行/构建当前项目
 
