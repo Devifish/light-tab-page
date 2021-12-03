@@ -11,8 +11,8 @@
       </a-select>
 
       <div class="action-menu" v-if="currentMenu">
-        <a-tooltip v-for="item of currentMenu.actions" :key="item" :title="item.title">
-          <a-button type="text" size="small" @click="item.click">
+        <a-tooltip v-for="item of currentMenu.actions" :key="item.title" :title="item.title">
+          <a-button type="text" size="small" @click="item.click!">
             <component :is="item.icon" />
           </a-button>
         </a-tooltip>
