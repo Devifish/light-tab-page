@@ -24,14 +24,14 @@
 
 ## 依赖
 
-| 依赖           | 版本          |
-| -------------- | ------------- |
-| Typescript     | 4.4.4         |
-| Vue.js         | 3.2.21        |
-| Vuex           | 4.0.2         |
-| Vue Router     | 4.0.12        |
-| Vite           | 2.6.13         |
-| Ant Design Vue | 3.0.0-alpha.9 |
+| 依赖           | 版本         |
+| -------------- | ------------ |
+| Typescript     | 4.4.4        |
+| Vue.js         | 3.2.26       |
+| Vuex           | 4.0.2        |
+| Vue Router     | 4.0.12       |
+| Vite           | 2.7.10       |
+| Ant Design Vue | 3.0.0-beta.4 |
 
 - 推荐使用 `PNPM` 及 `Node.js 12` 及以上版本运行/构建当前项目
 
