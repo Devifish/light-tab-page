@@ -17,7 +17,7 @@
         {{ t("about.license") }}
       </a>
       <br />
-      Copyright © 2021 Devifish. All rights reserved.
+      Copyright © 2022 Devifish. All rights reserved.
     </p>
   </footer>
 </template>
