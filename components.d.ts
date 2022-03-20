@@ -33,8 +33,6 @@ declare module 'vue' {
     ConfigProvider: typeof import('./src/components/ConfigProvider.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']
     IconTooltip: typeof import('./src/components/IconTooltip.vue')['default']
-    RouterLink: typeof import("vue-router")["RouterLink"]
-    RouterView: typeof import("vue-router")["RouterView"]
     SettingItem: typeof import('./src/components/SettingItem.vue')['default']
   }
 }
