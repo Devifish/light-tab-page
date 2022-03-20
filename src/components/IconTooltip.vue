@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<IconTooltipProps>(), {
 </script>
 
 <style lang="less">
-@import "ant-design-vue/lib/style/themes/index.less";
+@import "ant-design-vue/lib/style/themes/default.less";
 
 .icon-tooltip {
   margin-left: 4px;
