@@ -220,8 +220,8 @@ function updateSearchSetting(data: Option<SearchSetting>) {
 
     .ant-input-search-button {
       transition: none !important;
-      border-bottom-right-radius: @search-radius;
-      border-top-right-radius: @search-radius;
+      border-bottom-right-radius: @search-radius !important;
+      border-top-right-radius: @search-radius !important;
     }
 
     // 去除搜索按钮底色（防止在设置壁纸后白底）
