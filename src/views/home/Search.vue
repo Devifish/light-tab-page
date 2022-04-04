@@ -6,6 +6,7 @@
     <div class="search-input" ref="searchInput">
       <a-auto-complete
         v-model:value="searchText"
+        :open="showComplete"
         :options="searchSuggestion"
         :defaultActiveFirstOption="false"
         size="large"
@@ -18,6 +19,8 @@
           :placeholder="t('home.search')"
           enter-button
           @keydown="onSwitchEngines"
+          @click="showComplete = true"
+          @blur="showComplete = false"
           @search="onSearch"
         >
           <template #addonBefore v-if="searchSetting.showEngineSelect">
@@ -57,7 +60,8 @@ const { t } = useI18n()
 const { state: stateX, getters, commit, dispatch } = useStore()
 const props = defineProps<SearchProps>()
 
-const searchEngines = computed<SearchEngineData>(() => getters[SearchGetters.getUseSearchEngines]),
+const showComplete = ref(false),
+  searchEngines = computed<SearchEngineData>(() => getters[SearchGetters.getUseSearchEngines]),
   searchSetting = computed(() => stateX.setting.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<SuggestionItem[]>()
