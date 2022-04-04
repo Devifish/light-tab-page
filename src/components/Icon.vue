@@ -63,7 +63,7 @@ function getFontIcon() {
     .text-icon {
       text-align: center;
       font-size: 32px;
-      line-height: 1;
+      line-height: 0.9;
       user-select: none;
     }
 
