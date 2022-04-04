@@ -54,6 +54,7 @@ topsite:
   boardColor: "Board color"
   boardOpacity: "Board opacity"
   boardRound: "Board round"
+  add: "Add topsite"
 
 other:
   setting: "Other Setting"

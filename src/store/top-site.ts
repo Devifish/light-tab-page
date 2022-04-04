@@ -19,6 +19,7 @@ export enum TopSiteGetters {
 }
 
 export enum TopSiteMutations {
+  addTopSite = "ADD_TOP_SITE",
   updateTopSite = "UPDATE_TOP_SITE",
   deleteTopSite = "DELETE_TOP_SITE",
   sortTopSites = "SORT_TOP_SITES",
@@ -58,6 +59,15 @@ export default createStoreModule<TopSiteState>({
   },
   mutations: {
     /**
+     * 添加单个导航
+     * @param state
+     * @param data
+     */
+    [TopSiteMutations.addTopSite]: (state, data: TopSiteItem) => {
+      state.topSites.push(data)
+      saveTopSiteState(state)
+    },
+    /**
      * 更新单个导航
      * @param state
      * @param data
@@ -70,7 +80,7 @@ export default createStoreModule<TopSiteState>({
     /**
      * 删除导航
      * @param state
-     * @param data
+     * @param index
      */
     [TopSiteMutations.deleteTopSite]: (state, index: number) => {
       state.topSites.splice(index, 1)

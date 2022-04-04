@@ -36,16 +36,74 @@
           <span>{{ item.title }}</span>
         </div>
       </li>
+
+      <li
+        v-if="topSites.length < topSiteSetting.col * topSiteSetting.row"
+        v-show="!data.shake"
+        class="top-site-item"
+        :title="t('topsite.add')"
+      >
+        <icon
+          class="top-site-icon"
+          title="＋"
+          :size="48"
+          textIcon
+          @click="data.showAddModal = true"
+        >
+          <div class="icon-board"></div>
+        </icon>
+
+        <div class="icon-title">
+          <span>{{ t('topsite.add') }}</span>
+        </div>
+      </li>
     </transition-group>
+
+    <a-modal
+      v-model:visible="data.showAddModal"
+      :title="t('topsite.add')"
+      :width="500"
+      centered
+      destroy-on-close
+      ok-text="保存"
+      cancel-text="取消"
+      @ok="onSaveCustomTopSite"
+    >
+      <a-form :model="topSite" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }" ref="formRef">
+        <a-form-item label="网站标题" v-bind="validateInfos.title">
+          <a-input v-model:value="topSite.title" placeholder="标题" />
+        </a-form-item>
+        <a-form-item label="网站URL" v-bind="validateInfos.url">
+          <a-input v-model:value="topSite.url" placeholder="URL" />
+        </a-form-item>
+        <a-form-item label="自动获取图标">
+          <a-switch v-model:checked="topSite.autoIcon" />
+        </a-form-item>
+        <a-form-item v-if="!topSite.autoIcon" label="文字图标">
+          <a-switch v-model:checked="topSite.textIcon" />
+        </a-form-item>
+        <a-form-item
+          v-if="!(topSite.autoIcon || topSite.textIcon)"
+          label="图标URL"
+          v-bind="validateInfos.icon"
+        >
+          <a-input v-model:value="topSite.icon" placeholder="图标URL" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onBeforeMount, reactive } from "vue"
-import { DragType, OpenPageTarget, SortData, TopSites } from "@/types"
+import { DragType, OpenPageTarget, SortData, TopSiteItem, TopSites } from "@/types"
 import { useStore } from "@/store"
 import { TopSiteActions, TopSiteGetters, TopSiteMutations } from "@/store/top-site"
+import { useI18n } from "vue-i18n"
+import { Form } from "ant-design-vue"
+import { getFavicon } from "@/plugins/extension"
 
+const { t } = useI18n()
 const { state, getters, commit, dispatch } = useStore()
 
 const topSiteSetting = computed(() => state.setting.topSite)
@@ -54,8 +112,25 @@ const topSites = computed<TopSites>(() => getters[TopSiteGetters.getCurrentTopSi
 const data = reactive({
   currentDrag: -1,
   shake: false,
-  editStatus: false
+  editStatus: false,
+  showAddModal: false
 })
+
+const topSite = reactive({
+  title: "",
+  url: "",
+  icon: "",
+  textIcon: false,
+  autoIcon: true
+})
+
+const rules = reactive({
+  title: [{ required: true, message: "请输入名称" }],
+  url: [{ required: true, message: "请输入地址URL", type: "url" }],
+  icon: [{ required: false, message: "请输入图标URL", type: "url" }]
+})
+
+const { validate, resetFields, validateInfos } = Form.useForm(topSite, rules)
 
 function openPage(url: string) {
   window.open(url, OpenPageTarget.Blank)
@@ -103,6 +178,22 @@ function onDragIcon(type: DragType, index: number) {
       data.currentDrag = -1
       return
   }
+}
+
+async function onSaveCustomTopSite() {
+  try {
+    await validate()
+    const icon = topSite.autoIcon ? getFavicon(topSite.url) : undefined
+    const customData: TopSiteItem = {
+      ...topSite,
+      custom: true,
+      icon
+    }
+    commit(TopSiteMutations.addTopSite, customData)
+
+    resetFields()
+    data.showAddModal = false
+  } catch {}
 }
 
 async function init() {

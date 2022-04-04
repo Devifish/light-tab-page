@@ -54,6 +54,7 @@ topsite:
   boardColor: "底板顏色"
   boardOpacity: "底板不透明度"
   boardRound: "底板圓角"
+  add: "添加導航"
 
 other:
   setting: "其他設置"
