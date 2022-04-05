@@ -15,6 +15,7 @@
         backfill
         style="width: 100%"
         @search="debounceSearchSuggestion"
+        @select="showComplete = false"
       >
         <a-input-search
           :placeholder="t('home.search')"
