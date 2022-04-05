@@ -9,6 +9,7 @@
         :open="showComplete"
         :options="searchSuggestion"
         :defaultActiveFirstOption="false"
+        :get-popup-container="() => searchWarp!"
         size="large"
         autofocus
         backfill
@@ -61,6 +62,7 @@ const { state: stateX, getters, commit, dispatch } = useStore()
 const props = defineProps<SearchProps>()
 
 const showComplete = ref(false),
+  searchWarp = ref<HTMLElement>(),
   searchEngines = computed<SearchEngineData>(() => getters[SearchGetters.getUseSearchEngines]),
   searchSetting = computed(() => stateX.setting.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
