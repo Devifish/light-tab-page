@@ -1,0 +1,9 @@
+{
+    "id": "npm",
+    "name": "npm",
+    "icon": "img/npm.svg",
+    "description": "npm (node package manager) Javascript包管理",
+    "search": {
+        "url": "https://www.npmjs.com/search?q={searchText}"
+    }
+}
