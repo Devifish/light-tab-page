@@ -4,7 +4,7 @@ export default defineManifest({
   manifest_version: 2,
   name: "__MSG_name__",
   description: "__MSG_description__",
-  version: process.env.npm_package_version,
+  version: process.env.npm_package_version!,
   default_locale: "zh_CN",
   content_security_policy: "script-src 'self'; object-src 'self';",
   minimum_chrome_version: "81.0.0",
@@ -14,9 +14,7 @@ export default defineManifest({
     "https://cn.bing.com/",
     "https://suggestion.baidu.com/",
     "https://api.bing.com/",
-    "https://suggestqueries.google.com/",
-    "http://*/",
-    "https://*/"
+    "https://suggestqueries.google.com/"
   ],
   chrome_url_overrides: {
     newtab: "index.html#/"

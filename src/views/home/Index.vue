@@ -11,14 +11,6 @@
     <transition name="fade">
       <top-site v-if="state.enableTopSite" v-show="!state.fixedSearch" />
     </transition>
-
-    <router-view v-slot="{ route, Component }">
-      <transition name="moveY" mode="out-in">
-        <keep-alive>
-          <component :is="Component" :key="route.path" />
-        </keep-alive>
-      </transition>
-    </router-view>
   </main>
 
   <!-- 设置 -->

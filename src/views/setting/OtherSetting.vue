@@ -8,17 +8,6 @@
       </a-select>
     </setting-item>
 
-    <setting-item horizontal>
-      <template #lable>
-        <span>
-          {{ t("other.searchPlus") }}
-          <a-tag color="warning">{{ t("common.experimen") }}</a-tag>
-        </span>
-      </template>
-
-      <a-switch v-model:checked="searchSetting.overwriteSearch" v-permis="Permis.all" />
-    </setting-item>
-
     <setting-item :lable="t('other.backup.text')">
       <div class="backup-btn-warp">
         <a-button @click="exportBackupFile">
