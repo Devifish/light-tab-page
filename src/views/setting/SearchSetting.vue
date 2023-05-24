@@ -108,7 +108,7 @@ function updateSearchSetting(data: Option<SearchSetting>) {
 </script>
 
 <style lang="less">
-@import "ant-design-vue/lib/style/themes/default.less";
+@import "@/style/default.less";
 
 .search-setting {
   .engine-setting {

@@ -30,16 +30,6 @@ export default defineConfig(env => ({
       }
     }
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        modifyVars: {
-          "border-radius-base": "4px"
-        },
-        javascriptEnabled: true
-      }
-    }
-  },
   plugins: [
     vue(),
     vueI18n({
@@ -50,7 +40,7 @@ export default defineConfig(env => ({
       dts: true,
       resolvers: [
         AntDesignVueResolver({
-          importLess: true
+          importStyle: false
         })
       ]
     }),

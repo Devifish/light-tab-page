@@ -8,6 +8,7 @@ import {
   SearchData,
   AnalyzeUrl,
   RuleDataMap,
+  Rule,
   Rules,
   RuleData
 } from "@/types"
@@ -43,8 +44,8 @@ const SEARCH_ENGINES_STORAGE = "search-engines"
 const SEARCH_HISTORY_STORAGE = "search-history"
 const SEARCH_HISTORY_LENGTH = 100
 
-const ruleModules = import.meta.globEager("/src/rules/*.json")
-const rules: Rules = Object.values(ruleModules).map(item => item.default)
+const ruleModules = import.meta.glob<true, string, Rule>("/src/rules/*.json", { eager: true })
+const rules: Rules = Object.values(ruleModules)
 export const DEFAULT_SEARCH_ENGINES: SearchEngineData = Object.fromEntries(
   rules.map(item => [
     item.id,

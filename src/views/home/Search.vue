@@ -20,6 +20,7 @@
         <a-input-search
           :placeholder="t('home.search')"
           enter-button
+          size="large"
           @keydown="onSwitchEngines"
           @click="showComplete = true"
           @blur="showComplete = false"
@@ -207,16 +208,8 @@ function updateSearchSetting(data: Option<SearchSetting>) {
       width: 72px;
     }
 
-    .ant-select-selector {
-      transition: none !important;
-      .ant-select-selection-item {
-        transition: none !important;
-      }
-    }
-
     .ant-input,
     .ant-input-group-addon:first-child {
-      transition: none !important;
       border-bottom-left-radius: @search-radius;
       border-top-left-radius: @search-radius;
     }
@@ -226,7 +219,6 @@ function updateSearchSetting(data: Option<SearchSetting>) {
     }
 
     .ant-input-search-button {
-      transition: none !important;
       border-bottom-right-radius: @search-radius !important;
       border-top-right-radius: @search-radius !important;
     }

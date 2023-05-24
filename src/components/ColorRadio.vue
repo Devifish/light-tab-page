@@ -43,7 +43,7 @@ function onSelectColor(color: string) {
 </script>
 
 <style lang="less">
-@import "ant-design-vue/lib/style/themes/default.less";
+@import "@/style/default.less";
 
 .color-radio-warp {
   display: flex;
