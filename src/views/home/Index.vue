@@ -1,5 +1,5 @@
 <template>
-  <main
+  <a-layout
     class="main-wrap"
     :class="{
       'search-center': state.align === AlignType.searchCenter,
@@ -11,7 +11,7 @@
     <transition name="fade">
       <top-site v-if="state.enableTopSite" v-show="!state.fixedSearch" />
     </transition>
-  </main>
+  </a-layout>
 
   <!-- 设置 -->
   <div class="setting-wrap">

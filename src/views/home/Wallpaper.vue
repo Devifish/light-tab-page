@@ -15,7 +15,7 @@ import { BackgroundType, ThemeMode } from "@/types"
 import { useStore } from "@/store"
 import { SettingActions } from "@/store/setting"
 import { isEmpty } from "@/utils/common"
-import { CURRENT_THEME_KEY } from "@/components/ConfigProvider.vue"
+import { CURRENT_THEME_KEY } from "@/types"
 
 const { state, dispatch } = useStore()
 const background = computed(() => state.setting.background)
