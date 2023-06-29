@@ -45,6 +45,14 @@ const currentLang = computed(() => {
   return lang === LanguageType.Auto ? navigator.language : lang
 })
 
+// 监听并设置主题
+watchEffect(() => {
+  const isDark = currentTheme.value === ThemeMode.Dart
+  const html = document.body.parentElement!
+
+  html.setAttribute("data-theme", isDark ? "dark" : "light")
+})
+
 // 监听并设置语言
 watchEffect(() => {
   const lang = currentLang.value

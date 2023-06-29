@@ -10,6 +10,7 @@ home:
 theme:
   setting: "Theme Setting"
   mode: "Theme mode"
+  primaryColor: "Primary color"
 
 search:
   setting: "Search Setting"

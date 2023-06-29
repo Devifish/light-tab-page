@@ -41,15 +41,11 @@ import { useSettingStore } from "@/store"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons-vue"
+import { storeToRefs } from "pinia"
 
 const { t, availableLocales } = useI18n()
 const settingStore = useSettingStore()
-
-const lang = computed({
-  get: () => settingStore.lang,
-  set: lang => settingStore.updateLanguage(lang)
-})
-
+const { lang } = storeToRefs(settingStore)
 const languages = ref<Record<string, any>>({
   auto: computed(() => t("common.auto")),
   ...Object.fromEntries(availableLocales.map(item => [item, t("lang", item, { locale: item })]))

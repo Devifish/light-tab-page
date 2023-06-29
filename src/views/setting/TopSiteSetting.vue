@@ -18,9 +18,9 @@
     <setting-item :lable="t('topsite.iconSize')" horizontal>
       <a-slider
         class="horizontal-item"
-        v-model:value="topSiteSetting.iconSize"
+        v-model:value="topSite.iconSize"
         :min="16"
-        :max="topSiteSetting.boardSize"
+        :max="topSite.boardSize"
         :step="8"
         :tipFormatter="toPixel"
       />
@@ -29,24 +29,17 @@
     <setting-item :lable="t('topsite.boardSize')" horizontal>
       <a-slider
         class="horizontal-item"
-        v-model:value="topSiteSetting.boardSize"
+        v-model:value="topSite.boardSize"
         :min="16"
         :max="96"
         :step="8"
         :tipFormatter="toPixel"
       />
     </setting-item>
-    <setting-item :lable="t('topsite.boardColor')" horizontal>
-      <color-radio
-        v-model:value="topSiteSetting.boardColor"
-        :colors="['#FFF', '#00A4EF', '#7FBA00', '#F25022', '#FFB900', '#1F1F1F']"
-        style="width: 215px"
-      />
-    </setting-item>
     <setting-item :lable="t('topsite.boardOpacity')" horizontal>
       <a-slider
         class="horizontal-item"
-        v-model:value="topSiteSetting.boardOpacity"
+        v-model:value="topSite.boardOpacity"
         :step="0.01"
         :max="1"
         :tipFormatter="toPercent"
@@ -55,8 +48,8 @@
     <setting-item :lable="t('topsite.boardRound')" horizontal>
       <a-slider
         class="horizontal-item"
-        v-model:value="topSiteSetting.boardRadius"
-        :max="(topSiteSetting.boardSize ?? 0) / 2"
+        v-model:value="topSite.boardRadius"
+        :max="(topSite.boardSize ?? 0) / 2"
         :tipFormatter="toPixel"
       />
     </setting-item>
@@ -64,35 +57,23 @@
 </template>
 
 <script lang="ts" setup>
-import { TopSiteSetting, Option } from "@/types"
 import { toPixel, toPercent } from "@/utils/format"
 import { useSettingStore, useTopSiteStore } from "@/store"
-import { deepComputed } from "@/utils/common"
 import { computed, reactive } from "vue"
 import { sleep } from "@/utils/async"
 import dayjs from "@/plugins/dayjs"
 import { useI18n } from "vue-i18n"
+import { storeToRefs } from "pinia"
 
 const { t } = useI18n()
 const settingStore = useSettingStore()
 const topSiteStore = useTopSiteStore()
 
+const { topSite } = storeToRefs(settingStore)
 const lastUpdateTime = computed(() => topSiteStore.lastUpdateTime)
-const topSiteSetting = deepComputed(
-  () => settingStore.topSite,
-  updateTopSiteSetting,
-  "row",
-  "col",
-  "gap"
-)
-
 const state = reactive({
   syncing: false
 })
-
-function updateTopSiteSetting(data: Option<TopSiteSetting>) {
-  settingStore.updateTopSiteSetting(data)
-}
 
 /**
  * 同步浏览器最近浏览

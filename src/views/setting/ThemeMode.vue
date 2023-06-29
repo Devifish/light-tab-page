@@ -3,7 +3,7 @@
     <setting-item :lable="t('theme.mode')">
       <div class="theme-mode">
         <a-tooltip v-for="item in themeModes" :title="item.name" :key="item.name">
-          <div class="theme-item" @click="onThemeChange(item.mode)">
+          <div class="theme-item" @click="themeMode = item.mode">
             <img :src="item.icon" />
             <transition name="scale">
               <check-circle-filled class="select-icon" v-if="item.mode === themeMode" />
@@ -11,6 +11,13 @@
           </div>
         </a-tooltip>
       </div>
+    </setting-item>
+    <setting-item :lable="t('theme.primaryColor')">
+      <color-radio
+        v-model:value="topSite.boardColor"
+        :colors="['#00A4EF', '#7FBA00', '#F25022', '#FFB900', '#FFF', '#1F1F1F']"
+        style="width: 215px"
+      />
     </setting-item>
   </div>
 </template>
@@ -45,11 +52,7 @@ const themeModes = [
 
 const { t } = useI18n()
 const settingStore = useSettingStore()
-const { themeMode } = storeToRefs(settingStore)
-
-function onThemeChange(themeMode: ThemeMode) {
-  settingStore.updateThemeMode(themeMode)
-}
+const { themeMode, topSite } = storeToRefs(settingStore)
 </script>
 
 <style lang="less">

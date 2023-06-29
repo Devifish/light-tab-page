@@ -110,21 +110,14 @@ export default defineStore("search", {
      */
     openSearchPage(search: SearchData) {
       const { engine, text, target } = search
-      const settingStore = useSettingStore()
-      const { overwriteSearch } = settingStore.search
+      const searchEngines = this.searchEngines
 
-      if (overwriteSearch) {
-        router.push({ name: "SearchResult", params: { engine, text } })
-      } else {
-        const searchEngines = this.searchEngines
+      // 构建搜索URL
+      const url = AnalyzeUrl.defalut(searchEngines[engine].baseUrl, {
+        searchText: text
+      }).getUrlString()
 
-        // 构建搜索URL
-        const url = AnalyzeUrl.defalut(searchEngines[engine].baseUrl, {
-          searchText: text
-        }).getUrlString()
-
-        window.open(url, target)
-      }
+      window.open(url, target)
     },
 
     /**

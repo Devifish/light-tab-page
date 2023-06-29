@@ -10,6 +10,7 @@ home:
 theme:
   setting: "主题设置"
   mode: "主题模式"
+  primaryColor: "基础颜色"
 
 search:
   setting: "搜索设置"

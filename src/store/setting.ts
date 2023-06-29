@@ -46,7 +46,6 @@ export default defineStore("setting", {
       autoOpacity: true
     },
     search: {
-      overwriteSearch: false,
       currentEngine: "bing",
       openPageTarget: OpenPageTarget.Blank,
       showEngineIcon: true,
@@ -164,57 +163,12 @@ export default defineStore("setting", {
     },
 
     /**
-     * 更新语言
-     * @param state
-     * @param lang
-     */
-    updateLanguage(lang: LanguageType) {
-      this.lang = lang
-    },
-
-    /**
-     * 更新主题模式
-     * @param state
-     * @param mode
-     */
-    updateThemeMode(mode: ThemeMode) {
-      this.themeMode = mode
-    },
-
-    /**
      * 更新搜索设置
      * @param state
      * @param setting
      */
     updateSearchSetting(search: Option<SearchSetting>) {
       copy(search, this.search)
-    },
-
-    /**
-     * 更新导航栏设置
-     * @param state
-     * @param topSite
-     */
-    updateTopSiteSetting(topSite: Option<TopSiteSetting>) {
-      copy(topSite, this.topSite)
-    },
-
-    /**
-     * 更新布局设置
-     * @param state
-     * @param topSite
-     */
-    updateLayoutSetting(layout: Option<LayoutSetting>) {
-      copy(layout, this.layout)
-    },
-
-    /**
-     * 更新Popup菜单设置
-     * @param state
-     * @param popup
-     */
-    updatePopupSetting(popup: Option<PopupSettting>) {
-      copy(popup, this.popup)
     }
   }
 })

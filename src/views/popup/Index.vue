@@ -1,7 +1,7 @@
 <template>
   <main id="popup-layout">
     <div class="title">
-      <a-select v-model:value="current" :bordered="false" size="small">
+      <a-select v-model:value="popup.current" :bordered="false" size="small">
         <a-select-option v-for="(item, index) of popupMenu" :value="index" :key="item.title">
           <span>
             <component :is="item.icon" />
@@ -35,8 +35,8 @@ import { useSearchStore, useSettingStore } from "@/store"
 import { HistoryOutlined, RestOutlined, AppstoreOutlined } from "@ant-design/icons-vue"
 import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
-import { Option, PopupSettting } from "@/types"
 import { useI18n } from "vue-i18n"
+import { storeToRefs } from "pinia"
 
 interface ActionItem {
   title: string
@@ -54,6 +54,7 @@ interface PopupMenuItem {
 
 const { t } = useI18n()
 const store = useSettingStore()
+const { popup } = storeToRefs(store)
 
 const popupMenu = computed<PopupMenuItem[]>(() =>
   [
@@ -78,17 +79,8 @@ const popupMenu = computed<PopupMenuItem[]>(() =>
   ].filter(item => !item.skip)
 )
 
-const current = computed({
-  get: () => store.popup.current,
-  set: current => updatePopupSetting({ current })
-})
-
 // 当前菜单
-const currentMenu = computed(() => popupMenu.value[current.value])
-
-function updatePopupSetting(popup: Option<PopupSettting>) {
-  store.updatePopupSetting(popup)
-}
+const currentMenu = computed(() => popupMenu.value[popup.value.current])
 
 function cleanHistory() {
   const searchStore = useSearchStore()

@@ -1,17 +1,17 @@
 <template>
-  <a-layout
+  <main
     class="main-wrap"
     :class="{
       'search-center': state.align === AlignType.searchCenter,
       'overall-center': state.align === AlignType.overallCenter
     }"
   >
-    <search class="search" :value="state.searchText" :fixed="state.fixedSearch" />
+    <search class="search" :value="state.searchText" />
 
     <transition name="fade">
-      <top-site v-if="state.enableTopSite" v-show="!state.fixedSearch" />
+      <top-site v-if="state.enableTopSite" />
     </transition>
-  </a-layout>
+  </main>
 
   <!-- 设置 -->
   <div class="setting-wrap">
@@ -46,7 +46,6 @@ import { useRoute } from "vue-router"
 const route = useRoute()
 const settingStore = useSettingStore()
 const state = reactive({
-  fixedSearch: computed(() => route.path !== "/"),
   searchText: computed(() => route.params.text as string),
   settingVisible: false,
   align: computed(() => settingStore.layout.align),

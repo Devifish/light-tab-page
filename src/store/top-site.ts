@@ -38,7 +38,7 @@ export default defineStore("top-site", {
      */
     async syncBrowserTopSites() {
       const now = Date.now()
-      const customTopSites = this.topSites.filter(item => item.custom)
+      const customTopSites = this.topSites.filter(item => item?.custom)
       const list = await getBrowserTopSites()
 
       // 并行校验图标是否有效

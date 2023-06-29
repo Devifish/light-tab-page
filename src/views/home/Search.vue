@@ -1,5 +1,5 @@
 <template>
-  <div :class="['search-warp', { fixed: fixed }]" ref="searchWarp">
+  <div class="search-warp" ref="searchWarp">
     <div v-if="searchSetting.showEngineIcon" class="search-logo">
       <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
     </div>
@@ -44,12 +44,10 @@ import { useSettingStore, useSearchStore } from "@/store"
 import { Option, SearchEngineData, SearchSetting } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
-import { storeToRefs } from "pinia"
-import { ref, computed, watch, nextTick } from "vue"
+import { ref, computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 interface SearchProps {
-  fixed?: boolean
   value?: string
 }
 
@@ -81,31 +79,6 @@ const searchText = ref(props.value)
 watch(
   () => props.value,
   value => (searchText.value = value ?? "")
-)
-
-// 当fixed变化时添加动画
-const searchInput = ref<Element>()
-watch(
-  () => props.fixed,
-  () => {
-    const $el = searchInput.value!
-    const first = $el.getBoundingClientRect()
-
-    // 获取新位置并添加动画
-    nextTick(() => {
-      const last = $el.getBoundingClientRect(),
-        invertY = first.y - last.y,
-        invertX = first.x - last.x
-
-      $el.animate(
-        [{ transform: `translate(${invertX}px ,${invertY}px)` }, { transform: "translate(0, 0)" }],
-        {
-          duration: 300,
-          easing: "cubic-bezier(0,0,0.32,1)"
-        }
-      )
-    })
-  }
 )
 
 /**
@@ -170,26 +143,6 @@ function updateSearchSetting(data: Option<SearchSetting>) {
   justify-content: space-between;
   row-gap: 64px;
 
-  &.fixed {
-    position: fixed;
-    flex-direction: row;
-    justify-content: center;
-    height: 96px;
-    width: 100%;
-    top: 0;
-    column-gap: 16px;
-    z-index: 10;
-    background-color: rgba(225, 225, 225, 0.5);
-    backdrop-filter: saturate(125%) blur(8px);
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.15);
-
-    .search-logo img {
-      width: 128px;
-      height: 32px;
-      object-fit: contain;
-    }
-  }
-
   .search-logo img {
     height: @logo-h;
     width: auto;
@@ -227,17 +180,28 @@ function updateSearchSetting(data: Option<SearchSetting>) {
     .ant-input-group-addon:last-child {
       background-color: transparent;
     }
+
+    .ant-input-group-addon {
+      background-color: #ffffff;
+
+      .ant-select-selection-item {
+        line-height: 30px;
+      }
+    }
   }
 }
 
 [data-theme="dark"] {
-  .search-warp.fixed {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+  .search-input {
+    .ant-input,
+    .ant-input-group-addon {
+      background-color: #14141414;
+    }
 
-  // 深色模式搜索按钮半透明
-  .ant-input-search-button {
-    opacity: 0.5;
+    // 深色模式搜索按钮半透明
+    .ant-input-search-button {
+      opacity: 0.7;
+    }
   }
 }
 </style>
