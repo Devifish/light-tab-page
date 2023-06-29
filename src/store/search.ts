@@ -41,14 +41,15 @@ export const DEFAULT_SEARCH_ENGINES: SearchEngineData = Object.fromEntries(
   ])
 )
 
-export default defineStore("search", {
-  state: (): SearchState => {
-    const defaultState: SearchState = {
-      searchEngines: { ...DEFAULT_SEARCH_ENGINES },
-      history: [],
-      rules: Object.fromEntries(rules.map(item => [item.id, new RuleData(item)]))
-    }
+const defaultState: SearchState = {
+  searchEngines: { ...DEFAULT_SEARCH_ENGINES },
+  history: [],
+  rules: Object.fromEntries(rules.map(item => [item.id, new RuleData(item)]))
+}
 
+export default defineStore("search", {
+  persist: false,
+  state: (): SearchState => {
     const searchEngines = JSON.parse(localStorage[SEARCH_ENGINES_STORAGE] ?? "{}")
     Object.assign(defaultState.searchEngines, searchEngines)
 

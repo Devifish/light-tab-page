@@ -23,6 +23,7 @@
     "file-saver": "^2.0.5",
     "localforage": "^1.10.0",
     "pinia": "^2.1.4",
+    "pinia-plugin-persistedstate": "^3.1.0",
     "vue": "^3.3.4",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.2.2",

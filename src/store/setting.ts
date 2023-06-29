@@ -1,5 +1,4 @@
 import { defineStore } from "pinia"
-import { useLocalStorage } from "@vueuse/core"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/file"
@@ -31,54 +30,49 @@ export interface SettingState {
   popup: PopupSettting
 }
 
-const SETTING_STORAGE = "setting-data"
 const BACKUP_FILE_MARK = "_MARK_"
 
 export default defineStore("setting", {
-  state() {
-    const defaultState: SettingState = {
-      lang: LanguageType.Auto,
-      themeMode: ThemeMode.Auto,
-      background: {
-        id: "",
-        type: BackgroundType.None,
-        url: "",
-        blur: 0,
-        maskColor: "#000",
-        maskOpacity: 0,
-        autoOpacity: true
-      },
-      search: {
-        overwriteSearch: false,
-        currentEngine: "bing",
-        openPageTarget: OpenPageTarget.Blank,
-        showEngineIcon: true,
-        showEngineSelect: true,
-        searchInputRadius: 4,
-        useSearchEngines: ["bing", "google", "baidu"],
-        suggestion: SearchSuggestion.none
-      },
-      topSite: {
-        enable: false,
-        col: 6,
-        row: 2,
-        gap: 16,
-        iconSize: 32,
-        boardSize: 64,
-        boardRadius: 4,
-        boardColor: "#fff",
-        boardOpacity: 0.8
-      },
-      layout: {
-        align: AlignType.searchCenter
-      },
-      popup: {
-        current: 0
-      }
+  state: (): SettingState => ({
+    lang: LanguageType.Auto,
+    themeMode: ThemeMode.Auto,
+    background: {
+      id: "",
+      type: BackgroundType.None,
+      url: "",
+      blur: 0,
+      maskColor: "#000",
+      maskOpacity: 0,
+      autoOpacity: true
+    },
+    search: {
+      overwriteSearch: false,
+      currentEngine: "bing",
+      openPageTarget: OpenPageTarget.Blank,
+      showEngineIcon: true,
+      showEngineSelect: true,
+      searchInputRadius: 4,
+      useSearchEngines: ["bing", "google", "baidu"],
+      suggestion: SearchSuggestion.none
+    },
+    topSite: {
+      enable: false,
+      col: 6,
+      row: 2,
+      gap: 16,
+      iconSize: 32,
+      boardSize: 64,
+      boardRadius: 4,
+      boardColor: "#fff",
+      boardOpacity: 0.8
+    },
+    layout: {
+      align: AlignType.searchCenter
+    },
+    popup: {
+      current: 0
     }
-
-    return useLocalStorage<SettingState>(SETTING_STORAGE, defaultState)
-  },
+  }),
   actions: {
     /**
      * 上传壁纸

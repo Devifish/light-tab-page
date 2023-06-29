@@ -1,5 +1,4 @@
 import { defineStore } from "pinia"
-import { useLocalStorage } from "@vueuse/core"
 import { getBrowserTopSites, getFavicon } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
 import { verifyImageUrl } from "@/utils/file"
@@ -14,17 +13,11 @@ export interface TopSiteItemVo extends TopSiteItem {
   index: number
 }
 
-const TOP_SITE_STORAGE = "top-site-data"
-
 export default defineStore("top-site", {
-  state() {
-    const defaultState: TopSiteState = {
-      topSites: [],
-      lastUpdateTime: undefined
-    }
-
-    return useLocalStorage(TOP_SITE_STORAGE, defaultState)
-  },
+  state: (): TopSiteState => ({
+    topSites: [],
+    lastUpdateTime: undefined
+  }),
   getters: {
     /**
      * 获取当前的导航栏数据
