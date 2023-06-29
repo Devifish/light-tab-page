@@ -5,6 +5,7 @@ import { viteBuildManifest } from "./script/build-manifest"
 import ViteComponents from "unplugin-vue-components/vite"
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers"
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite"
+import manifest from "./manifest.config"
 
 export default defineConfig(env => ({
   envPrefix: ["APP_", "npm_package_name", "npm_package_version"],
@@ -44,6 +45,6 @@ export default defineConfig(env => ({
         })
       ]
     }),
-    viteBuildManifest()
+    viteBuildManifest(manifest)
   ]
 }))
