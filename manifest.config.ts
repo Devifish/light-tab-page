@@ -1,6 +1,6 @@
-import { defineManifest } from "./script/build-manifest"
+import { defineManifestV3 } from "./script/build-manifest"
 
-export default defineManifest({
+export default defineManifestV3({
   manifest_version: 3,
   name: "__MSG_name__",
   description: "__MSG_description__",
