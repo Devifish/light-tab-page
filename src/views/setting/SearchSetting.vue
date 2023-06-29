@@ -8,7 +8,7 @@
         </icon-tooltip>
       </template>
 
-      <a-select v-model:value="searchSetting.currentEngine" style="width: 90px">
+      <a-select v-model:value="setting.currentEngine" style="width: 90px">
         <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
           {{ value.name }}
         </a-select-option>
@@ -19,14 +19,14 @@
       <template #lable>
         <span>{{ t("search.suggestApi") }}</span>
         <icon-tooltip
-          v-if="searchSetting.suggestion === SearchSuggestion.none"
+          v-if="setting.suggestion === SearchSuggestion.none"
           :title="t('search.suggestApiTip')"
           type="warn"
         />
       </template>
 
       <a-select
-        v-model:value="searchSetting.suggestion"
+        v-model:value="setting.suggestion"
         :disabled="!isExtension"
         v-permis="Permis.suggestion"
         style="width: 100px"
@@ -39,11 +39,7 @@
     </setting-item>
 
     <setting-item :lable="t('search.searchRound')">
-      <a-slider
-        v-model:value="searchSetting.searchInputRadius"
-        :max="22"
-        :tip-formatter="toPixel"
-      />
+      <a-slider v-model:value="setting.searchInputRadius" :max="22" :tip-formatter="toPixel" />
     </setting-item>
 
     <setting-item :lable="t('search.newTabOpen')" horizontal>
@@ -51,11 +47,11 @@
     </setting-item>
 
     <setting-item :lable="t('search.showEngineIcon')" horizontal>
-      <a-switch v-model:checked="searchSetting.showEngineIcon" />
+      <a-switch v-model:checked="setting.showEngineIcon" />
     </setting-item>
 
     <setting-item :lable="t('search.showEngineSelet')" horizontal>
-      <a-switch v-model:checked="searchSetting.showEngineSelect" />
+      <a-switch v-model:checked="setting.showEngineSelect" />
     </setting-item>
   </div>
 
@@ -79,19 +75,16 @@ import { storeToRefs } from "pinia"
 const { t } = useI18n()
 const settingStore = useSettingStore()
 const searchStore = useSearchStore()
-const { search: searchSetting } = storeToRefs(settingStore)
+const { search: setting } = storeToRefs(settingStore)
 const searchEngines = computed<SearchEngineData>(() => searchStore.getUseSearchEngines)
 
 // Ref
 const manageVisible = ref(false)
-
-// 是否在新标签页中打开
 const isOpenPageByBlank = computed({
   get: () => settingStore.search.openPageTarget === OpenPageTarget.Blank,
   set: isOpenPageByBlank => {
-    settingStore.updateSearchSetting({
-      openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
-    })
+    const openPageTarget = isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
+    setting.value.openPageTarget = openPageTarget
   }
 })
 </script>
