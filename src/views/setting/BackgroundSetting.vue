@@ -54,32 +54,27 @@
 <script lang="ts" setup>
 import { watch } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
-import { BackgroundSetting, BackgroundType } from "@/types"
+import { BackgroundType } from "@/types"
 import { isExtension, Permis } from "@/plugins/extension"
 import { toPixel, toPercent } from "@/utils/format"
-import { useStore } from "@/store"
-import { SettingActions, SettingMutations } from "@/store/setting"
-import { deepComputed } from "@/utils/common"
+import { useSettingStore } from "@/store"
 import { useI18n } from "vue-i18n"
+import { storeToRefs } from "pinia"
 
 const { t } = useI18n()
-const store = useStore()
-const background = deepComputed(() => store.state.setting.background, updateBackgroundSetting)
+const store = useSettingStore()
+const { background } = storeToRefs(store)
 
 function uploadBackgroundImage(e) {
-  store.dispatch(SettingActions.uploadBackgroundImage, e.file)
-}
-
-function updateBackgroundSetting(value: BackgroundSetting) {
-  store.commit(SettingMutations.updateBackgroundSetting, value)
+  store.uploadBackgroundImage(e.file)
 }
 
 // 监听到背景类型为Bing则拉取壁纸
 watch(
-  () => background.type,
+  () => background.value.type,
   type => {
     if (type === BackgroundType.Bing) {
-      store.dispatch(SettingActions.loadBingDailyWallpaper)
+      store.loadBingDailyWallpaper()
     }
   }
 )

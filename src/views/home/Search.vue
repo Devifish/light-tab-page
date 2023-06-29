@@ -40,12 +40,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "@/store"
-import { SearchActions, SearchGetters } from "@/store/search"
-import { SettingMutations } from "@/store/setting"
+import { useSettingStore, useSearchStore } from "@/store"
 import { Option, SearchEngineData, SearchSetting } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
+import { storeToRefs } from "pinia"
 import { ref, computed, watch, nextTick } from "vue"
 import { useI18n } from "vue-i18n"
 
@@ -60,13 +59,14 @@ interface SuggestionItem {
 }
 
 const { t } = useI18n()
-const { state: stateX, getters, commit, dispatch } = useStore()
+const settingStore = useSettingStore()
+const searchStore = useSearchStore()
 const props = defineProps<SearchProps>()
 
 const showComplete = ref(false),
   searchWarp = ref<HTMLElement>(),
-  searchEngines = computed<SearchEngineData>(() => getters[SearchGetters.getUseSearchEngines]),
-  searchSetting = computed(() => stateX.setting.search),
+  searchEngines = computed<SearchEngineData>(() => searchStore.getUseSearchEngines),
+  searchSetting = computed(() => settingStore.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<SuggestionItem[]>()
 
@@ -113,7 +113,7 @@ watch(
  * 将搜索内容重定向到搜索引擎
  */
 function onSearch(search: string) {
-  dispatch(SearchActions.submitSearch, search)
+  searchStore.submitSearch(search)
 }
 
 /**
@@ -125,7 +125,7 @@ async function handleSearchSuggestion(value: string) {
   if (isEmpty(value)) {
     searchSuggestion.value = []
   } else {
-    const suggestion: string[] = await dispatch(SearchActions.getSuggestion, value)
+    const suggestion: string[] = await searchStore.getSuggestion(value)
     searchSuggestion.value = suggestion.map(item => ({ value: item }))
   }
 }
@@ -154,7 +154,7 @@ function onSwitchEngines(e: KeyboardEvent) {
 }
 
 function updateSearchSetting(data: Option<SearchSetting>) {
-  commit(SettingMutations.updateSearchSetting, data)
+  settingStore.updateSearchSetting(data)
 }
 </script>
 

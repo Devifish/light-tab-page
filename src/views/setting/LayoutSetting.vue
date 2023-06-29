@@ -43,28 +43,20 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "@/store"
-import { deepComputed, otherKeys } from "@/utils/common"
-import { SettingMutations } from "@/store/setting"
-import { TopSiteSetting, Option, LayoutSetting, AlignType } from "@/types"
+import { useSettingStore } from "@/store"
+import { deepComputed } from "@/utils/common"
+import { Option, LayoutSetting, AlignType } from "@/types"
 import { toPixel } from "@/utils/format"
 import { isExtension, Permis } from "@/plugins/extension"
 import { useI18n } from "vue-i18n"
+import { storeToRefs } from "pinia"
 
 const { t } = useI18n()
-const store = useStore()
-const topSiteSetting = deepComputed(
-  () => store.state.setting.topSite,
-  updateTopSiteSetting,
-  ...otherKeys(store.state.setting.topSite, "col", "row", "gap", "enable")
-)
-const layoutSetting = deepComputed(() => store.state.setting.layout, updateLayoutSetting)
-
-function updateTopSiteSetting(data: Option<TopSiteSetting>) {
-  store.commit(SettingMutations.updateTopSiteSetting, data)
-}
+const settingStore = useSettingStore()
+const { topSite: topSiteSetting } = storeToRefs(settingStore)
+const layoutSetting = deepComputed(() => settingStore.layout, updateLayoutSetting)
 
 function updateLayoutSetting(data: Option<LayoutSetting>) {
-  store.commit(SettingMutations.updateLayoutSetting, data)
+  settingStore.updateLayoutSetting(data)
 }
 </script>

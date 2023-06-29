@@ -32,27 +32,26 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "@/store"
+import { useSettingStore, useSearchStore } from "@/store"
 import type { SearchResultData } from "@/types"
 import { isEmpty } from "@/utils/common"
 import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from "vue-router"
 
-const route = useRoute(),
-  { state: stateX } = useStore(),
-  { text } = route.params
-
+const route = useRoute()
+const settingStore = useSettingStore()
+const searchStore = useSearchStore()
 const state = reactive({
   page: 0,
   loading: false,
   searchList: [] as SearchResultData,
-  currentRule: computed(() => stateX.search.rules[stateX.setting.search.currentEngine]),
-  openPageTarget: computed(() => stateX.setting.search.openPageTarget)
+  currentRule: computed(() => searchStore.rules[settingStore.search.currentEngine]),
+  openPageTarget: computed(() => settingStore.search.openPageTarget)
 })
 
 async function loadSearchList() {
   state.loading = true
-  const searchList = await state.currentRule.getSearchList(text as string, state.page)
+  const searchList = await state.currentRule.getSearchList(route.params.text as string, state.page)
 
   state.searchList = state.searchList.concat(searchList)
   state.loading = false

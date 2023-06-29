@@ -27,7 +27,7 @@
             <sup
               v-show="data.editStatus"
               class="bubble-delete"
-              @click.stop="deleteTopSite(index)"
+              @click.stop="topSiteStore.deleteTopSite(index)"
             ></sup>
           </transition>
         </icon>
@@ -54,7 +54,7 @@
         </icon>
 
         <div class="icon-title">
-          <span>{{ t('topsite.add') }}</span>
+          <span>{{ t("topsite.add") }}</span>
         </div>
       </li>
     </transition-group>
@@ -97,17 +97,17 @@
 <script lang="ts" setup>
 import { computed, onBeforeMount, reactive } from "vue"
 import { DragType, OpenPageTarget, SortData, TopSiteItem, TopSites } from "@/types"
-import { useStore } from "@/store"
-import { TopSiteActions, TopSiteGetters, TopSiteMutations } from "@/store/top-site"
+import { useSettingStore, useTopSiteStore } from "@/store"
 import { useI18n } from "vue-i18n"
 import { Form } from "ant-design-vue"
 import { getFavicon } from "@/plugins/extension"
+import { storeToRefs } from "pinia"
 
 const { t } = useI18n()
-const { state, getters, commit, dispatch } = useStore()
-
-const topSiteSetting = computed(() => state.setting.topSite)
-const topSites = computed<TopSites>(() => getters[TopSiteGetters.getCurrentTopSites])
+const settingStore = useSettingStore()
+const topSiteStore = useTopSiteStore()
+const { topSite: topSiteSetting } = storeToRefs(settingStore)
+const topSites = computed<TopSites>(() => topSiteStore.getCurrentTopSites)
 
 const data = reactive({
   currentDrag: -1,
@@ -134,10 +134,6 @@ const { validate, resetFields, validateInfos } = Form.useForm(topSite, rules)
 
 function openPage(url: string) {
   window.open(url, OpenPageTarget.Blank)
-}
-
-function deleteTopSite(index: number) {
-  commit(TopSiteMutations.deleteTopSite, index)
 }
 
 function openEditStatus() {
@@ -171,7 +167,7 @@ function onDragIcon(type: DragType, index: number) {
         to: index
       }
 
-      commit(TopSiteMutations.sortTopSites, sortData)
+      topSiteStore.sortTopSites(sortData)
       data.currentDrag = index
       return
     case DragType.end:
@@ -189,7 +185,7 @@ async function onSaveCustomTopSite() {
       custom: true,
       icon
     }
-    commit(TopSiteMutations.addTopSite, customData)
+    topSiteStore.addTopSite(customData)
 
     resetFields()
     data.showAddModal = false
@@ -197,8 +193,8 @@ async function onSaveCustomTopSite() {
 }
 
 async function init() {
-  if (!state.topSite.lastUpdateTime) {
-    await dispatch(TopSiteActions.syncBrowserTopSites)
+  if (!topSiteStore.lastUpdateTime) {
+    await topSiteStore.syncBrowserTopSites()
   }
 }
 

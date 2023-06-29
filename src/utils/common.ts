@@ -1,4 +1,4 @@
-import { Option } from "@/types"
+import type { Option } from "@/types"
 import { computed, reactive } from "vue"
 
 /**
@@ -56,7 +56,7 @@ export function containsAny(source: string, ...tragets: string[]) {
  * @param tragets
  * @returns
  */
- export function containsAll(source: string, ...tragets: string[]) {
+export function containsAll(source: string, ...tragets: string[]) {
   return tragets.every(item => source.includes(item))
 }
 
@@ -114,7 +114,7 @@ export function copy(
  * @param keys Key
  * @returns 除keys参数外的key
  */
-export function otherKeys<T, K extends keyof T>(source: T, ...keys: K[]): Array<K> {
+export function otherKeys<T extends object, K extends keyof T>(source: T, ...keys: K[]): Array<K> {
   return Object.keys(source).filter(key => !keys.includes(key as K)) as Array<K>
 }
 
@@ -151,7 +151,7 @@ export function deepComputed<T extends object, K extends keyof T>(
   get: () => T,
   set?: (newObj: T, key: string, newVal: any) => void,
   ...ignoreKeys: K[]
-): Option<T> {
+) {
   const obj = get(),
     keys = Object.keys(obj),
     tempObj: Option<T> = Object.create(null)

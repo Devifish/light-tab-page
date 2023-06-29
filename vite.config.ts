@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue"
 import { viteBuildManifest } from "./script/build-manifest"
 import ViteComponents from "unplugin-vue-components/vite"
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers"
-import vueI18n from "@intlify/vite-plugin-vue-i18n"
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite"
 
 export default defineConfig(env => ({
   envPrefix: ["APP_", "npm_package_name", "npm_package_version"],
@@ -32,7 +32,7 @@ export default defineConfig(env => ({
   },
   plugins: [
     vue(),
-    vueI18n({
+    VueI18nPlugin({
       include: resolve(__dirname, "src/locales/**"),
       compositionOnly: true
     }),

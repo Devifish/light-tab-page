@@ -35,19 +35,18 @@ import { computed, onBeforeMount, ref } from "vue"
 import { CloseOutlined } from "@ant-design/icons-vue"
 import { HistoryItem, OpenPageTarget, SearchData } from "@/types"
 import dayjs from "@/plugins/dayjs"
-import { useStore } from "@/store"
-import { SearchActions, SearchMutations } from "@/store/search"
+import { useSearchStore } from "@/store"
+import { storeToRefs } from "pinia"
 
 // Vuex
-const store = useStore()
-const searchHistory = computed(() => store.state.search.history),
-  searchEngines = computed(() => store.state.search.searchEngines)
+const store = useSearchStore()
+const { history: searchHistory, searchEngines } = storeToRefs(store)
 
 const current = ref()
 const now = Date.now()
 
 function openSearchPage(history: HistoryItem) {
-  store.dispatch(SearchActions.openSearchPage, <SearchData>{
+  store.openSearchPage({
     engine: history.engineId,
     text: history.searchText,
     target: OpenPageTarget.Blank
@@ -55,11 +54,11 @@ function openSearchPage(history: HistoryItem) {
 }
 
 function deleteHistory(index: number) {
-  store.commit(SearchMutations.deleteHistory, index)
+  store.deleteHistory(index)
 }
 
 function loadHistory() {
-  store.commit(SearchMutations.loadHistory)
+  store.loadHistory()
 }
 
 onBeforeMount(loadHistory)

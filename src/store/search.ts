@@ -1,5 +1,5 @@
+import { defineStore } from "pinia"
 import router from "@/router"
-import { createStoreModule } from "./index"
 import {
   SearchEngineData,
   SearchEngineItem,
@@ -14,30 +14,12 @@ import {
 } from "@/types"
 import { deepClone, isEmpty } from "@/utils/common"
 import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/api/suggestion"
+import useSettingStore from "./setting"
 
 export interface SearchState {
   searchEngines: SearchEngineData
   history: Array<HistoryItem>
   rules: RuleDataMap
-}
-
-export enum SearchGetters {
-  getUseSearchEngines = "GET_USE_SEARCH_ENGINES"
-}
-
-export enum SearchMutations {
-  putHistory = "PUT_HISTORY",
-  deleteHistory = "DELETE_HISTORY",
-  cleanHistory = "CLEAN_HISTORY",
-  loadHistory = "LOAD_HISTORY",
-  addSearchEngine = "ADD_SEARCH_ENGINE",
-  deleteSearchEngine = "DELETE_SEARCH_ENGINE"
-}
-
-export enum SearchActions {
-  submitSearch = "SUBMIT_SEARCH",
-  openSearchPage = "OPEN_SEARCH_PAGE",
-  getSuggestion = "GET_SUGGESTION"
 }
 
 const SEARCH_ENGINES_STORAGE = "search-engines"
@@ -59,8 +41,8 @@ export const DEFAULT_SEARCH_ENGINES: SearchEngineData = Object.fromEntries(
   ])
 )
 
-export default createStoreModule<SearchState>({
-  state() {
+export default defineStore("search", {
+  state: (): SearchState => {
     const defaultState: SearchState = {
       searchEngines: { ...DEFAULT_SEARCH_ENGINES },
       history: [],
@@ -78,9 +60,9 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @returns
      */
-    [SearchGetters.getUseSearchEngines]: ({ searchEngines }, _, rootState) => {
-      const setting = rootState.setting.search,
-        useSearchEngines = setting.useSearchEngines!,
+    getUseSearchEngines: ({ searchEngines }) => {
+      const { search } = useSettingStore()
+      const useSearchEngines = search.useSearchEngines!,
         temp: SearchEngineData = {}
 
       for (let id of useSearchEngines) {
@@ -92,106 +74,32 @@ export default createStoreModule<SearchState>({
       return temp
     }
   },
-  mutations: {
-    /**
-     * 添加搜索历史
-     * @param param0
-     * @param newHistory
-     */
-    [SearchMutations.putHistory]: (state, newHistory: HistoryItem) => {
-      let history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
-
-      // 去重并在头添加
-      history = history.filter(item => item.searchText !== newHistory.searchText)
-      history.unshift(newHistory)
-
-      state.history = history
-      saveSearchHistory(history)
-    },
-
-    /**
-     * 删除搜索历史
-     * @param param0
-     * @param index
-     */
-    [SearchMutations.deleteHistory]: (state, index: number) => {
-      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
-      history.splice(index, 1)
-
-      state.history = history
-      saveSearchHistory(history)
-    },
-
-    /**
-     * 加载搜索历史
-     * @param state
-     */
-    [SearchMutations.loadHistory]: state => {
-      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
-      state.history = history
-    },
-
-    /**
-     * 清除所有搜索历史
-     * @param state
-     */
-    [SearchMutations.cleanHistory]: state => {
-      state.history = []
-      localStorage.removeItem(SEARCH_HISTORY_STORAGE)
-    },
-
-    /**
-     * 添加自定义搜索引擎
-     * @param state
-     * @param data
-     */
-    [SearchMutations.addSearchEngine]: (state, data: SearchEngineItem) => {
-      const searchEnginesNew = {
-        ...state.searchEngines,
-        [data.id]: data
-      }
-
-      state.searchEngines = searchEnginesNew
-      saveSearchEngineData(searchEnginesNew)
-    },
-
-    /**
-     * 删除自定义搜索引擎
-     * @param state
-     * @param searchKey
-     */
-    [SearchMutations.deleteSearchEngine]: (state, searchKey: string) => {
-      const searchEnginesNew = deepClone(state.searchEngines, searchKey)
-
-      state.searchEngines = searchEnginesNew
-      saveSearchEngineData(searchEnginesNew)
-    }
-  },
   actions: {
     /**
      * 提交搜索
      * @param param0
      * @param searchText
      */
-    [SearchActions.submitSearch]: async ({ rootState, commit, dispatch }, search: string) => {
+    async submitSearch(search: string) {
       const searchTrim = search.trim()
       if (isEmpty(searchTrim)) throw new Error("搜索内容不能为空")
 
-      const setting = rootState.setting.search
+      const settingStore = useSettingStore()
+      const setting = settingStore.search
       const currentEngine = setting.currentEngine!
       const history: HistoryItem = {
         engineId: currentEngine,
         searchText: searchTrim,
         timestamp: Date.now()
       }
-      commit(SearchMutations.putHistory, history)
+      this.putHistory(history)
 
       const data: SearchData = {
         engine: currentEngine,
         text: searchTrim,
         target: setting.openPageTarget!
       }
-      dispatch(SearchActions.openSearchPage, data)
+      this.openSearchPage(data)
     },
 
     /**
@@ -199,14 +107,15 @@ export default createStoreModule<SearchState>({
      * @param param0
      * @param search
      */
-    [SearchActions.openSearchPage]: ({ state, rootState }, search: SearchData) => {
+    openSearchPage(search: SearchData) {
       const { engine, text, target } = search
-      const { overwriteSearch } = rootState.setting.search
+      const settingStore = useSettingStore()
+      const { overwriteSearch } = settingStore.search
 
       if (overwriteSearch) {
         router.push({ name: "SearchResult", params: { engine, text } })
       } else {
-        const { searchEngines } = state
+        const searchEngines = this.searchEngines
 
         // 构建搜索URL
         const url = AnalyzeUrl.defalut(searchEngines[engine].baseUrl, {
@@ -223,10 +132,10 @@ export default createStoreModule<SearchState>({
      * @param searchText
      * @returns
      */
-    [SearchActions.getSuggestion]: ({ rootState }, searchText: string) => {
-      const setting = rootState.setting.search
+    getSuggestion(searchText: string) {
+      const { search } = useSettingStore()
 
-      switch (setting.suggestion) {
+      switch (search.suggestion) {
         case SearchSuggestion.baidu:
           return getBaiduSuggestion(searchText)
         case SearchSuggestion.bing:
@@ -236,6 +145,80 @@ export default createStoreModule<SearchState>({
         default:
           return []
       }
+    },
+
+    /**
+     * 添加搜索历史
+     * @param param0
+     * @param newHistory
+     */
+    putHistory(newHistory: HistoryItem) {
+      let history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+
+      // 去重并在头添加
+      history = history.filter(item => item.searchText !== newHistory.searchText)
+      history.unshift(newHistory)
+
+      this.history = history
+      saveSearchHistory(history)
+    },
+
+    /**
+     * 删除搜索历史
+     * @param param0
+     * @param index
+     */
+    deleteHistory(index: number) {
+      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+      history.splice(index, 1)
+
+      this.history = history
+      saveSearchHistory(history)
+    },
+
+    /**
+     * 加载搜索历史
+     * @param state
+     */
+    loadHistory() {
+      const history: Array<HistoryItem> = JSON.parse(localStorage[SEARCH_HISTORY_STORAGE] ?? "[]")
+      this.history = history
+    },
+
+    /**
+     * 清除所有搜索历史
+     * @param state
+     */
+    cleanHistory() {
+      this.history = []
+      localStorage.removeItem(SEARCH_HISTORY_STORAGE)
+    },
+
+    /**
+     * 添加自定义搜索引擎
+     * @param state
+     * @param data
+     */
+    addSearchEngine(data: SearchEngineItem) {
+      const searchEnginesNew = {
+        ...this.searchEngines,
+        [data.id]: data
+      }
+
+      this.searchEngines = searchEnginesNew
+      saveSearchEngineData(searchEnginesNew)
+    },
+
+    /**
+     * 删除自定义搜索引擎
+     * @param state
+     * @param searchKey
+     */
+    deleteSearchEngine(searchKey: string) {
+      const searchEnginesNew = deepClone(this.searchEngines, searchKey)
+
+      this.searchEngines = searchEnginesNew
+      saveSearchEngineData(searchEnginesNew)
     }
   }
 })

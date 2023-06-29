@@ -12,13 +12,13 @@
 import { computed, inject } from "vue"
 import { verifyImageUrl } from "@/utils/file"
 import { BackgroundType, ThemeMode } from "@/types"
-import { useStore } from "@/store"
-import { SettingActions } from "@/store/setting"
+import { useSettingStore } from "@/store"
 import { isEmpty } from "@/utils/common"
 import { CURRENT_THEME_KEY } from "@/types"
+import { storeToRefs } from "pinia"
 
-const { state, dispatch } = useStore()
-const background = computed(() => state.setting.background)
+const settingStore = useSettingStore()
+const { background } = storeToRefs(settingStore)
 
 // 获取当前主题
 const currentTheme = inject(CURRENT_THEME_KEY)
@@ -36,12 +36,12 @@ const maskOpacity = computed(() => {
 // 如果 URL无效则重新加载
 const verifyBackground = await verifyImageUrl(background.value.url!)
 if (!verifyBackground) {
-  await dispatch(SettingActions.reloadBackgroundImage)
+  await settingStore.reloadBackgroundImage()
 }
 
 // 加载Bing每日壁纸
 if (background.value.type === BackgroundType.Bing) {
-  await dispatch(SettingActions.loadBingDailyWallpaper)
+  await settingStore.loadBingDailyWallpaper()
 }
 </script>
 

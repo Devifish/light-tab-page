@@ -66,21 +66,20 @@
 <script lang="ts" setup>
 import { TopSiteSetting, Option } from "@/types"
 import { toPixel, toPercent } from "@/utils/format"
-import { useStore } from "@/store"
-import { SettingMutations } from "@/store/setting"
+import { useSettingStore, useTopSiteStore } from "@/store"
 import { deepComputed } from "@/utils/common"
 import { computed, reactive } from "vue"
-import { TopSiteActions } from "@/store/top-site"
 import { sleep } from "@/utils/async"
 import dayjs from "@/plugins/dayjs"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
-const store = useStore()
+const settingStore = useSettingStore()
+const topSiteStore = useTopSiteStore()
 
-const lastUpdateTime = computed(() => store.state.topSite.lastUpdateTime)
+const lastUpdateTime = computed(() => topSiteStore.lastUpdateTime)
 const topSiteSetting = deepComputed(
-  () => store.state.setting.topSite,
+  () => settingStore.topSite,
   updateTopSiteSetting,
   "row",
   "col",
@@ -92,7 +91,7 @@ const state = reactive({
 })
 
 function updateTopSiteSetting(data: Option<TopSiteSetting>) {
-  store.commit(SettingMutations.updateTopSiteSetting, data)
+  settingStore.updateTopSiteSetting(data)
 }
 
 /**
@@ -102,7 +101,7 @@ async function syncBrowserTopSites() {
   state.syncing = true
   await sleep(1000) // 提升loading体验
 
-  await store.dispatch(TopSiteActions.syncBrowserTopSites)
+  await topSiteStore.syncBrowserTopSites()
   state.syncing = false
 }
 </script>

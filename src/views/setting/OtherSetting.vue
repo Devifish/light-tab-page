@@ -37,27 +37,18 @@
 
 <script lang="ts" setup>
 import SettingItem from "@/components/SettingItem.vue"
-import { useStore } from "@/store"
-import { SettingActions, SettingMutations } from "@/store/setting"
+import { useSettingStore } from "@/store"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons-vue"
-import { Option, SearchSetting } from "@/types"
-import { deepComputed, otherKeys } from "@/utils/common"
-import { Permis } from "@/plugins/extension"
 
 const { t, availableLocales } = useI18n()
-const store = useStore()
-const lang = computed({
-  get: () => store.state.setting.lang,
-  set: lang => store.commit(SettingMutations.updateLanguage, lang)
-})
+const settingStore = useSettingStore()
 
-const searchSetting = deepComputed(
-  () => store.state.setting.search,
-  updateSearchSetting,
-  ...otherKeys(store.state.setting.search, "overwriteSearch")
-)
+const lang = computed({
+  get: () => settingStore.lang,
+  set: lang => settingStore.updateLanguage(lang)
+})
 
 const languages = ref<Record<string, any>>({
   auto: computed(() => t("common.auto")),
@@ -67,7 +58,7 @@ const languages = ref<Record<string, any>>({
 async function importBackupFile(e) {
   try {
     const file: File = e.file
-    await store.dispatch(SettingActions.importSetting, file)
+    await settingStore.importSetting(file)
   } catch (e) {
     console.log(e)
   }
@@ -77,11 +68,7 @@ async function importBackupFile(e) {
 }
 
 function exportBackupFile() {
-  store.dispatch(SettingActions.exportSetting)
-}
-
-function updateSearchSetting(data: Option<SearchSetting>) {
-  store.commit(SettingMutations.updateSearchSetting, data)
+  settingStore.exportSetting()
 }
 </script>
 

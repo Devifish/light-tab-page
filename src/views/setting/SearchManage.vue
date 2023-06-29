@@ -88,17 +88,16 @@
 <script lang="ts" setup>
 import { ref, reactive, computed } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
-import { DEFAULT_SEARCH_ENGINES, SearchMutations } from "@/store/search"
+import { DEFAULT_SEARCH_ENGINES } from "@/store/search"
 import { Option, SearchEngineItem, SearchSetting } from "@/types"
 import { Form } from "ant-design-vue"
-import { useStore } from "@/store"
-import { SettingMutations } from "@/store/setting"
+import { useSettingStore, useSearchStore } from "@/store"
 
-// Vuex
-const { state, commit } = useStore()
-const currentEngine = computed(() => state.setting.search.currentEngine!),
-  useSearchEngines = computed(() => state.setting.search.useSearchEngines!),
-  searchEngines = computed(() => Object.values(state.search.searchEngines))
+const settingStore = useSettingStore()
+const searchStore = useSearchStore()
+const currentEngine = computed(() => settingStore.search.currentEngine!),
+  useSearchEngines = computed(() => settingStore.search.useSearchEngines!),
+  searchEngines = computed(() => Object.values(searchStore.searchEngines))
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
 const currentDragEngineId = ref<string>()
@@ -156,7 +155,7 @@ function removeUseSearchEngines(engineId: string) {
 }
 
 function updateSearchSetting(data: Option<SearchSetting>) {
-  commit(SettingMutations.updateSearchSetting, data)
+  settingStore.updateSearchSetting(data)
 }
 
 async function addSearchEngine() {
@@ -171,7 +170,7 @@ async function addSearchEngine() {
       baseUrl: url
     }
 
-    commit(SearchMutations.addSearchEngine, data)
+    searchStore.addSearchEngine(data)
     addUseSearchEngines(name)
 
     // 重置并关闭表单
@@ -181,7 +180,7 @@ async function addSearchEngine() {
 }
 
 function deleteSearchEngine(engineId: string) {
-  commit(SearchMutations.deleteSearchEngine, engineId)
+  searchStore.deleteSearchEngine(engineId)
 }
 </script>
 

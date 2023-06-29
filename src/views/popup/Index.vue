@@ -31,12 +31,10 @@
 
 <script lang="ts" setup>
 import { computed, DefineComponent, FunctionalComponent } from "vue"
-import { useStore } from "@/store"
-import { SearchMutations } from "@/store/search"
+import { useSearchStore, useSettingStore } from "@/store"
 import { HistoryOutlined, RestOutlined, AppstoreOutlined } from "@ant-design/icons-vue"
 import HomeTopSite from "./HomeTopSite.vue"
 import SearchHistory from "./SearchHistory.vue"
-import { SettingMutations } from "@/store/setting"
 import { Option, PopupSettting } from "@/types"
 import { useI18n } from "vue-i18n"
 
@@ -55,14 +53,14 @@ interface PopupMenuItem {
 }
 
 const { t } = useI18n()
-const store = useStore()
+const store = useSettingStore()
 
 const popupMenu = computed<PopupMenuItem[]>(() =>
   [
     {
       title: t("popup.topsite"),
       icon: AppstoreOutlined,
-      skip: !store.state.setting.topSite.enable,
+      skip: !store.topSite.enable,
       component: HomeTopSite
     },
     {
@@ -81,7 +79,7 @@ const popupMenu = computed<PopupMenuItem[]>(() =>
 )
 
 const current = computed({
-  get: () => store.state.setting.popup.current,
+  get: () => store.popup.current,
   set: current => updatePopupSetting({ current })
 })
 
@@ -89,11 +87,12 @@ const current = computed({
 const currentMenu = computed(() => popupMenu.value[current.value])
 
 function updatePopupSetting(popup: Option<PopupSettting>) {
-  store.commit(SettingMutations.updatePopupSetting, popup)
+  store.updatePopupSetting(popup)
 }
 
 function cleanHistory() {
-  store.commit(SearchMutations.cleanHistory)
+  const searchStore = useSearchStore()
+  searchStore.cleanHistory()
 }
 </script>
 

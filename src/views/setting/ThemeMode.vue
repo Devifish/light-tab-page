@@ -16,15 +16,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
 import { ThemeMode } from "@/types"
 import { CheckCircleFilled } from "@ant-design/icons-vue"
 import AutoMode from "@/assets/auto-mode.svg"
 import LightMode from "@/assets/light-mode.svg"
 import DarkMode from "@/assets/dark-mode.svg"
-import { useStore } from "@/store"
-import { SettingMutations } from "@/store/setting"
+import { useSettingStore } from "@/store"
 import { useI18n } from "vue-i18n"
+import { storeToRefs } from "pinia"
 
 const themeModes = [
   {
@@ -45,11 +44,11 @@ const themeModes = [
 ]
 
 const { t } = useI18n()
-const store = useStore()
-const themeMode = computed(() => store.state.setting.themeMode)
+const settingStore = useSettingStore()
+const { themeMode } = storeToRefs(settingStore)
 
 function onThemeChange(themeMode: ThemeMode) {
-  store.commit(SettingMutations.updateThemeMode, themeMode)
+  settingStore.updateThemeMode(themeMode)
 }
 </script>
 

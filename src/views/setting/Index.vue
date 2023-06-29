@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { computed } from "vue"
-import { useStore } from "@/store"
+import { useSettingStore } from "@/store"
 import ThemeMode from "./ThemeMode.vue"
 import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
@@ -45,7 +45,7 @@ interface SettingItem {
 }
 
 const { t } = useI18n()
-const store = useStore()
+const store = useSettingStore()
 const settingList = computed<Array<SettingItem>>(() =>
   [
     {
@@ -77,7 +77,7 @@ const settingList = computed<Array<SettingItem>>(() =>
       title: t("topsite.setting"),
       icon: AppstoreOutlined,
       component: TopSiteSetting,
-      skip: !store.state.setting.topSite.enable
+      skip: !store.topSite.enable
     },
     {
       key: "OtherSetting",

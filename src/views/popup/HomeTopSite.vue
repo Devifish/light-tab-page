@@ -23,13 +23,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from "@/store"
+import { useTopSiteStore } from "@/store"
 import { OpenPageTarget } from "@/types"
+import { storeToRefs } from "pinia"
 import { computed } from "vue"
 
 // Vuex
-const store = useStore()
-const topSites = computed(() => store.state.topSite.topSites)
+const store = useTopSiteStore()
+const { topSites } = storeToRefs(store)
 
 const row = computed(() => Math.ceil(topSites.value.length / 3))
 

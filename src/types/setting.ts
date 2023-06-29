@@ -11,9 +11,9 @@ export enum BackgroundType {
 }
 
 export interface BackgroundSetting {
-  id?: string
+  id: string | null
   type?: BackgroundType
-  url?: string
+  url: string | null
   blur?: number
   maskColor?: String
   maskOpacity?: number

@@ -1,36 +1,15 @@
-import type { App, InjectionKey } from "vue"
-import { createStore, useStore as baseUseStore, Module, Store } from "vuex"
-import search, { SearchState } from "./search"
-import setting, { SettingState } from "./setting"
-import topSite, { TopSiteState } from "./top-site"
+import type { App, Plugin } from "vue"
+import { createPinia } from "pinia"
+import useSearchStore from "./search"
+import useSettingStore from "./setting"
+import useTopSiteStore from "./top-site"
 
-export type RootState = {
-  search: SearchState
-  setting: SettingState
-  topSite: TopSiteState
-}
-
-export const STORE_KEY: InjectionKey<Store<RootState>> = Symbol("store_key")
-
-export function createStoreModule<S>(module: Module<S, RootState>) {
-  return module
-}
-
-export function useStore() {
-  return baseUseStore(STORE_KEY)
-}
-
-const store = createStore<RootState>({
-  strict: import.meta.env.DEV,
-  modules: {
-    search,
-    setting,
-    topSite
-  }
-})
-
-export default {
+const pinia = createPinia()
+const definePlugin: Plugin = {
   install(app: App) {
-    app.use(store, STORE_KEY)
+    app.use(pinia)
   }
 }
+
+export default definePlugin
+export { useSettingStore, useSearchStore, useTopSiteStore }

@@ -1,9 +1,9 @@
-import { createStoreModule } from "./index"
+import { defineStore } from "pinia"
+import { useLocalStorage } from "@vueuse/core"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/file"
 import { getDailyWallpaperUrl } from "@/api/bing"
-import { debounce } from "@/utils/async"
 import { isObjectURL } from "@/utils/browser"
 import { saveAs } from "file-saver"
 import {
@@ -31,28 +31,10 @@ export interface SettingState {
   popup: PopupSettting
 }
 
-export enum SettingMutations {
-  updateLanguage = "UPDATE_LANGUAGE",
-  updateThemeMode = "UPDATE_THEME_MODE",
-  updateBackgroundSetting = "UPDATE_BACKGROUND_SETTING",
-  updateSearchSetting = "UPDATE_SEARCH_SETTING",
-  updateTopSiteSetting = "UPDATE_TOP_SITE_SETTING",
-  updateLayoutSetting = "UPDATE_LAYOUT_SETTING",
-  updatePopupSetting = "UPDATE_POPUP_SETTING"
-}
-
-export enum SettingActions {
-  uploadBackgroundImage = "UPLOAD_BACKGROUND_IMAGE",
-  reloadBackgroundImage = "RELOAD_BACKGROUND_IMAGE",
-  loadBingDailyWallpaper = "LOAD_BING_DAILY_WALLPAPER",
-  exportSetting = "EXPORT_SETTING",
-  importSetting = "IMPORT_SETTING"
-}
-
 const SETTING_STORAGE = "setting-data"
 const BACKUP_FILE_MARK = "_MARK_"
 
-export default createStoreModule<SettingState>({
+export default defineStore("setting", {
   state() {
     const defaultState: SettingState = {
       lang: LanguageType.Auto,
@@ -95,95 +77,20 @@ export default createStoreModule<SettingState>({
       }
     }
 
-    const settingData = JSON.parse(localStorage[SETTING_STORAGE] ?? "{}")
-    copy(settingData, defaultState, true, true, 1)
-
-    return defaultState
+    return useLocalStorage<SettingState>(SETTING_STORAGE, defaultState)
   },
-  mutations: {
-    /**
-     * 更新语言
-     * @param state
-     * @param lang
-     */
-    [SettingMutations.updateLanguage]: (state, lang: LanguageType) => {
-      state.lang = lang
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新主题模式
-     * @param state
-     * @param mode
-     */
-    [SettingMutations.updateThemeMode]: (state, mode: ThemeMode) => {
-      state.themeMode = mode
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新背景设置
-     * @param state
-     * @param background
-     */
-    [SettingMutations.updateBackgroundSetting]: (state, background: Option<BackgroundSetting>) => {
-      copy(background, state.background)
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新搜索设置
-     * @param state
-     * @param setting
-     */
-    [SettingMutations.updateSearchSetting]: (state, search: SearchSetting) => {
-      copy(search, state.search)
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新导航栏设置
-     * @param state
-     * @param topSite
-     */
-    [SettingMutations.updateTopSiteSetting]: (state, topSite: Option<TopSiteSetting>) => {
-      copy(topSite, state.topSite)
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新布局设置
-     * @param state
-     * @param topSite
-     */
-    [SettingMutations.updateLayoutSetting]: (state, layout: Option<LayoutSetting>) => {
-      copy(layout, state.layout)
-      saveSettingState(state)
-    },
-
-    /**
-     * 更新Popup菜单设置
-     * @param state
-     * @param popup
-     */
-    [SettingMutations.updatePopupSetting]: (state, popup: Option<PopupSettting>) => {
-      copy(popup, state.popup)
-      saveSettingState(state)
-    }
-  },
-
   actions: {
     /**
      * 上传壁纸
      * @param param0
      * @param imageFile
      */
-    [SettingActions.uploadBackgroundImage]: async ({ state, commit }, imageFile: File) => {
+    async uploadBackgroundImage(imageFile: File) {
       if (!isImageFile(imageFile)) throw new Error("这不是一个图片文件")
 
       const id = uuid(),
         url = URL.createObjectURL(imageFile),
-        url_old = state.background.url
+        url_old = this.background.url
 
       // 清除上次壁纸，ObjectURL可能导致内存溢出
       await wallpaperStore.clear()
@@ -193,10 +100,7 @@ export default createStoreModule<SettingState>({
 
       // 保存图片到IndexedDB
       await wallpaperStore.setItem<Blob>(id, imageFile)
-      commit(SettingMutations.updateBackgroundSetting, {
-        id,
-        url
-      })
+      copy({ id, url }, this.background)
     },
 
     /**
@@ -204,16 +108,17 @@ export default createStoreModule<SettingState>({
      * 壁纸使用BlobUrl实现，数据生命周期为session
      * @param param0
      */
-    [SettingActions.reloadBackgroundImage]: async ({ state, commit }) => {
-      const id = state.background?.id!
+    async reloadBackgroundImage() {
+      const id = this.background?.id!
       const file = await wallpaperStore.getItem<Blob>(id)
 
       // 校验图片数据是否可用，否则删除该数据
       if (file && isImageFile(file)) {
         const url = URL.createObjectURL(file)
-        commit(SettingMutations.updateBackgroundSetting, { url })
+        this.background.url = url
       } else {
-        commit(SettingMutations.updateBackgroundSetting, { id: null, url: null })
+        this.background.id = null
+        this.background.url = null
         await wallpaperStore.removeItem(id)
       }
     },
@@ -223,18 +128,18 @@ export default createStoreModule<SettingState>({
      * @param param0
      * @param imageFile
      */
-    [SettingActions.loadBingDailyWallpaper]: async ({ commit }) => {
+    async loadBingDailyWallpaper() {
       const url = await getDailyWallpaperUrl()
 
       if (isEmpty(url)) return
-      commit(SettingMutations.updateBackgroundSetting, { url })
+      this.background.url = url
     },
 
     /**
      * 导出设置数据
      * 使用JSON格式保存
      */
-    [SettingActions.exportSetting]: () => {
+    exportSetting() {
       const { npm_package_name, npm_package_version } = import.meta.env
       const dataJson = JSON.stringify({
         [BACKUP_FILE_MARK]: npm_package_name,
@@ -250,7 +155,7 @@ export default createStoreModule<SettingState>({
      * 导入设置数据
      * 使用JSON格式保存
      */
-    [SettingActions.importSetting]: async (_, file: File) => {
+    async importSetting(file: File) {
       if (!file.type.includes("json")) throw new Error("导入文件不匹配")
 
       const dataJson = await file.text()
@@ -262,12 +167,60 @@ export default createStoreModule<SettingState>({
         if (item === BACKUP_FILE_MARK) continue
         localStorage.setItem(item, data[item])
       }
+    },
+
+    /**
+     * 更新语言
+     * @param state
+     * @param lang
+     */
+    updateLanguage(lang: LanguageType) {
+      this.lang = lang
+    },
+
+    /**
+     * 更新主题模式
+     * @param state
+     * @param mode
+     */
+    updateThemeMode(mode: ThemeMode) {
+      this.themeMode = mode
+    },
+
+    /**
+     * 更新搜索设置
+     * @param state
+     * @param setting
+     */
+    updateSearchSetting(search: Option<SearchSetting>) {
+      copy(search, this.search)
+    },
+
+    /**
+     * 更新导航栏设置
+     * @param state
+     * @param topSite
+     */
+    updateTopSiteSetting(topSite: Option<TopSiteSetting>) {
+      copy(topSite, this.topSite)
+    },
+
+    /**
+     * 更新布局设置
+     * @param state
+     * @param topSite
+     */
+    updateLayoutSetting(layout: Option<LayoutSetting>) {
+      copy(layout, this.layout)
+    },
+
+    /**
+     * 更新Popup菜单设置
+     * @param state
+     * @param popup
+     */
+    updatePopupSetting(popup: Option<PopupSettting>) {
+      copy(popup, this.popup)
     }
   }
 })
-
-// 保存设置数据节流防抖
-const saveSettingState = debounce((data: SettingState) => {
-  const settingJson = JSON.stringify(data)
-  localStorage.setItem(SETTING_STORAGE, settingJson)
-}, 250)

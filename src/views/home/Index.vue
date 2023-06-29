@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { useStore } from "@/store"
+import { useSettingStore } from "@/store"
 import { AlignType, BackgroundType } from "@/types"
 import Search from "./Search.vue"
 import TopSite from "./TopSite.vue"
@@ -44,14 +44,14 @@ import Setting from "@/views/setting/Index.vue"
 import { useRoute } from "vue-router"
 
 const route = useRoute()
-const { state: stateX } = useStore()
+const settingStore = useSettingStore()
 const state = reactive({
   fixedSearch: computed(() => route.path !== "/"),
   searchText: computed(() => route.params.text as string),
   settingVisible: false,
-  align: computed(() => stateX.setting.layout.align),
-  enableTopSite: computed(() => stateX.setting.topSite.enable),
-  enableWallpaper: computed(() => stateX.setting.background.type !== BackgroundType.None)
+  align: computed(() => settingStore.layout.align),
+  enableTopSite: computed(() => settingStore.topSite.enable),
+  enableWallpaper: computed(() => settingStore.background.type !== BackgroundType.None)
 })
 </script>
 

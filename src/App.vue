@@ -5,10 +5,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useStore } from "./store"
+import { useSettingStore } from "./store"
+import { storeToRefs } from "pinia"
 
-const { state } = useStore()
-const themeMode = computed(() => state.setting.themeMode)
-const lang = computed(() => state.setting.lang)
+const settingStore = useSettingStore()
+const { themeMode, lang } = storeToRefs(settingStore)
 </script>

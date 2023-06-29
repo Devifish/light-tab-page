@@ -67,44 +67,33 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { OpenPageTarget, SearchEngineData, SearchSetting, SearchSuggestion, Option } from "@/types"
+import { OpenPageTarget, SearchEngineData, SearchSuggestion } from "@/types"
 import SearchManage from "./SearchManage.vue"
 import { Permis, isExtension } from "@/plugins/extension"
 import { toPixel } from "@/utils/format"
-import { useStore } from "@/store"
-import { SearchGetters } from "@/store/search"
-import { deepComputed } from "@/utils/common"
-import { SettingMutations } from "@/store/setting"
+import { useSettingStore, useSearchStore } from "@/store"
 import { useI18n } from "vue-i18n"
 import IconTooltip from "@/components/IconTooltip.vue"
+import { storeToRefs } from "pinia"
 
 const { t } = useI18n()
-const store = useStore()
-
-const searchEngines = computed<SearchEngineData>(
-  () => store.getters[SearchGetters.getUseSearchEngines]
-)
-const searchSetting = deepComputed(
-  () => store.state.setting.search,
-  updateSearchSetting,
-  "openPageTarget"
-)
+const settingStore = useSettingStore()
+const searchStore = useSearchStore()
+const { search: searchSetting } = storeToRefs(settingStore)
+const searchEngines = computed<SearchEngineData>(() => searchStore.getUseSearchEngines)
 
 // Ref
 const manageVisible = ref(false)
 
 // 是否在新标签页中打开
 const isOpenPageByBlank = computed({
-  get: () => store.state.setting.search.openPageTarget === OpenPageTarget.Blank,
-  set: isOpenPageByBlank =>
-    updateSearchSetting({
+  get: () => settingStore.search.openPageTarget === OpenPageTarget.Blank,
+  set: isOpenPageByBlank => {
+    settingStore.updateSearchSetting({
       openPageTarget: isOpenPageByBlank ? OpenPageTarget.Blank : OpenPageTarget.Self
     })
+  }
 })
-
-function updateSearchSetting(data: Option<SearchSetting>) {
-  store.commit(SettingMutations.updateSearchSetting, data)
-}
 </script>
 
 <style lang="less">
