@@ -4,12 +4,15 @@
 `2023/6/30`
 
 1. 重构底层框架
-2. 升级 ManifestV3
-3. 升级 Typescript 5
-4. 升级 vite 至 4.3.9
-5. 升级 ant-design-vue 至 4.0.0-rc.5
-6. 迁移 Vuex 至 Pinia
-7. 修复搜索特殊字符问题
+2. 添加切换主题主色调
+3. 升级 ManifestV3
+4. 升级 Typescript 5
+5. 升级 vite 至 4.3.9
+6. 升级 ant-design-vue 至 4.0.0-rc.5
+7. 迁移 Vuex 至 Pinia
+8. 修复搜索特殊字符问题
+9. 修复暗色主题下文字颜色
+10. 移除搜索增强
 
 ## v1.4.3
 `2022/4/5`
