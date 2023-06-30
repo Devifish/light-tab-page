@@ -1,5 +1,5 @@
 <template>
-  <div class="search-warp" ref="searchWarp">
+  <div class="search-warp">
     <div v-if="searchSetting.showEngineIcon" class="search-logo">
       <img :src="currentUseEngine.icon" class="logo" alt="logo" draggable="false" />
     </div>
@@ -9,7 +9,6 @@
         :open="showComplete"
         :options="searchSuggestion"
         :defaultActiveFirstOption="false"
-        :get-popup-container="() => searchWarp!"
         size="large"
         autofocus
         backfill
@@ -41,7 +40,6 @@
 
 <script lang="ts" setup>
 import { useSettingStore, useSearchStore } from "@/store"
-import { SearchEngineData } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
 import { storeToRefs } from "pinia"
@@ -65,7 +63,6 @@ const { currentUseEngine, useSearchEngines } = storeToRefs(searchStore)
 const props = defineProps<SearchProps>()
 
 const showComplete = ref(false),
-  searchWarp = ref<HTMLElement>(),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<SuggestionItem[]>()
 
