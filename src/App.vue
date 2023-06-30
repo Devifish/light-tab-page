@@ -1,5 +1,5 @@
 <template>
-  <config-provider :theme="themeMode" :lang="lang">
+  <config-provider :theme="currentTheme" :lang="currentLang">
     <router-view />
   </config-provider>
 </template>
@@ -9,5 +9,5 @@ import { useSettingStore } from "./store"
 import { storeToRefs } from "pinia"
 
 const settingStore = useSettingStore()
-const { themeMode, lang } = storeToRefs(settingStore)
+const { currentTheme, currentLang } = storeToRefs(settingStore)
 </script>

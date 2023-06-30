@@ -9,26 +9,22 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject } from "vue"
+import { computed } from "vue"
 import { verifyImageUrl } from "@/utils/file"
 import { BackgroundType, ThemeMode } from "@/types"
 import { useSettingStore } from "@/store"
 import { isEmpty } from "@/utils/common"
-import { CURRENT_THEME_KEY } from "@/types"
 import { storeToRefs } from "pinia"
 
 const settingStore = useSettingStore()
-const { background } = storeToRefs(settingStore)
-
-// 获取当前主题
-const currentTheme = inject(CURRENT_THEME_KEY)
+const { background, currentTheme } = storeToRefs(settingStore)
 
 // 遮罩不透明度
 const maskOpacity = computed(() => {
   const defaultOpacity = 0.75
   const { maskOpacity, autoOpacity } = background.value
 
-  return autoOpacity && currentTheme!.value === ThemeMode.Dart
+  return autoOpacity && currentTheme.value === ThemeMode.Dart
     ? (defaultOpacity + (1 - defaultOpacity) * maskOpacity!).toFixed(2)
     : maskOpacity
 })

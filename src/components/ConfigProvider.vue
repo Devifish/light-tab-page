@@ -5,49 +5,32 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, watchEffect, reactive } from "vue"
-import { LanguageType, ThemeMode, CURRENT_THEME_KEY } from "@/types"
-import { usePreferredDark } from "@/utils/use"
+import { computed, watchEffect, reactive } from "vue"
+import { LanguageType, ThemeMode } from "@/types"
 import dayjs from "@/plugins/dayjs"
 import { useI18n } from "vue-i18n"
 import { theme } from "ant-design-vue"
 
 interface ThemeProviderProps {
   theme: ThemeMode
-  lang: LanguageType
+  lang: string
 }
 
-const prop = withDefaults(defineProps<ThemeProviderProps>(), {
+const props = withDefaults(defineProps<ThemeProviderProps>(), {
   theme: ThemeMode.Auto,
   lang: LanguageType.Auto
 })
 
 const { locale } = useI18n()
-const isDark = usePreferredDark()
-
-const currentTheme = computed(() => {
-  const { theme } = prop
-  if (theme === ThemeMode.Auto) {
-    return isDark.value ? ThemeMode.Dart : ThemeMode.Light
-  } else {
-    return theme
-  }
-})
-
 const themeConfig = reactive({
   algorithm: computed(() =>
-    currentTheme.value == ThemeMode.Dart ? theme.darkAlgorithm : theme.defaultAlgorithm
+    props.theme == ThemeMode.Dart ? theme.darkAlgorithm : theme.defaultAlgorithm
   )
-})
-
-const currentLang = computed(() => {
-  const { lang } = prop
-  return lang === LanguageType.Auto ? navigator.language : lang
 })
 
 // 监听并设置主题
 watchEffect(() => {
-  const isDark = currentTheme.value === ThemeMode.Dart
+  const isDark = props.theme === ThemeMode.Dart
   const html = document.body.parentElement!
 
   html.setAttribute("data-theme", isDark ? "dark" : "light")
@@ -55,11 +38,7 @@ watchEffect(() => {
 
 // 监听并设置语言
 watchEffect(() => {
-  const lang = currentLang.value
-
-  locale.value = lang
-  dayjs.locale(lang.toLowerCase())
+  locale.value = props.lang
+  dayjs.locale(props.lang.toLowerCase())
 })
-
-provide(CURRENT_THEME_KEY, currentTheme)
 </script>

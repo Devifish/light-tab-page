@@ -2,7 +2,6 @@ export * from "./search"
 export * from "./setting"
 export * from "./rule"
 export * from "./analyze"
-export * from "./injection"
 
 export enum LanguageType {
   Auto = "auto",

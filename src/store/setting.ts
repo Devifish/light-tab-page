@@ -2,10 +2,10 @@ import { defineStore } from "pinia"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
 import { isImageFile } from "@/utils/file"
+import { usePreferredDark } from "@/utils/use"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { isObjectURL } from "@/utils/browser"
 import { saveAs } from "file-saver"
-import useSearchStore from "./search"
 import {
   BackgroundSetting,
   BackgroundType,
@@ -72,6 +72,30 @@ export default defineStore("setting", {
       current: 0
     }
   }),
+  getters: {
+    /**
+     * 获取当前语言
+     * 自动时使用浏览器语言
+     *
+     * @returns currentLang
+     */
+    currentLang: ({ lang }) => (lang === LanguageType.Auto ? navigator.language : lang),
+
+    /**
+     * 获取当前主题
+     * 自动时使用系统主题颜色
+     *
+     * @returns ThemeMode.Dart | ThemeMode.Light
+     */
+    currentTheme({ themeMode }): ThemeMode.Dart | ThemeMode.Light {
+      if (themeMode === ThemeMode.Auto) {
+        const isDark = usePreferredDark()
+        return isDark.value ? ThemeMode.Dart : ThemeMode.Light
+      } else {
+        return themeMode
+      }
+    }
+  },
   actions: {
     /**
      * 上传壁纸
