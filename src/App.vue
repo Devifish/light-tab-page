@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect, reactive } from "vue"
+import { computed, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { theme } from "ant-design-vue"
 import { ThemeMode } from "@/types"
@@ -14,12 +14,17 @@ import { useSettingStore } from "./store"
 
 const { locale } = useI18n()
 const setting = useSettingStore()
-const themeConfig = reactive({
-  algorithm: computed(() => {
-    return setting.currentTheme == ThemeMode.Dart ? theme.darkAlgorithm : theme.defaultAlgorithm
-  }),
-  token: {
-    colorPrimary: computed(() => setting.theme.primaryColor)
+const themeConfig = computed(() => {
+  let algorithm = theme.defaultAlgorithm
+  if (setting.currentTheme == ThemeMode.Dart) {
+    algorithm = theme.darkAlgorithm
+  }
+
+  return {
+    algorithm,
+    token: {
+      colorPrimary: setting.theme.primaryColor
+    }
   }
 })
 
