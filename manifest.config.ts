@@ -30,5 +30,12 @@ export default defineManifestV3({
     "32": "icons/logo32.png",
     "64": "icons/logo64.png",
     "128": "icons/logo128.png"
+  },
+
+  /** 兼容Firefox */
+  browser_specific_settings: {
+    gecko: {
+      id: "{c29037b9-7c63-4064-be30-cf42d599ca39}"
+    }
   }
 })
