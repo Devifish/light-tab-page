@@ -9,7 +9,6 @@
 - [Edge 应用商店](https://microsoftedge.microsoft.com/addons/detail/ilebnicnppejmbmkaokpdljcanljdnic)
 - [Firefox 应用商店](https://addons.mozilla.org/zh-CN/firefox/addon/light-tab-page/)
 - [离线安装包](https://github.com/Devifish/light-tab-page/releases)
-- [体验地址](https://lighttab.devifish.cn/) (仅缺失部分插件独有功能)
 
 ## 特性
 
@@ -18,7 +17,7 @@
 - 🔍 自定义搜索引擎
 - 🪄 高度可定制化设置
 - 🪟 Bing 每日壁纸
-- 🎨 切换主题（强调色）（Todo）
+- 🎨 切换主题（主色调）
 - ⏱️ 最近搜索/浏览导航
 - ⚡ 加载迅速 (< 50ms)
 
@@ -26,14 +25,14 @@
 
 | 依赖           | 版本       |
 | -------------- | ---------- |
-| Typescript     | 4.4.4      |
-| Vue.js         | 3.2.31     |
-| Vuex           | 4.0.2      |
-| Vue Router     | 4.0.14     |
-| Vite           | 2.9.1      |
-| Ant Design Vue | 3.1.0-rc.6 |
+| Typescript     | 5.0.4      |
+| Vue.js         | 3.3.4     |
+| Pinia           | 2.1.4      |
+| Vue Router     | 4.2.2     |
+| Vite           | 4.3.9      |
+| Ant Design Vue | 4.0.0-rc.5 |
 
-- 推荐使用 `PNPM` 及 `Node.js 12` 及以上版本运行/构建当前项目
+- 推荐使用 `PNPM` 及 `Node.js 18` 及以上版本运行/构建当前项目
 
 ## 开发
 
