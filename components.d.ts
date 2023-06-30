@@ -31,7 +31,6 @@ declare module 'vue' {
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     ColorRadio: typeof import('./src/components/ColorRadio.vue')['default']
-    ConfigProvider: typeof import('./src/components/ConfigProvider.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']
     IconTooltip: typeof import('./src/components/IconTooltip.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

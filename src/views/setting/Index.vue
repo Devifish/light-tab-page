@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { useSettingStore } from "@/store"
-import ThemeMode from "./ThemeMode.vue"
+import ThemeSetting from "./ThemeSetting.vue"
 import SearchSetting from "./SearchSetting.vue"
 import BackgroundSetting from "./BackgroundSetting.vue"
 import TopSiteSetting from "./TopSiteSetting.vue"
@@ -49,10 +49,10 @@ const store = useSettingStore()
 const settingList = computed<Array<SettingItem>>(() =>
   [
     {
-      key: "ThemeMode",
+      key: "ThemeSetting",
       title: t("theme.setting"),
       icon: BgColorsOutlined,
-      component: ThemeMode
+      component: ThemeSetting
     },
     {
       key: "SearchSetting",

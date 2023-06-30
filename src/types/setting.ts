@@ -48,3 +48,8 @@ export interface LayoutSetting {
 export interface PopupSettting {
   current: number
 }
+
+export interface ThemeSetting {
+  mode: ThemeMode
+  primaryColor: string
+}

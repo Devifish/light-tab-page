@@ -17,12 +17,13 @@ import {
   SearchSetting,
   OpenPageTarget,
   SearchSuggestion,
-  LanguageType
+  LanguageType,
+  ThemeSetting
 } from "@/types"
 
 export interface SettingState {
   lang: LanguageType
-  themeMode: ThemeMode
+  theme: ThemeSetting
   search: SearchSetting
   background: BackgroundSetting
   topSite: TopSiteSetting
@@ -35,7 +36,10 @@ const BACKUP_FILE_MARK = "_MARK_"
 export default defineStore("setting", {
   state: (): SettingState => ({
     lang: LanguageType.Auto,
-    themeMode: ThemeMode.Auto,
+    theme: {
+      mode: ThemeMode.Auto,
+      primaryColor: "#1890ff"
+    },
     background: {
       id: "",
       type: BackgroundType.None,
@@ -87,12 +91,12 @@ export default defineStore("setting", {
      *
      * @returns ThemeMode.Dart | ThemeMode.Light
      */
-    currentTheme({ themeMode }): ThemeMode.Dart | ThemeMode.Light {
-      if (themeMode === ThemeMode.Auto) {
+    currentTheme({ theme }): ThemeMode.Dart | ThemeMode.Light {
+      if (theme.mode === ThemeMode.Auto) {
         const isDark = usePreferredDark()
         return isDark.value ? ThemeMode.Dart : ThemeMode.Light
       } else {
-        return themeMode
+        return theme.mode
       }
     }
   },
