@@ -9,7 +9,7 @@
       </template>
 
       <a-select v-model:value="setting.currentEngine" style="width: 90px">
-        <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
+        <a-select-option v-for="(value, key) in useSearchEngines" :value="key" :key="key">
           {{ value.name }}
         </a-select-option>
       </a-select>
@@ -63,7 +63,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { OpenPageTarget, SearchEngineData, SearchSuggestion } from "@/types"
+import { OpenPageTarget, SearchSuggestion } from "@/types"
 import SearchManage from "./SearchManage.vue"
 import { Permis, isExtension } from "@/plugins/extension"
 import { toPixel } from "@/utils/format"
@@ -76,7 +76,7 @@ const { t } = useI18n()
 const settingStore = useSettingStore()
 const searchStore = useSearchStore()
 const { search: setting } = storeToRefs(settingStore)
-const searchEngines = computed<SearchEngineData>(() => searchStore.getUseSearchEngines)
+const { useSearchEngines } = storeToRefs(searchStore)
 
 // Ref
 const manageVisible = ref(false)

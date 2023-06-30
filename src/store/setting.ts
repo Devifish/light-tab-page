@@ -5,12 +5,12 @@ import { isImageFile } from "@/utils/file"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { isObjectURL } from "@/utils/browser"
 import { saveAs } from "file-saver"
+import useSearchStore from "./search"
 import {
   BackgroundSetting,
   BackgroundType,
   ThemeMode,
   TopSiteSetting,
-  Option,
   LayoutSetting,
   AlignType,
   PopupSettting,
@@ -160,15 +160,6 @@ export default defineStore("setting", {
         if (item === BACKUP_FILE_MARK) continue
         localStorage.setItem(item, data[item])
       }
-    },
-
-    /**
-     * 更新搜索设置
-     * @param state
-     * @param setting
-     */
-    updateSearchSetting(search: Option<SearchSetting>) {
-      copy(search, this.search)
     }
   }
 })

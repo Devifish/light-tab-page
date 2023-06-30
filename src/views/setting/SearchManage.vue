@@ -7,8 +7,10 @@
             {{ item.name }}
             <template v-if="defaultEngineKeys.includes(item.id)">(内置)</template>
           </span>
-          <a-tag v-if="currentEngine === item.id" color="processing"> 使用中 </a-tag>
-          <a-tag v-else-if="useSearchEngines.includes(item.id)" color="success"> 已添加 </a-tag>
+          <a-tag v-if="search.currentEngine === item.id" color="processing"> 使用中 </a-tag>
+          <a-tag v-else-if="search.useSearchEngines.includes(item.id)" color="success">
+            已添加
+          </a-tag>
         </template>
         <template #avatar>
           <img :src="item.icon" />
@@ -17,7 +19,7 @@
 
       <template #actions>
         <a-button
-          v-if="!useSearchEngines.includes(item.id)"
+          v-if="!search.useSearchEngines.includes(item.id)"
           type="link"
           size="small"
           @click="addUseSearchEngines(item.id)"
@@ -28,7 +30,7 @@
           v-else
           type="link"
           size="small"
-          :disabled="currentEngine === item.id"
+          :disabled="search.currentEngine === item.id"
           @click="removeUseSearchEngines(item.id)"
         >
           移出
@@ -37,8 +39,8 @@
           v-if="!defaultEngineKeys.includes(item.id)"
           type="link"
           size="small"
-          :disabled="currentEngine === item.id"
-          @click="deleteSearchEngine(item.id)"
+          :disabled="search.currentEngine === item.id"
+          @click="searchStore.deleteSearchEngine(item.id)"
         >
           删除
         </a-button>
@@ -89,15 +91,15 @@
 import { ref, reactive, computed } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { DEFAULT_SEARCH_ENGINES } from "@/store/search"
-import { Option, SearchEngineItem, SearchSetting } from "@/types"
+import { SearchEngineItem } from "@/types"
 import { Form } from "ant-design-vue"
 import { useSettingStore, useSearchStore } from "@/store"
+import { storeToRefs } from "pinia"
 
 const settingStore = useSettingStore()
 const searchStore = useSearchStore()
-const currentEngine = computed(() => settingStore.search.currentEngine!),
-  useSearchEngines = computed(() => settingStore.search.useSearchEngines!),
-  searchEngines = computed(() => Object.values(searchStore.searchEngines))
+const { search } = storeToRefs(settingStore)
+const searchEngines = computed(() => Object.values(searchStore.searchEngines))
 
 const defaultEngineKeys = Object.keys(DEFAULT_SEARCH_ENGINES)
 const currentDragEngineId = ref<string>()
@@ -118,44 +120,33 @@ const rules = reactive({
 
 const { validate, resetFields, validateInfos } = Form.useForm(addEngineState, rules)
 
-function onEngineDragenter(e, moveId: string) {
+function onEngineDragenter(e: Event, moveId: string) {
   e.preventDefault()
 
   const currentId = currentDragEngineId.value
   if (currentId && moveId !== currentId) {
-    const temp = Array.from(useSearchEngines.value)
+    const temp = Array.from(search.value.useSearchEngines)
     const currentIndex = temp.indexOf(currentId)
     const moveIndex = temp.indexOf(moveId)
 
     temp.splice(currentIndex, 1)
     temp.splice(moveIndex, 0, currentId)
-
-    updateSearchSetting({
-      useSearchEngines: temp
-    })
+    search.value.useSearchEngines = temp
   }
 }
 
 function addUseSearchEngines(engineId: string) {
-  const temp = new Set(useSearchEngines.value)
+  const temp = new Set(search.value.useSearchEngines)
   temp.add(engineId)
 
-  updateSearchSetting({
-    useSearchEngines: Array.from(temp)
-  })
+  search.value.useSearchEngines = Array.from(temp)
 }
 
 function removeUseSearchEngines(engineId: string) {
-  const temp = new Set(useSearchEngines.value)
+  const temp = new Set(search.value.useSearchEngines)
   temp.delete(engineId)
 
-  updateSearchSetting({
-    useSearchEngines: Array.from(temp)
-  })
-}
-
-function updateSearchSetting(data: Option<SearchSetting>) {
-  settingStore.updateSearchSetting(data)
+  search.value.useSearchEngines = Array.from(temp)
 }
 
 async function addSearchEngine() {
@@ -177,10 +168,6 @@ async function addSearchEngine() {
     resetFields()
     addEngineState.show = false
   } catch {}
-}
-
-function deleteSearchEngine(engineId: string) {
-  searchStore.deleteSearchEngine(engineId)
 }
 </script>
 

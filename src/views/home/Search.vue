@@ -1,7 +1,7 @@
 <template>
   <div class="search-warp" ref="searchWarp">
     <div v-if="searchSetting.showEngineIcon" class="search-logo">
-      <img :src="searchEngines[currentEngine].icon" class="logo" alt="logo" draggable="false" />
+      <img :src="currentUseEngine.icon" class="logo" alt="logo" draggable="false" />
     </div>
     <div class="search-input" ref="searchInput">
       <a-auto-complete
@@ -27,8 +27,8 @@
           @search="onSearch"
         >
           <template #addonBefore v-if="searchSetting.showEngineSelect">
-            <a-select v-model:value="currentEngine" style="width: 90px">
-              <a-select-option v-for="(value, key) in searchEngines" :value="key" :key="key">
+            <a-select v-model:value="searchSetting.currentEngine" style="width: 90px">
+              <a-select-option v-for="(value, key) in useSearchEngines" :value="key" :key="key">
                 {{ value.name }}
               </a-select-option>
             </a-select>
@@ -41,9 +41,10 @@
 
 <script lang="ts" setup>
 import { useSettingStore, useSearchStore } from "@/store"
-import { Option, SearchEngineData, SearchSetting } from "@/types"
+import { SearchEngineData } from "@/types"
 import { debounce } from "@/utils/async"
 import { isEmpty } from "@/utils/common"
+import { storeToRefs } from "pinia"
 import { ref, computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
@@ -59,20 +60,14 @@ interface SuggestionItem {
 const { t } = useI18n()
 const settingStore = useSettingStore()
 const searchStore = useSearchStore()
+const { search: searchSetting } = storeToRefs(settingStore)
+const { currentUseEngine, useSearchEngines } = storeToRefs(searchStore)
 const props = defineProps<SearchProps>()
 
 const showComplete = ref(false),
   searchWarp = ref<HTMLElement>(),
-  searchEngines = computed<SearchEngineData>(() => searchStore.getUseSearchEngines),
-  searchSetting = computed(() => settingStore.search),
   searchInputRadius = computed(() => `${searchSetting.value.searchInputRadius}px`),
   searchSuggestion = ref<SuggestionItem[]>()
-
-// 当前搜索引擎
-const currentEngine = computed({
-  get: () => searchSetting.value.currentEngine!,
-  set: currentEngine => updateSearchSetting({ currentEngine })
-})
 
 // 搜索内容
 const searchText = ref(props.value)
@@ -112,22 +107,18 @@ function onSwitchEngines(e: KeyboardEvent) {
 
   e.preventDefault()
 
-  const engineKeys = Object.keys(searchEngines.value)
+  const engineKeys = Object.keys(useSearchEngines.value)
   const length = engineKeys.length
 
-  let currentIndex = engineKeys.indexOf(currentEngine.value)
+  let currentIndex = engineKeys.indexOf(searchSetting.value.currentEngine)
   currentIndex += e.shiftKey ? -1 : 1
 
-  currentEngine.value =
+  searchSetting.value.currentEngine =
     currentIndex < 0
       ? engineKeys[length - 1]
       : currentIndex < length
       ? engineKeys[currentIndex]
       : engineKeys[0]
-}
-
-function updateSearchSetting(data: Option<SearchSetting>) {
-  settingStore.updateSearchSetting(data)
 }
 </script>
 

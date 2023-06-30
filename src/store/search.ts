@@ -57,17 +57,26 @@ export default defineStore("search", {
   },
   getters: {
     /**
-     * 获取需要使用的搜索引擎列表
-     * @param param0
-     * @returns
+     * 获取当前使用的搜索引擎
+     *
+     * @returns SearchEngineItem
      */
-    getUseSearchEngines: ({ searchEngines }) => {
+    currentUseEngine(state): SearchEngineItem {
+      const { search } = useSettingStore()
+      return state.searchEngines[search.currentEngine]
+    },
+
+    /**
+     * 获取需要使用的搜索引擎列表
+     * @returns SearchEngineData
+     */
+    useSearchEngines(state): SearchEngineData {
       const { search } = useSettingStore()
       const useSearchEngines = search.useSearchEngines!,
         temp: SearchEngineData = {}
 
       for (let id of useSearchEngines) {
-        const searchEngine = searchEngines[id]
+        const searchEngine = state.searchEngines[id]
         if (isEmpty(searchEngine)) continue
 
         temp[id] = searchEngine
