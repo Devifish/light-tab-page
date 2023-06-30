@@ -1,13 +1,11 @@
 <template>
-  <config-provider :theme="currentTheme" :lang="currentLang">
+  <config-provider :theme="setting.currentTheme" :lang="setting.currentLang">
     <router-view />
   </config-provider>
 </template>
 
 <script lang="ts" setup>
 import { useSettingStore } from "./store"
-import { storeToRefs } from "pinia"
 
-const settingStore = useSettingStore()
-const { currentTheme, currentLang } = storeToRefs(settingStore)
+const setting = useSettingStore()
 </script>

@@ -21,7 +21,7 @@ export class AnalyzeUrl {
       const express = `{${key}}`
       if (!url.includes(express)) continue
 
-      url = url.replace(express, encodeURI(data[key]))
+      url = url.replace(express, encodeURIComponent(data[key]))
     }
 
     this.url = new URL(url)

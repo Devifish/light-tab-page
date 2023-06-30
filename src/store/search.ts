@@ -102,14 +102,13 @@ export default defineStore("search", {
         searchText: searchTrim,
         timestamp: Date.now()
       }
-      this.putHistory(history)
 
-      const data: SearchData = {
+      this.putHistory(history)
+      this.openSearchPage({
         engine: currentEngine,
         text: searchTrim,
         target: setting.openPageTarget!
-      }
-      this.openSearchPage(data)
+      })
     },
 
     /**

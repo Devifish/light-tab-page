@@ -1,7 +1,7 @@
 <template>
   <div class="search-warp">
     <div v-if="searchSetting.showEngineIcon" class="search-logo">
-      <img :src="currentUseEngine.icon" class="logo" alt="logo" draggable="false" />
+      <img :src="search.currentUseEngine.icon" class="logo" alt="logo" draggable="false" />
     </div>
     <div class="search-input" ref="searchInput">
       <a-auto-complete
@@ -27,7 +27,11 @@
         >
           <template #addonBefore v-if="searchSetting.showEngineSelect">
             <a-select v-model:value="searchSetting.currentEngine" style="width: 90px">
-              <a-select-option v-for="(value, key) in useSearchEngines" :value="key" :key="key">
+              <a-select-option
+                v-for="(value, key) in search.useSearchEngines"
+                :value="key"
+                :key="key"
+              >
                 {{ value.name }}
               </a-select-option>
             </a-select>
@@ -56,10 +60,9 @@ interface SuggestionItem {
 }
 
 const { t } = useI18n()
-const settingStore = useSettingStore()
-const searchStore = useSearchStore()
-const { search: searchSetting } = storeToRefs(settingStore)
-const { currentUseEngine, useSearchEngines } = storeToRefs(searchStore)
+const setting = useSettingStore()
+const search = useSearchStore()
+const { search: searchSetting } = storeToRefs(setting)
 const props = defineProps<SearchProps>()
 
 const showComplete = ref(false),
@@ -77,8 +80,8 @@ watch(
  * 搜索框搜索事件
  * 将搜索内容重定向到搜索引擎
  */
-function onSearch(search: string) {
-  searchStore.submitSearch(search)
+function onSearch(searchText: string) {
+  search.submitSearch(searchText)
 }
 
 /**
@@ -90,7 +93,7 @@ async function handleSearchSuggestion(value: string) {
   if (isEmpty(value)) {
     searchSuggestion.value = []
   } else {
-    const suggestion: string[] = await searchStore.getSuggestion(value)
+    const suggestion: string[] = await search.getSuggestion(value)
     searchSuggestion.value = suggestion.map(item => ({ value: item }))
   }
 }
@@ -104,7 +107,7 @@ function onSwitchEngines(e: KeyboardEvent) {
 
   e.preventDefault()
 
-  const engineKeys = Object.keys(useSearchEngines.value)
+  const engineKeys = Object.keys(search.useSearchEngines)
   const length = engineKeys.length
 
   let currentIndex = engineKeys.indexOf(searchSetting.value.currentEngine)
