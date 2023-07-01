@@ -25,9 +25,9 @@ export default defineStore("top-site", {
      * @param rootState
      * @returns
      */
-    getCurrentTopSites: ({ topSites }) => {
-      const { topSite: topSiteSetting } = useSettingStore()
-      return topSites.filter((_item, index) => index < topSiteSetting.col * topSiteSetting.row)
+    getCurrentTopSites(): TopSites {
+      const { topSite: setting } = useSettingStore()
+      return this.topSites.filter((_item, index) => index < setting.col * setting.row)
     }
   },
   actions: {

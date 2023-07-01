@@ -91,12 +91,14 @@ export default defineStore("setting", {
      *
      * @returns ThemeMode.Dart | ThemeMode.Light
      */
-    currentTheme({ theme }): ThemeMode.Dart | ThemeMode.Light {
-      if (theme.mode === ThemeMode.Auto) {
+    currentTheme(): ThemeMode.Dart | ThemeMode.Light {
+      const mode = this.theme.mode
+
+      if (mode === ThemeMode.Auto) {
         const isDark = usePreferredDark()
         return isDark.value ? ThemeMode.Dart : ThemeMode.Light
       } else {
-        return theme.mode
+        return mode
       }
     }
   },
