@@ -6,12 +6,18 @@ import { isEmpty } from "./common"
  * @param file 文件
  * @returns Base64
  */
-export async function fileToBase64(file: File) {
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-
-  await new Promise(resolve => (reader.onload = resolve))
-  return reader.result
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target?.result) {
+        resolve(e.target?.result as string)
+      } else {
+        reject()
+      }
+    }
+  })
 }
 
 /**
