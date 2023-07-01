@@ -4,9 +4,7 @@
       <template #lable>
         {{ t("topsite.topSiteData") }}
         <span style="font-size: 10px; color: #a0a0a0">
-          ({{
-            t("topsite.topSiteDataTip", [lastUpdateTime ? dayjs(lastUpdateTime).fromNow() : "无"])
-          }})
+          ({{ t("topsite.topSiteDataTip", [lastUpdateTime]) }})
         </span>
       </template>
 
@@ -68,12 +66,10 @@ import { storeToRefs } from "pinia"
 const { t } = useI18n()
 const settingStore = useSettingStore()
 const topSiteStore = useTopSiteStore()
-
 const { topSite } = storeToRefs(settingStore)
-const lastUpdateTime = computed(() => topSiteStore.lastUpdateTime)
-const state = reactive({
-  syncing: false
-})
+
+const state = reactive({ syncing: false })
+const lastUpdateTime = computed(() => dayjs(topSiteStore.lastUpdateTime).fromNow())
 
 /**
  * 同步浏览器最近浏览
