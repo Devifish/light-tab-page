@@ -30,22 +30,20 @@ const props = withDefaults(defineProps<IconTooltipProps>(), {
 </script>
 
 <style lang="less">
-@import "@/style/default.less";
-
 .icon-tooltip {
   margin-left: 4px;
 
   &.success {
-    color: @success-color;
+    color: #52c41a;
   }
   &.info {
-    color: @info-color;
+    color: #1677ff;
   }
   &.warn {
-    color: @warning-color;
+    color: #faad14;
   }
   &.error {
-    color: @error-color;
+    color: #ff4d4f;
   }
 }
 </style>

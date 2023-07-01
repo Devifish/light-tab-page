@@ -56,11 +56,10 @@ const { theme } = storeToRefs(settingStore)
 </script>
 
 <style lang="less">
-@import "@/style/default.less";
-
 .theme-setting {
   .theme-mode {
     display: flex;
+    height: 45px;
     column-gap: 8px;
 
     .theme-item {
@@ -73,7 +72,7 @@ const { theme } = storeToRefs(settingStore)
       }
 
       .select-icon {
-        color: @primary-color;
+        color: var(--primary-color);
         position: absolute;
         bottom: 8px;
         right: 8px;

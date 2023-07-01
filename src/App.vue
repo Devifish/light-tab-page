@@ -34,6 +34,7 @@ watchEffect(() => {
   const html = document.body.parentElement!
 
   html.setAttribute("data-theme", isDark ? "dark" : "light")
+  document.body.setAttribute("style", `--primary-color: ${setting.theme.primaryColor}`)
 })
 
 // 监听并设置语言

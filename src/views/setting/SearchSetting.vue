@@ -3,7 +3,7 @@
     <setting-item horizontal>
       <template #lable>
         <span>{{ t("search.engine") }}</span>
-        <icon-tooltip title="管理搜索引擎" @click="manageVisible = true">
+        <icon-tooltip class="engine-setting" title="管理搜索引擎" @click="manageVisible = true">
           <setting-outlined />
         </icon-tooltip>
       </template>
@@ -90,11 +90,9 @@ const isOpenPageByBlank = computed({
 </script>
 
 <style lang="less">
-@import "@/style/default.less";
-
 .search-setting {
   .engine-setting {
-    color: @primary-color;
+    color: var(--primary-color);
     margin-left: 4px;
     font-size: 12px;
   }

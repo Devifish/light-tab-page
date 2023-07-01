@@ -43,8 +43,6 @@ function onSelectColor(color: string) {
 </script>
 
 <style lang="less">
-@import "@/style/default.less";
-
 .color-radio-warp {
   display: flex;
   column-gap: 8px;
@@ -57,19 +55,18 @@ function onSelectColor(color: string) {
     transition: border-color 0.3s ease;
 
     &:hover {
-      border-color: @primary-color;
+      border-color: var(--primary-color);
     }
 
     &.active {
-      border-color: @primary-color;
+      border-color: var(--primary-color);
     }
 
     .select-icon {
       width: 100%;
-      color: @primary-color;
-      font-size: 14px;
-      line-height: 28px;
-      text-align: center;
+      height: 100%;
+      color: #FFF;
+      justify-content: center;
 
       &.scale-enter-active,
       &.scale-leave-active {
