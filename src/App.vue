@@ -8,7 +8,7 @@
 import { computed, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { theme } from "ant-design-vue"
-import { ThemeMode } from "@/types"
+import { ThemeMode } from "@/types/setting"
 import dayjs from "@/plugins/dayjs"
 import { useSettingStore } from "./store"
 

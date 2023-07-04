@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { useTopSiteStore } from "@/store"
-import { OpenPageTarget } from "@/types"
+import { OpenPageTarget } from "@/types/search"
 import { storeToRefs } from "pinia"
 import { computed } from "vue"
 

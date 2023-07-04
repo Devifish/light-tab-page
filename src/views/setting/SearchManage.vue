@@ -91,7 +91,7 @@
 import { ref, reactive, computed } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { DEFAULT_SEARCH_ENGINES } from "@/store/search"
-import { SearchEngineItem } from "@/types"
+import { SearchEngineItem } from "@/types/search"
 import { Form } from "ant-design-vue"
 import { useSettingStore, useSearchStore } from "@/store"
 import { storeToRefs } from "pinia"

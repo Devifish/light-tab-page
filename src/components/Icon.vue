@@ -3,20 +3,20 @@
     <div
       class="icon-content"
       :style="{
-        width: toPixel(size),
-        height: toPixel(size)
+        width: sizePixel,
+        height: sizePixel
       }"
     >
       <p
-        v-if="textIcon || !src"
+        v-if="props.textIcon || !props.src"
         class="text-icon"
         :style="{
-          fontSize: toPixel(size)
+          fontSize: sizePixel
         }"
       >
         {{ getFontIcon() }}
       </p>
-      <img v-else class="img-icon" :src="src" alt="logo" draggable="false" />
+      <img v-else class="img-icon" :src="props.src" alt="logo" draggable="false" />
     </div>
 
     <slot />
@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import { isEmpty } from "@/utils/common"
 import { toPixel } from "@/utils/format"
+import { computed } from "vue"
 
 interface IconProps {
   src?: string
@@ -38,6 +39,8 @@ const props = withDefaults(defineProps<IconProps>(), {
   textIcon: false,
   size: 32
 })
+
+const sizePixel = computed(() => toPixel(props.size))
 
 function getFontIcon() {
   if (isEmpty(props.title)) return "无"

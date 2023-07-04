@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ThemeMode } from "@/types"
+import { ThemeMode } from "@/types/setting"
 import { CheckCircleFilled } from "@ant-design/icons-vue"
 import AutoMode from "@/assets/auto-mode.svg"
 import LightMode from "@/assets/light-mode.svg"

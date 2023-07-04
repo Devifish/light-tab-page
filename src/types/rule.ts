@@ -1,10 +1,10 @@
-import type { SearchEngineItem, SearchResultData } from "./search"
+import type { SearchResultData } from "./search"
 import { AnalyzeCss, AnalyzeUrl } from "./analyze"
 
 export interface Rule {
   id: string
   name: string
-  description: string,
+  description: string
   icon: string
   search: SearchRule
 }

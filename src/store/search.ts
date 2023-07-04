@@ -1,17 +1,13 @@
 import { defineStore } from "pinia"
-import router from "@/router"
 import {
   SearchEngineData,
   SearchEngineItem,
   SearchSuggestion,
   HistoryItem,
-  SearchData,
-  AnalyzeUrl,
-  RuleDataMap,
-  Rule,
-  Rules,
-  RuleData
-} from "@/types"
+  SearchData
+} from "@/types/search"
+import { RuleDataMap, Rule, Rules, RuleData } from "@/types/rule"
+import { AnalyzeUrl } from "@/types/analyze"
 import { deepClone, isEmpty } from "@/utils/common"
 import { getBaiduSuggestion, getBingSuggestion, getGoogleSuggestion } from "@/api/suggestion"
 import useSettingStore from "./setting"

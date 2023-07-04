@@ -1,17 +1,17 @@
 <template>
   <div class="color-radio-warp">
     <div
-      v-for="item of colors"
-      :class="['color-item', { active: equalsIgnoreCase(value, item) }]"
+      v-for="item of props.colors"
+      :class="['color-item', { active: equalsIgnoreCase(props.value, item) }]"
       :key="item"
       :style="{
         backgroundColor: item,
-        borderRadius: `${radius}`
+        borderRadius: `${props.radius}`
       }"
       @click="onSelectColor(item)"
     >
       <transition name="scale">
-        <check-outlined v-if="equalsIgnoreCase(value, item)" class="select-icon" />
+        <check-outlined v-if="equalsIgnoreCase(props.value, item)" class="select-icon" />
       </transition>
     </div>
   </div>
@@ -65,7 +65,7 @@ function onSelectColor(color: string) {
     .select-icon {
       width: 100%;
       height: 100%;
-      color: #FFF;
+      color: #fff;
       justify-content: center;
 
       &.scale-enter-active,

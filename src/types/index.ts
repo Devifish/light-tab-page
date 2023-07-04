@@ -1,15 +1,3 @@
-export * from "./search"
-export * from "./setting"
-export * from "./rule"
-export * from "./analyze"
-
-export enum LanguageType {
-  Auto = "auto",
-  SimplifiedChinese = "zh-CN",
-  TraditionalChinese = "zh-TW",
-  English = "en"
-}
-
 export interface TopSiteItem {
   title: string
   url: string

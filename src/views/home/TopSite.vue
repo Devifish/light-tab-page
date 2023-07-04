@@ -96,7 +96,8 @@
 
 <script lang="ts" setup>
 import { computed, onBeforeMount, reactive } from "vue"
-import { DragType, OpenPageTarget, SortData, TopSiteItem, TopSites } from "@/types"
+import { DragType, SortData, TopSiteItem, TopSites } from "@/types"
+import { OpenPageTarget } from "@/types/search"
 import { useSettingStore, useTopSiteStore } from "@/store"
 import { useI18n } from "vue-i18n"
 import { Form } from "ant-design-vue"

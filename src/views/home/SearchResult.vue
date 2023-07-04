@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import { useSettingStore, useSearchStore } from "@/store"
-import type { SearchResultData } from "@/types"
+import type { SearchResultData } from "@/types/search"
 import { isEmpty } from "@/utils/common"
 import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from "vue-router"

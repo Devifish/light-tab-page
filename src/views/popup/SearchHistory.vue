@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from "vue"
+import { onBeforeMount, ref } from "vue"
 import { CloseOutlined } from "@ant-design/icons-vue"
-import { HistoryItem, OpenPageTarget, SearchData } from "@/types"
+import { HistoryItem, OpenPageTarget } from "@/types/search"
 import dayjs from "@/plugins/dayjs"
 import { useSearchStore } from "@/store"
 import { storeToRefs } from "pinia"
@@ -42,9 +42,7 @@ import { storeToRefs } from "pinia"
 const store = useSearchStore()
 const { history: searchHistory, searchEngines } = storeToRefs(store)
 
-const current = ref()
-const now = Date.now()
-
+const current = ref<number | null>(null)
 function openSearchPage(history: HistoryItem) {
   store.openSearchPage({
     engine: history.engineId,

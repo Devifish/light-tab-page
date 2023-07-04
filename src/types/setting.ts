@@ -10,6 +10,13 @@ export enum BackgroundType {
   Bing
 }
 
+export enum LanguageType {
+  Auto = "auto",
+  SimplifiedChinese = "zh-CN",
+  TraditionalChinese = "zh-TW",
+  English = "en"
+}
+
 export interface BackgroundSetting {
   id: string | null
   type?: BackgroundType
@@ -25,7 +32,7 @@ export interface TopSiteIcon {
 }
 
 export interface TopSiteSetting {
-  enable: boolean,
+  enable: boolean
   row: number
   col: number
   gap: number

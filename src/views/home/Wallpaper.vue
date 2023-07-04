@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { verifyImageUrl } from "@/utils/img"
-import { BackgroundType, ThemeMode } from "@/types"
+import { BackgroundType, ThemeMode } from "@/types/setting"
 import { useSettingStore } from "@/store"
 import { isEmpty } from "@/utils/common"
 import { storeToRefs } from "pinia"

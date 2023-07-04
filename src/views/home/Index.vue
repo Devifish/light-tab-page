@@ -36,7 +36,7 @@
 import { computed, reactive } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
 import { useSettingStore } from "@/store"
-import { AlignType, BackgroundType } from "@/types"
+import { AlignType, BackgroundType } from "@/types/setting"
 import Search from "./Search.vue"
 import TopSite from "./TopSite.vue"
 import Wallpaper from "./Wallpaper.vue"

@@ -63,7 +63,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue"
 import { SettingOutlined } from "@ant-design/icons-vue"
-import { OpenPageTarget, SearchSuggestion } from "@/types"
+import { OpenPageTarget, SearchSuggestion } from "@/types/search"
 import SearchManage from "./SearchManage.vue"
 import { Permis, isExtension } from "@/plugins/extension"
 import { toPixel } from "@/utils/format"

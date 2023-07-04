@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { useSettingStore } from "@/store"
-import { AlignType } from "@/types"
+import { AlignType } from "@/types/setting"
 import { toPixel } from "@/utils/format"
 import { isExtension, Permis } from "@/plugins/extension"
 import { useI18n } from "vue-i18n"

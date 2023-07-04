@@ -14,12 +14,10 @@ import {
   LayoutSetting,
   AlignType,
   PopupSettting,
-  SearchSetting,
-  OpenPageTarget,
-  SearchSuggestion,
   LanguageType,
   ThemeSetting
-} from "@/types"
+} from "@/types/setting"
+import { SearchSetting, OpenPageTarget, SearchSuggestion } from "@/types/search"
 
 export interface SettingState {
   lang: LanguageType

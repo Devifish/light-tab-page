@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { watch } from "vue"
 import { PlusOutlined } from "@ant-design/icons-vue"
-import { BackgroundType } from "@/types"
+import { BackgroundType } from "@/types/setting"
 import { isExtension, Permis } from "@/plugins/extension"
 import { toPixel, toPercent } from "@/utils/format"
 import { useSettingStore } from "@/store"
