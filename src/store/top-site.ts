@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import { getBrowserTopSites, getFavicon } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
-import { verifyImageUrl } from "@/utils/file"
+import { verifyImageUrl } from "@/utils/img"
 import useSettingStore from "./setting"
 
 export interface TopSiteState {

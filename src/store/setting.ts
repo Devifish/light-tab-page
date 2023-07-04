@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import { copy, isEmpty, uuid } from "@/utils/common"
 import { wallpaperStore } from "@/plugins/localforage"
-import { isImageFile } from "@/utils/file"
+import { isImageFile } from "@/utils/img"
 import { usePreferredDark } from "@/utils/use"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { isObjectURL } from "@/utils/browser"

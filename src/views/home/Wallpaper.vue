@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { computed } from "vue"
-import { verifyImageUrl } from "@/utils/file"
+import { verifyImageUrl } from "@/utils/img"
 import { BackgroundType, ThemeMode } from "@/types"
 import { useSettingStore } from "@/store"
 import { isEmpty } from "@/utils/common"
