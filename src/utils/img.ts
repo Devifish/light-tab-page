@@ -39,3 +39,30 @@ export function isImageFile(file: Blob) {
 
   return imageType.includes(fileType)
 }
+
+/**
+ * 获取图片像素点
+ *
+ * @param url URL
+ * @returns ImageData
+ */
+export function getPixels(url: string): Promise<ImageData> {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas")
+    const context = canvas.getContext("2d")!
+
+    const image = new Image()
+    image.src = url
+    image.onload = () => {
+      context.drawImage(image, 0, 0)
+
+      //获取像素矩阵
+      const data = context.getImageData(0, 0, image.width, image.height)
+      resolve(data)
+
+      canvas.remove()
+    }
+
+    image.onerror = reject
+  })
+}

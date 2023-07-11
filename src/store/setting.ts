@@ -6,6 +6,7 @@ import { usePreferredDark } from "@/utils/use"
 import { getDailyWallpaperUrl } from "@/api/bing"
 import { isObjectURL } from "@/utils/browser"
 import { saveAs } from "file-saver"
+import { fromUrl } from "@/utils/palette"
 import {
   BackgroundSetting,
   BackgroundType,
@@ -30,13 +31,15 @@ export interface SettingState {
 }
 
 const BACKUP_FILE_MARK = "_MARK_"
+const DEFAULT_COLOR = ["#1890ff", "#7FBA00", "#F25022", "#FFB900", "#00A4EF", "#1F1F1F"]
 
 export default defineStore("setting", {
   state: (): SettingState => ({
     lang: LanguageType.Auto,
     theme: {
       mode: ThemeMode.Auto,
-      primaryColor: "#1890ff"
+      primaryColor: "#1890ff",
+      colorPalette: []
     },
     background: {
       id: "",
@@ -98,6 +101,20 @@ export default defineStore("setting", {
       } else {
         return mode
       }
+    },
+
+    /**
+     * 获取基础颜色
+     *
+     * @returns Array<string>
+     */
+    primaryColors(): Array<string> {
+      const { colorPalette } = this.theme
+      if (isEmpty(colorPalette)) {
+        return DEFAULT_COLOR
+      } else {
+        return colorPalette
+      }
     }
   },
   actions: {
@@ -154,6 +171,11 @@ export default defineStore("setting", {
 
       if (isEmpty(url)) return
       this.background.url = url
+    },
+
+    async loadWallpaperPalette() {
+      const { url } = this.background
+      this.theme.colorPalette = await fromUrl(url!)
     },
 
     /**

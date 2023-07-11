@@ -15,8 +15,14 @@
     <setting-item :lable="t('theme.primaryColor')">
       <color-radio
         v-model:value="theme.primaryColor"
-        :colors="['#1890ff', '#7FBA00', '#F25022', '#FFB900', '#00A4EF', '#1F1F1F']"
-        style="width: 215px"
+        :colors="primaryColors"
+      />
+    </setting-item>
+    <setting-item horizontal lable="使用壁纸调色板">
+      <a-switch
+        :checked="isColorPalette"
+        :loading="loading.colorPalette"
+        @change="changeColorPalette"
       />
     </setting-item>
   </div>
@@ -31,6 +37,9 @@ import DarkMode from "@/assets/dark-mode.svg"
 import { useSettingStore } from "@/store"
 import { useI18n } from "vue-i18n"
 import { storeToRefs } from "pinia"
+import { computed } from "vue"
+import { isEmpty } from "@/utils/common"
+import { reactive } from "vue"
 
 const themeModes = [
   {
@@ -52,7 +61,17 @@ const themeModes = [
 
 const { t } = useI18n()
 const settingStore = useSettingStore()
-const { theme } = storeToRefs(settingStore)
+const { theme, primaryColors } = storeToRefs(settingStore)
+const loading = reactive({ colorPalette: false })
+const isColorPalette = computed(() => !isEmpty(theme.value.colorPalette))
+
+async function changeColorPalette(checked: any) {
+  if (checked) {
+    settingStore.loadWallpaperPalette()
+  } else {
+    theme.value.colorPalette = []
+  }
+}
 </script>
 
 <style lang="less">

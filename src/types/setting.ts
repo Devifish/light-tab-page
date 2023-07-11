@@ -59,4 +59,5 @@ export interface PopupSettting {
 export interface ThemeSetting {
   mode: ThemeMode
   primaryColor: string
+  colorPalette: Array<string>
 }
