@@ -18,7 +18,7 @@
     <setting-item horizontal v-if="background.type === BackgroundType.Local">
       <template #lable>
         <span>
-          使用壁纸调色板
+          {{ t('theme.wallpaperPalette') }}
           <a-tag color="warning">{{ t("common.experimen") }}</a-tag>
         </span>
       </template>
