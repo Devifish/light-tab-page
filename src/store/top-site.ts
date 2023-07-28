@@ -1,8 +1,9 @@
 import { defineStore } from "pinia"
+import useSettingStore from "./setting"
 import { getBrowserTopSites, getFavicon } from "@/plugins/extension"
 import { SortData, TopSiteItem, TopSites } from "@/types"
 import { verifyImageUrl } from "@/utils/img"
-import useSettingStore from "./setting"
+import { isEmpty } from "@/utils/common"
 
 export interface TopSiteState {
   topSites: TopSites
@@ -96,6 +97,7 @@ export default defineStore("top-site", {
     sortTopSites(sort: SortData) {
       const topSites = this.topSites
       const from = topSites[sort.from]
+      if (isEmpty(from)) return
 
       topSites.splice(sort.from, 1)
       topSites.splice(sort.to, 0, from)
