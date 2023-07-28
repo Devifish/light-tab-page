@@ -11,6 +11,7 @@ theme:
   setting: "Theme Setting"
   mode: "Theme mode"
   primaryColor: "Primary color"
+  wallpaperPalette: "Using the wallpaper palette"
 
 search:
   setting: "Search Setting"

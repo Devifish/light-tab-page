@@ -11,6 +11,7 @@ theme:
   setting: "主題設置"
   mode: "主題模式"
   primaryColor: "基础颜色"
+  wallpaperPalette: "使用壁紙调色板"
 
 search:
   setting: "搜索設置"

@@ -13,12 +13,15 @@
       </div>
     </setting-item>
     <setting-item :lable="t('theme.primaryColor')">
-      <color-radio
-        v-model:value="theme.primaryColor"
-        :colors="primaryColors"
-      />
+      <color-radio v-model:value="theme.primaryColor" :colors="primaryColors" />
     </setting-item>
-    <setting-item horizontal lable="使用壁纸调色板">
+    <setting-item horizontal v-if="background.type === BackgroundType.Local">
+      <template #lable>
+        <span>
+          使用壁纸调色板
+          <a-tag color="warning">{{ t("common.experimen") }}</a-tag>
+        </span>
+      </template>
       <a-switch
         :checked="isColorPalette"
         :loading="loading.colorPalette"
@@ -39,6 +42,7 @@ import { useI18n } from "vue-i18n"
 import { storeToRefs } from "pinia"
 import { computed } from "vue"
 import { isEmpty } from "@/utils/common"
+import { BackgroundType } from "@/types/setting"
 import { reactive } from "vue"
 
 const themeModes = [
@@ -61,7 +65,7 @@ const themeModes = [
 
 const { t } = useI18n()
 const settingStore = useSettingStore()
-const { theme, primaryColors } = storeToRefs(settingStore)
+const { theme, primaryColors, background } = storeToRefs(settingStore)
 const loading = reactive({ colorPalette: false })
 const isColorPalette = computed(() => !isEmpty(theme.value.colorPalette))
 
