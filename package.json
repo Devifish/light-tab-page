@@ -16,8 +16,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
-    "@vueuse/core": "^10.2.0",
-    "ant-design-vue": "4.0.0-rc.5",
+    "ant-design-vue": "4.0.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.8",
     "file-saver": "^2.0.5",

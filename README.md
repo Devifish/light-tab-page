@@ -23,14 +23,14 @@
 
 ## 依赖
 
-| 依赖           | 版本       |
-| -------------- | ---------- |
-| Typescript     | 5.0.4      |
-| Vue.js         | 3.3.4     |
-| Pinia           | 2.1.4      |
-| Vue Router     | 4.2.2     |
-| Vite           | 4.3.9      |
-| Ant Design Vue | 4.0.0-rc.5 |
+| 依赖           | 版本  |
+| -------------- | ----- |
+| Typescript     | 5.0.4 |
+| Vue.js         | 3.3.4 |
+| Pinia          | 2.1.4 |
+| Vue Router     | 4.2.2 |
+| Vite           | 4.3.9 |
+| Ant Design Vue | 4.0.0 |
 
 - 推荐使用 `PNPM` 及 `Node.js 18` 及以上版本运行/构建当前项目
 
