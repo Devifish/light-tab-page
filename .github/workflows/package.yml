@@ -21,10 +21,10 @@ jobs:
       - name: Create ZIP package
         run: zip -r extension.zip . -x "*.git*"
 
-      - name: Generate CRX
+      - name: Generate CRX (without private key)
         run: |
           mkdir -p output
-          chromium-browser --pack-extension=$PWD --pack-extension-key=private-key.pem
+          chromium-browser --pack-extension=$PWD
           mv $PWD.crx output/extension.crx
       
       - name: Upload artifacts
