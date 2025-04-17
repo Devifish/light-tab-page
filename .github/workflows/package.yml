@@ -3,7 +3,7 @@ name: Build Chrome Extension
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -28,14 +28,7 @@ jobs:
           mv $PWD.crx output/extension.crx
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: chrome-extension
           path: output/extension.crx
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: output/extension.crx
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
