@@ -1,0 +1,6 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="48px" width="48px">
+    <path key="MicrosoftLogo2" id="blue" d="M22.8,25.2H0V48h22.8V25.2z" fill="#00A4EF"></path>
+    <path key="MicrosoftLogo3" id="yellow" d="M48,25.2H25.2V48H48V25.2z" fill="#FFB900"></path>
+    <path key="MicrosoftLogo4" id="green" d="M48,0H25.2v22.8H48V0z" fill="#7FBA00"></path>
+    <path key="MicrosoftLogo5" id="red" d="M22.8,0H0v22.8h22.8V0z" fill="#F25022"></path>
+</svg>

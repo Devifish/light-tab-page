@@ -1,7 +1,7 @@
 import axios from "@/plugins/axios"
 import { isEmpty } from "@/utils/common"
 
-const BASE_URL = "https://cn.bing.com"
+const BASE_URL = "https://www.bing.com"
 
 export async function getDailyWallpaperUrl(n: number = 1) {
   const { data } = await axios.get<any>("/HPImageArchive.aspx", {
