@@ -42,3 +42,10 @@ cd light-tab-page
 pnpm install
 pnpm run dev
 ```
+
+## 赞助
+本项目的 CDN 加速及安全防护由腾讯 EdgeOne 赞助。
+
+[![Best Asian CDN, Edge, and Secure Solutions - Tencent EdgeOne](https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png)](https://edgeone.ai/?from=github)
+
+
