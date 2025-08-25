@@ -1,0 +1,34 @@
+name: Build Chrome Extension
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser zip
+
+      - name: Create ZIP package
+        run: zip -r extension.zip . -x "*.git*"
+
+      - name: Generate CRX (without private key)
+        run: |
+          mkdir -p output
+          chromium-browser --pack-extension=$PWD
+          mv $PWD.crx output/extension.crx
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: output/extension.crx
